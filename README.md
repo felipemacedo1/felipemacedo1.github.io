@@ -30,15 +30,5 @@ Distribuído sob a licença MIT. Veja o arquivo [LICENSE](./LICENSE) para mais d
 
 © 2025 Felipe Macedo.
 
----
-
-<p align="left">
-  <img src="https://img.shields.io/badge/HTML-5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
-  <img src="https://img.shields.io/badge/CSS-3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
-  <img src="https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
-  <img src="https://img.shields.io/badge/Terminal-Retro-00ff00?style=for-the-badge&logo=gnubash&logoColor=black" alt="Terminal Retro">
-  <img src="https://img.shields.io/badge/Portfolio-Pessoal-blueviolet?style=for-the-badge" alt="Portfolio">
-</p>
-
 <!--
 Tags: portfolio, terminal, javascript, html, css, retro, interactive, personal, webdev
