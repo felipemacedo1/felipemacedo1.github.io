@@ -1,27 +1,49 @@
 
-# jstatic-portifolio-mcd
+# 💻 Terminal Portfolio - Felipe Macedo
 
+[![Version](https://img.shields.io/badge/Version-1.0.1-blue?style=for-the-badge)]()
 [![HTML5](https://img.shields.io/badge/HTML-5-E34F26?style=for-the-badge&logo=html5&logoColor=white)]()
 [![CSS3](https://img.shields.io/badge/CSS-3-1572B6?style=for-the-badge&logo=css3&logoColor=white)]()
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
 [![Terminal Retro](https://img.shields.io/badge/Terminal-Retro-00ff00?style=for-the-badge&logo=gnubash&logoColor=black)]()
 [![Portfolio](https://img.shields.io/badge/Portfolio-Pessoal-blueviolet?style=for-the-badge)]()
-[![Status](https://img.shields.io/badge/Status-100%25%20Complete-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> Terminal Portfolio Webpage de Felipe Macedo
+> 🚀 Portfólio interativo em formato de terminal retrô
 
-Este projeto é um portfólio interativo em formato de terminal, desenvolvido em HTML, CSS e JavaScript puro. Inspirado em terminais retrô, com comandos, easter eggs e responsividade para mobile.
+Um portfólio web único que simula um terminal Linux/Unix, desenvolvido com HTML, CSS e JavaScript vanilla. Oferece uma experiência nostálgica e interativa para apresentar projetos e informações profissionais.
 
-## Como usar
+## 🎯 Como Usar
 
-Basta abrir o arquivo `index.html` em qualquer navegador moderno. Não há dependências externas.
+1. Clone o repositório ou baixe os arquivos
+2. Abra o arquivo `index.html` em qualquer navegador moderno
+3. Digite `help` para ver todos os comandos disponíveis
 
-## Funcionalidades
-- Interface de terminal simulada
-- Comandos customizados (help, menu, about, projects, contact, etc)
-- Easter eggs e atalhos
-- Totalmente responsivo
+**Sem dependências externas** - funciona offline!
+
+## ✨ Funcionalidades
+
+- 🖥️ **Interface de terminal autêntica** com cursor piscante
+- ⌨️ **Comandos interativos**: `help`, `about`, `projects`, `contact`, `clear`, etc.
+- 🎮 **Easter eggs** e comandos secretos
+- 📱 **Totalmente responsivo** para mobile e desktop
+- 🎨 **Tema retrô** com cores e fontes nostálgicas
+- ⚡ **Performance otimizada** com JavaScript vanilla
+
+## 🛠️ Comandos Disponíveis
+
+- `help` - Lista todos os comandos
+- `about` - Informações pessoais
+- `projects` - Portfólio de projetos
+- `contact` - Informações de contato
+- `clear` - Limpa o terminal
+- `menu` - Menu principal
+
+## 🚀 Tecnologias
+
+- **HTML5** - Estrutura semântica
+- **CSS3** - Estilização e animações
+- **JavaScript ES6** - Lógica e interatividade
 
 
 ## Licença
