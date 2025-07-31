@@ -818,11 +818,7 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
 
         async startInitialSequence() {
           this.input.disabled = true;
-          await this.sleep(1000);
-
-          await this.typeCommand("whoami");
-          await this.executeCommandSilent("whoami");
-          await this.sleep(1500);
+          await this.sleep(500);
 
           await this.typeCommand("menu");
           await this.executeCommandSilent("menu");
