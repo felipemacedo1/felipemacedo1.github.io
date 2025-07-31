@@ -755,15 +755,33 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
 
             switch (e.key) {
               case "Enter":
-                this.processCommand();
+                if (this.suggestions.length > 0 && this.suggestionIndex >= 0) {
+                  e.preventDefault();
+                  this.selectSuggestion(this.suggestions[this.suggestionIndex]);
+                } else {
+                  this.processCommand();
+                }
                 break;
               case "ArrowUp":
                 e.preventDefault();
-                this.navigateHistory("up");
+                if (this.suggestions.length > 0) {
+                  this.suggestionIndex = this.suggestionIndex <= 0 ? this.suggestions.length - 1 : this.suggestionIndex - 1;
+                  this.displaySuggestions();
+                } else {
+                  this.navigateHistory("up");
+                }
                 break;
               case "ArrowDown":
                 e.preventDefault();
-                this.navigateHistory("down");
+                if (this.suggestions.length > 0) {
+                  this.suggestionIndex = this.suggestionIndex >= this.suggestions.length - 1 ? 0 : this.suggestionIndex + 1;
+                  this.displaySuggestions();
+                } else {
+                  this.navigateHistory("down");
+                }
+                break;
+              case "Escape":
+                this.hideSuggestions();
                 break;
               case "Tab":
                 e.preventDefault();
@@ -1773,15 +1791,21 @@ Assistente virtual avançado com processamento de linguagem natural.
 
         showSuggestions() {
           const currentInput = this.input.value.toLowerCase();
-          if (!currentInput) {
+          if (!currentInput || currentInput.length < 2) {
             this.hideSuggestions();
             return;
           }
 
           const availableCommands = Object.keys(this.commands);
           this.suggestions = availableCommands.filter(
-            (cmd) => cmd.startsWith(currentInput) && cmd !== currentInput
-          ).slice(0, 5);
+            (cmd) => cmd.includes(currentInput) && cmd !== currentInput
+          ).sort((a, b) => {
+            const aStarts = a.startsWith(currentInput);
+            const bStarts = b.startsWith(currentInput);
+            if (aStarts && !bStarts) return -1;
+            if (!aStarts && bStarts) return 1;
+            return a.length - b.length;
+          }).slice(0, 4);
 
           if (this.suggestions.length > 0) {
             this.displaySuggestions();
@@ -1797,24 +1821,28 @@ Assistente virtual avançado com processamento de linguagem natural.
             suggestionBox.id = 'suggestions';
             suggestionBox.style.cssText = `
               position: absolute;
-              background: rgba(0, 0, 0, 0.95);
+              background: rgba(0, 0, 0, 0.98);
               border: 1px solid #00ff00;
-              border-radius: 5px;
-              padding: 8px;
-              bottom: 25px;
+              border-radius: 6px;
+              padding: 4px 0;
+              bottom: 30px;
               left: 0;
-              min-width: 200px;
+              min-width: 180px;
+              max-width: 300px;
               z-index: 1000;
               font-family: inherit;
-              font-size: 12px;
-              box-shadow: 0 4px 8px rgba(0, 255, 0, 0.2);
+              font-size: 11px;
+              box-shadow: 0 -4px 12px rgba(0, 255, 0, 0.3);
+              backdrop-filter: blur(8px);
             `;
             document.getElementById('inputLine').appendChild(suggestionBox);
           }
 
-          suggestionBox.innerHTML = this.suggestions.map((cmd, index) => 
-            `<div style="padding: 4px 8px; color: ${index === this.suggestionIndex ? '#00ffff' : '#00ff00'}; cursor: pointer; border-radius: 3px; transition: background 0.2s;" onmouseover="this.style.background='rgba(0,255,0,0.1)'" onmouseout="this.style.background='transparent'" onclick="terminal.selectSuggestion('${cmd}')">${cmd}</div>`
-          ).join('');
+          const currentInput = this.input.value.toLowerCase();
+          suggestionBox.innerHTML = this.suggestions.map((cmd, index) => {
+            const highlighted = cmd.replace(new RegExp(`(${currentInput})`, 'gi'), '<span style="background: rgba(0,255,255,0.3); color: #00ffff;">$1</span>');
+            return `<div style="padding: 6px 12px; color: ${index === this.suggestionIndex ? '#00ffff' : '#00ff00'}; cursor: pointer; border-radius: 3px; transition: all 0.15s; display: flex; align-items: center;" onmouseover="this.style.background='rgba(0,255,0,0.15)'; this.style.color='#00ffff'" onmouseout="this.style.background='transparent'; this.style.color='#00ff00'" onclick="terminal.selectSuggestion('${cmd}')"><span style="margin-right: 8px;">▶</span>${highlighted}</div>`;
+          }).join('');
         }
 
         hideSuggestions() {
