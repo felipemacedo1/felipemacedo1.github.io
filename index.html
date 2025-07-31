@@ -4,39 +4,63 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Felipe Macedo - Terminal Portfolio</title>
-    <meta
-      name="description"
-      content="Portfólio pessoal de Felipe Macedo - Desenvolvedor Full Cycle com experiência em Java, Go e Spring Boot. Cursando Ciência da Computação e apaixonado por soluções backend escaláveis."
-    />
-
-    <meta
-      name="keywords"
-      content="Felipe Macedo, desenvolvedor, fullstack, Java, Go, portfolio, terminal"
-    />
+    <meta name="description" content="Portfólio interativo de Felipe Macedo - Desenvolvedor Full Stack especializado em Java, Go e Spring Boot. Terminal retrô com comandos, projetos e informações profissionais." />
+    <meta name="keywords" content="Felipe Macedo, desenvolvedor, Java, Go, Spring Boot, portfolio, terminal, fullstack, backend, microserviços, APIs" />
     <meta name="author" content="Felipe Macedo" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="pt-BR" />
+    <meta name="theme-color" content="#00ff00" />
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <!-- <meta property="og:url" content="https://felipemacedo1.dev/" /> -->
+    <meta property="og:url" content="https://felipemacedo1.github.io/static-port/" />
     <meta property="og:title" content="Felipe Macedo - Terminal Portfolio" />
-    <meta
-      property="og:description"
-      content="Desenvolvedor Fullstack especializado em Java, Go e soluções backend escaláveis"
-    />
+    <meta property="og:description" content="Desenvolvedor Full Stack especializado em Java, Go e soluções backend escaláveis. Portfolio interativo em formato de terminal retrô." />
+    <meta property="og:site_name" content="Felipe Macedo Portfolio" />
+    <meta property="og:locale" content="pt_BR" />
+    
     <!-- Twitter -->
-    <!-- <meta property="twitter:card" content="summary_large_image" /> -->
-    <!-- <meta property="twitter:url" content="https://felipemacedo1.dev/" /> -->
-    <meta
-      property="twitter:title"
-      content="Felipe Macedo - Terminal Portfolio"
-    />
-    <meta
-      property="twitter:description"
-      content="Desenvolvedor Fullstack especializado em Java, Go e soluções backend escaláveis"
-    />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>"
-    />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://felipemacedo1.github.io/static-port/" />
+    <meta property="twitter:title" content="Felipe Macedo - Terminal Portfolio" />
+    <meta property="twitter:description" content="Desenvolvedor Full Stack especializado em Java, Go e soluções backend escaláveis" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>" />
+    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Felipe Macedo - Terminal Portfolio&quot;,&quot;short_name&quot;:&quot;Terminal&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;theme_color&quot;:&quot;#00ff00&quot;,&quot;background_color&quot;:&quot;#000000&quot;}" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Felipe Macedo",
+      "jobTitle": "Desenvolvedor Full Stack",
+      "description": "Desenvolvedor especializado em Java, Go, Spring Boot e arquitetura de microserviços",
+      "url": "https://felipemacedo1.github.io/static-port/",
+      "sameAs": [
+        "https://linkedin.com/in/felipemacedo1",
+        "https://github.com/felipemacedo1",
+        "https://github.com/orgs/growthfolio/"
+      ],
+      "knowsAbout": ["Java", "Go", "Spring Boot", "Microserviços", "APIs REST", "PostgreSQL", "Redis", "Docker"]
+    }
+    </script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+      
+      // Função para rastrear comandos
+      function trackCommand(command) {
+        gtag('event', 'terminal_command', {
+          'command_name': command,
+          'page_title': 'Portfolio Terminal'
+        });
+      }
+    </script>
 
     <style>
       * {
@@ -522,6 +546,12 @@
             contato: this.showContact.bind(this),
             3: this.showContact.bind(this),
             whoami: this.whoami.bind(this),
+            skills: this.showSkills.bind(this),
+            experience: this.showExperience.bind(this),
+            education: this.showEducation.bind(this),
+            certifications: this.showCertifications.bind(this),
+            resume: this.downloadResume.bind(this),
+            status: this.showStatus.bind(this),
             date: this.showDate.bind(this),
             ls: this.listFiles.bind(this),
             "ls -la": this.listFilesDetailed.bind(this),
@@ -665,6 +695,11 @@
         }
 
         executeCommand(command) {
+          // Rastrear comando no Google Analytics
+          if (typeof trackCommand === 'function') {
+            trackCommand(command);
+          }
+          
           if (this.commands[command]) {
             this.commands[command]();
           } else {
@@ -698,6 +733,12 @@
 
 <span class="highlight">🔧 Comandos extras:</span>
 <span class="success">whoami</span>         - Quem sou eu?
+<span class="success">skills</span>         - Tecnologias e níveis
+<span class="success">experience</span>     - Timeline profissional
+<span class="success">education</span>      - Formação acadêmica
+<span class="success">certifications</span> - Certificados e cursos
+<span class="success">resume</span>         - Download do currículo
+<span class="success">status</span>         - Disponibilidade atual
 <span class="success">date</span>           - Data e hora atual
 <span class="success">ls</span>             - Lista arquivos
 <span class="success">pwd</span>            - Diretório atual
@@ -1137,6 +1178,256 @@ Assistente virtual avançado com processamento de linguagem natural.
 </span>
                 `;
           this.addToOutput(exitText);
+        }
+
+        showSkills() {
+          const skillsText = `
+<span class="ascii-art">
+    ╔════════════════════════════════════════╗
+    ║              🛠️ STACK TECNOLÓGICO              ║
+    ╚════════════════════════════════════════╝
+</span>
+
+<span class="highlight">🚀 Backend & APIs:</span>
+<span class="success">Java</span>           █████████░ <span class="warning">90%</span> - Spring Boot, JPA, Hibernate
+<span class="success">Go</span>             ████████░░ <span class="warning">80%</span> - Gorilla Mux, GORM, APIs REST
+<span class="success">Spring Boot</span>   █████████░ <span class="warning">90%</span> - Microserviços, Security
+
+<span class="highlight">📊 Banco de Dados:</span>
+<span class="success">PostgreSQL</span>    ████████░░ <span class="warning">80%</span> - Queries complexas, Índices
+<span class="success">Redis</span>         ███████░░░ <span class="warning">70%</span> - Cache, Sessions
+<span class="success">MongoDB</span>       ██████░░░░ <span class="warning">60%</span> - NoSQL, Agregations
+
+<span class="highlight">🐳 DevOps & Cloud:</span>
+<span class="success">Docker</span>        ████████░░ <span class="warning">80%</span> - Containers, Compose
+<span class="success">AWS</span>           ██████░░░░ <span class="warning">60%</span> - EC2, RDS, S3
+<span class="success">GitHub Actions</span> ███████░░░ <span class="warning">70%</span> - CI/CD, Workflows
+
+<span class="highlight">🌐 Frontend:</span>
+<span class="success">HTML/CSS</span>      ████████░░ <span class="warning">80%</span> - Responsivo, Flexbox
+<span class="success">JavaScript</span>   ███████░░░ <span class="warning">70%</span> - ES6+, DOM, APIs
+<span class="success">React</span>         ██████░░░░ <span class="warning">60%</span> - Hooks, Context
+
+<span class="highlight">🔧 Ferramentas:</span>
+<span class="success">Git</span>           █████████░ <span class="warning">90%</span> - Workflows, Branching
+<span class="success">IntelliJ IDEA</span> █████████░ <span class="warning">90%</span> - Debugging, Refactoring
+<span class="success">Postman</span>       ████████░░ <span class="warning">80%</span> - API Testing
+    `;
+          this.addToOutput(skillsText);
+        }
+
+        showExperience() {
+          const experienceText = `
+<span class="ascii-art">
+    ╔════════════════════════════════════════╗
+    ║            💼 EXPERIÊNCIA PROFISSIONAL            ║
+    ╚════════════════════════════════════════╝
+</span>
+
+<div class="project-item">
+<span class="project-title">🏢 Analista de Sistemas - Sansuy S.A.</span>
+<span class="project-description">
+<strong>Período:</strong> 2024 - Atual
+<strong>Localização:</strong> São Paulo, SP
+
+• Desenvolvimento de sistemas corporativos com Java e JavaFX
+• Integração de APIs REST com Spring Boot
+• Manutenção e otimização de sistemas legados
+• Colaboração em equipe ágil com metodologias Scrum
+
+<strong>Tecnologias:</strong> Java 8+, Spring Boot, JavaFX, PostgreSQL, Git
+</span>
+</div>
+
+<div class="project-item">
+<span class="project-title">🚀 Backend Developer - Asapcard</span>
+<span class="project-description">
+<strong>Período:</strong> 2023 - 2024
+<strong>Localização:</strong> Remoto
+
+• Desenvolvimento de soluções financeiras em Go
+• Arquitetura de microserviços escaláveis
+• Integração com APIs de pagamento e bancos
+• Implementação de segurança e autenticação
+
+<strong>Tecnologias:</strong> Go, Gorilla Mux, GORM, Redis, Docker, PostgreSQL
+</span>
+</div>
+
+<div class="project-item">
+<span class="project-title">🎓 Desenvolvedor Trainee - Generation Brasil</span>
+<span class="project-description">
+<strong>Período:</strong> 2023
+<strong>Localização:</strong> São Paulo, SP
+
+• Bootcamp intensivo Full Stack Java
+• Desenvolvimento de projetos em equipe
+• Metodologias ágeis e soft skills
+• Projeto final: E-commerce com Spring Boot
+
+<strong>Tecnologias:</strong> Java, Spring Boot, MySQL, HTML, CSS, JavaScript
+</span>
+</div>
+
+<span class="success">📈 Evolução Profissional:</span>
+<span class="output-text">2023: Início na programação → 2024: Desenvolvedor Full Stack → 2025: Especialização em Arquitetura</span>
+    `;
+          this.addToOutput(experienceText);
+        }
+
+        showEducation() {
+          const educationText = `
+<span class="ascii-art">
+    ╔════════════════════════════════════════╗
+    ║              🎓 FORMAÇÃO ACADÊmica              ║
+    ╚════════════════════════════════════════╝
+</span>
+
+<div class="project-item">
+<span class="project-title">🏦 Bacharelado em Ciência da Computação</span>
+<span class="project-description">
+<strong>Instituição:</strong> FMU - Faculdades Metropolitanas Unidas
+<strong>Período:</strong> 2025 - 2029 (Cursando)
+<strong>Status:</strong> 1º Semestre
+
+• Fundamentos de Programação e Algoritmos
+• Estruturas de Dados e Complexidade
+• Engenharia de Software e Arquitetura
+• Banco de Dados e Sistemas Distribuídos
+</span>
+</div>
+
+<div class="project-item">
+<span class="project-title">📊 Gestão da Tecnologia da Informação</span>
+<span class="project-description">
+<strong>Instituição:</strong> Anhembi Morumbi
+<strong>Período:</strong> 2022 - 2024 (Concluído)
+<strong>Status:</strong> Graduado
+
+• Gestão de Projetos de TI
+• Governança e Segurança da Informação
+• Análise de Sistemas e Processos
+• Infraestrutura e Redes
+</span>
+</div>
+
+<span class="success">🏆 Destaques Acadêmicos:</span>
+<span class="output-text">• Média geral: 8.5/10</span>
+<span class="output-text">• Projetos práticos com tecnologias atuais</span>
+<span class="output-text">• Participação em grupos de estudo</span>
+<span class="output-text">• Foco em desenvolvimento backend e arquitetura</span>
+    `;
+          this.addToOutput(educationText);
+        }
+
+        showCertifications() {
+          const certificationsText = `
+<span class="ascii-art">
+    ╔════════════════════════════════════════╗
+    ║            🏅 CERTIFICAÇÕES & CURSOS            ║
+    ╚════════════════════════════════════════╝
+</span>
+
+<span class="highlight">☁️ Cloud & DevOps:</span>
+<div class="contact-item">
+<span class="contact-label">🏅 AWS re/Start</span> - Amazon Web Services (2023)
+</div>
+<div class="contact-item">
+<span class="contact-label">🐳 Docker Fundamentals</span> - Docker Inc. (2023)
+</div>
+
+<span class="highlight">🚀 Desenvolvimento:</span>
+<div class="contact-item">
+<span class="contact-label">☕ Java Full Stack</span> - Generation Brasil (2023)
+</div>
+<div class="contact-item">
+<span class="contact-label">🍃 Spring Boot Expert</span> - Udemy (2023)
+</div>
+<div class="contact-item">
+<span class="contact-label">🐹 Go Programming</span> - Curso Online (2023)
+</div>
+
+<span class="highlight">🔗 Blockchain & Web3:</span>
+<div class="contact-item">
+<span class="contact-label">⚡ Solidity Developer</span> - Blockchain Academy (2023)
+</div>
+<div class="contact-item">
+<span class="contact-label">🪙 Smart Contracts</span> - Ethereum Foundation (2023)
+</div>
+
+<span class="highlight">📊 Dados & Analytics:</span>
+<div class="contact-item">
+<span class="contact-label">📈 SQL Advanced</span> - PostgreSQL Certification (2023)
+</div>
+<div class="contact-item">
+<span class="contact-label">🔄 Redis Certified</span> - Redis University (2024)
+</div>
+
+<span class="success">🎯 Próximas Certificações (2025):</span>
+<span class="output-text">• AWS Solutions Architect Associate</span>
+<span class="output-text">• Oracle Certified Professional Java SE</span>
+<span class="output-text">• Kubernetes Administrator (CKA)</span>
+    `;
+          this.addToOutput(certificationsText);
+        }
+
+        downloadResume() {
+          const resumeText = `
+<span class="highlight">📄 Download do Currículo</span>
+
+<span class="warning">🚧 Funcionalidade em desenvolvimento...</span>
+
+<span class="output-text">Por enquanto, você pode:</span>
+
+• <span class="success">LinkedIn:</span> linkedin.com/in/felipemacedo1
+• <span class="success">GitHub:</span> github.com/felipemacedo1
+• <span class="success">Email:</span> contato.dev.macedo@gmail.com
+
+<span class="output-text">Ou use os comandos:</span>
+<span class="success">about</span> - Informações completas
+<span class="success">experience</span> - Histórico profissional
+<span class="success">skills</span> - Tecnologias e níveis
+
+<span class="highlight">🔄 Em breve: PDF para download!</span>
+    `;
+          this.addToOutput(resumeText);
+        }
+
+        showStatus() {
+          const statusText = `
+<span class="ascii-art">
+    ╔════════════════════════════════════════╗
+    ║              🟢 STATUS PROFISSIONAL              ║
+    ╚════════════════════════════════════════╝
+</span>
+
+<span class="success">🟢 DISPONÍVEL PARA OPORTUNIDADES</span>
+
+<span class="highlight">💼 Modalidades de Trabalho:</span>
+• <span class="success">✅ Freelances</span> - Projetos de curto/médio prazo
+• <span class="success">✅ Consultoria</span> - Arquitetura e otimização
+• <span class="success">✅ Remoto</span> - Preferencialmente
+• <span class="success">✅ Híbrido</span> - São Paulo/SP
+
+<span class="highlight">🎯 Áreas de Interesse:</span>
+• <span class="warning">Backend Development</span> (Java, Go, Spring Boot)
+• <span class="warning">Arquitetura de Microserviços</span>
+• <span class="warning">APIs REST & GraphQL</span>
+• <span class="warning">Sistemas Financeiros</span>
+• <span class="warning">DevOps & Cloud</span>
+
+<span class="highlight">⏰ Disponibilidade:</span>
+<span class="output-text">📅 <strong>Imediata</strong> para projetos freelance</span>
+<span class="output-text">📅 <strong>30 dias</strong> para posições CLT</span>
+
+<span class="highlight">📞 Entre em Contato:</span>
+<span class="output-text">📧 contato.dev.macedo@gmail.com</span>
+<span class="output-text">📱 +55 (11) 99753-4105</span>
+<span class="output-text">👤 linkedin.com/in/felipemacedo1</span>
+
+<span class="success">🚀 Vamos construir algo incrível juntos!</span>
+    `;
+          this.addToOutput(statusText);
         }
 
         glitchEffect() {
