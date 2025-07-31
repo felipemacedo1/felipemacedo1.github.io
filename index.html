@@ -224,6 +224,12 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
         }
       }
 
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+        20%, 40%, 60%, 80% { transform: translateX(2px); }
+      }
+
       .command {
         color: #00ff00;
       }
@@ -489,6 +495,45 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
         text-shadow: 0 0 8px #ffaa00;
       }
 
+      /* High Contrast Theme */
+      .theme-contrast {
+        background: #000000;
+      }
+
+      .theme-contrast .terminal-container {
+        background: #000000;
+        border: 3px solid #ffffff;
+        box-shadow: none;
+      }
+
+      .theme-contrast .prompt,
+      .theme-contrast #commandInput,
+      .theme-contrast .cursor,
+      .theme-contrast .command,
+      .theme-contrast .success {
+        color: #ffffff;
+        font-weight: bold;
+      }
+
+      .theme-contrast .output-text,
+      .theme-contrast .menu-option,
+      .theme-contrast .contact-item {
+        color: #ffffff;
+        font-weight: bold;
+      }
+
+      .theme-contrast .highlight {
+        color: #ffff00;
+        background: #000000;
+        font-weight: bold;
+      }
+
+      .theme-contrast .error {
+        color: #ff0000;
+        background: #ffffff;
+        font-weight: bold;
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         body {
@@ -666,6 +711,7 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
             "theme matrix": () => this.changeTheme("matrix"),
             "theme hacker": () => this.changeTheme("hacker"),
             "theme retro": () => this.changeTheme("retro"),
+            "theme contrast": () => this.changeTheme("contrast"),
             "h4x0r-mode": this.hackerMode.bind(this),
             matrix: this.matrixMode.bind(this),
             konami: this.konamiCode.bind(this),
@@ -676,8 +722,14 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
             eastereggs: this.eastereggs.bind(this),
             exit: this.exitTerminal.bind(this),
             glitch: this.glitchEffect.bind(this),
+            joke: this.showJoke.bind(this),
+            quote: this.showQuote.bind(this),
+            stats: this.showStats.bind(this),
+            fullscreen: this.toggleFullscreen.bind(this),
+            fs: this.toggleFullscreen.bind(this),
           };
 
+          this.startTime = Date.now();
           this.init();
         }
 
@@ -821,6 +873,7 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
           if (this.commands[command]) {
             this.commands[command]();
           } else {
+            this.showInvalidCommandFeedback();
             this.addToOutput(
               `<span class="error">❌ bash: ${command}: comando não encontrado</span>`
             );
@@ -861,7 +914,7 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
 <span class="success">ls</span>             - Lista arquivos
 <span class="success">pwd</span>            - Diretório atual
 <span class="success">sudo</span>           - Tentar privilégios de admin
-<span class="success">theme dark/light/matrix/hacker/retro</span> - Mudar tema
+<span class="success">theme dark/light/matrix/hacker/retro/contrast</span> - Mudar tema
 <span class="success">coffee</span> | <span class="success">tdah</span> - Diagnóstico TDAH/cafeína
 
 <span class="highlight">🎮 Easter eggs:</span>
@@ -1132,7 +1185,8 @@ Assistente virtual avançado com processamento de linguagem natural.
             light: '☀️ Claro', 
             matrix: '🔢 Matrix',
             hacker: '🔴 Hacker',
-            retro: '🟠 Retrô'
+            retro: '🟠 Retrô',
+            contrast: '⚫ Alto Contraste'
           };
           
           this.currentTheme = theme;
@@ -1558,6 +1612,99 @@ Assistente virtual avançado com processamento de linguagem natural.
 <span class="success">🚀 Vamos construir algo incrível juntos!</span>
     `;
           this.addToOutput(statusText);
+        }
+
+        showJoke() {
+          const jokes = [
+            '🤖 Por que os programadores preferem o modo escuro?\nPorque a luz atrai bugs!',
+            '🐛 Como você chama um bug que não consegue ser corrigido?\nUm feature!',
+            '💻 Por que os programadores odeiam a natureza?\nTem muitos bugs e a documentação é terrível!',
+            '☕ Quantos programadores são necessários para trocar uma lâmpada?\nNenhum, isso é um problema de hardware!',
+            '🔄 "Funciona na minha máquina" - Famosas últimas palavras',
+            '📊 99 bugs no código, 99 bugs...\nTira um, corrige ao redor, 127 bugs no código!',
+            '🔍 Por que os programadores Java usam óculos?\nPorque não conseguem C# (see sharp)!'
+          ];
+          
+          const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+          this.addToOutput(`<span class="highlight">🎭 Piada do Dia:</span>\n<span class="output-text">${randomJoke}</span>`);
+        }
+
+        showQuote() {
+          const quotes = [
+            '"O código é como humor. Quando você tem que explicá-lo, é ruim." - Cory House',
+            '"Primeiro, resolva o problema. Depois, escreva o código." - John Johnson',
+            '"A melhor maneira de prever o futuro é inventá-lo." - Alan Kay',
+            '"Qualquer tolo pode escrever código que um computador entende. Bons programadores escrevem código que humanos entendem." - Martin Fowler',
+            '"A programação não é sobre o que você sabe; é sobre o que você pode descobrir." - Chris Pine',
+            '"Experiencia é o nome que damos aos nossos erros." - Oscar Wilde',
+            '"O único jeito de aprender uma nova linguagem de programação é escrevendo programas nela." - Dennis Ritchie'
+          ];
+          
+          const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+          this.addToOutput(`<span class="highlight">💭 Citação Inspiradora:</span>\n<span class="output-text">${randomQuote}</span>`);
+        }
+
+        showStats() {
+          const stats = {
+            comandos: this.commandHistory.length,
+            tema: this.currentTheme,
+            sessao: Math.floor((Date.now() - this.startTime) / 1000),
+            favorito: this.getMostUsedCommand()
+          };
+          
+          const statsText = `
+<span class="ascii-art">
+    ╔════════════════════════════════════════╗
+    ║            📈 ESTATÍSTICAS DA SESSÃO            ║
+    ╚════════════════════════════════════════╝
+</span>
+
+<span class="highlight">📊 Dados da Sessão:</span>
+<span class="output-text">• <strong>Comandos executados:</strong> ${stats.comandos}</span>
+<span class="output-text">• <strong>Tempo de sessão:</strong> ${stats.sessao}s</span>
+<span class="output-text">• <strong>Tema atual:</strong> ${stats.tema}</span>
+<span class="output-text">• <strong>Comando favorito:</strong> ${stats.favorito}</span>
+
+<span class="highlight">🎯 Performance:</span>
+<span class="output-text">• <strong>Comandos/minuto:</strong> ${(stats.comandos / (stats.sessao / 60)).toFixed(1)}</span>
+<span class="output-text">• <strong>Eficiência:</strong> ${stats.comandos > 10 ? 'Expert' : stats.comandos > 5 ? 'Intermediário' : 'Iniciante'}</span>
+
+<span class="success">🏆 Continue explorando para descobrir mais comandos!</span>
+    `;
+          this.addToOutput(statsText);
+        }
+
+        getMostUsedCommand() {
+          if (this.commandHistory.length === 0) return 'nenhum';
+          
+          const frequency = {};
+          this.commandHistory.forEach(cmd => {
+            frequency[cmd] = (frequency[cmd] || 0) + 1;
+          });
+          
+          return Object.keys(frequency).reduce((a, b) => frequency[a] > frequency[b] ? a : b);
+        }
+
+        toggleFullscreen() {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().then(() => {
+              this.addToOutput('<span class="success">🖥️ Modo tela cheia ativado! Pressione ESC para sair.</span>');
+            }).catch(() => {
+              this.addToOutput('<span class="error">❌ Erro ao ativar tela cheia. Navegador não suporta.</span>');
+            });
+          } else {
+            document.exitFullscreen().then(() => {
+              this.addToOutput('<span class="warning">📵 Modo tela cheia desativado.</span>');
+            });
+          }
+        }
+
+        showInvalidCommandFeedback() {
+          const terminal = document.querySelector(".terminal-container");
+          terminal.style.animation = "shake 0.5s";
+          setTimeout(() => {
+            terminal.style.animation = "";
+          }, 500);
         }
 
         glitchEffect() {
