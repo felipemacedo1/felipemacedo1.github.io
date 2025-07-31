@@ -310,9 +310,9 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
 
       .ascii-art {
         color: #00ff00;
-        font-size: 10px;
-        line-height: 0.9;
-        margin: 5px 0;
+        font-size: 12px;
+        line-height: 1;
+        margin: 8px 0;
       }
 
       .mobile-keyboard {
@@ -580,7 +580,7 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
         }
 
         .ascii-art {
-          font-size: 7px;
+          font-size: 9px;
           overflow-x: auto;
         }
       }
@@ -633,8 +633,8 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
         }
 
         .ascii-art {
-          font-size: 6px;
-          line-height: 0.7;
+          font-size: 8px;
+          line-height: 0.8;
           overflow-x: auto;
           white-space: pre;
         }
@@ -794,7 +794,9 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
           };
 
           this.startTime = Date.now();
+          this.version = 'v1.0.0';
           this.init();
+          this.fetchVersion();
         }
 
         init() {
@@ -1018,11 +1020,21 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
           }, 300);
         }
 
+        async fetchVersion() {
+          try {
+            const response = await fetch('https://api.github.com/repos/felipemacedo1/felipemacedo1.github.io/releases/latest');
+            const data = await response.json();
+            this.version = data.tag_name || 'v1.0.0';
+          } catch {
+            this.version = 'v1.0.0';
+          }
+        }
+
         showMenu() {
           const menuText = `
 <span class="ascii-art align-center">
 ╔══════════════════════════════════════════════════╗
-           🚀 PORTFOLIO TERMINAL v0.1-beta            
+           🚀 PORTFOLIO TERMINAL ${this.version}            
                      Felipe Macedo                     
 ╚══════════════════════════════════════════════════╝
 </span>
@@ -1171,7 +1183,7 @@ Assistente virtual avançado com processamento de linguagem natural.
 <div class="contact-item">
 <span class="contact-label">🌐 Portfolio:</span> https://github.com/orgs/growthfolio/
 </div>
-<div class="contact-item">
+
 <span class="contact-label">📱 WhatsApp:</span> +55 (11) 99753-4105
 </div>
 
