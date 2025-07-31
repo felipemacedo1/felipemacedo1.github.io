@@ -321,20 +321,23 @@
       .mobile-keyboard {
         display: none;
         position: fixed;
-        bottom: 20px;
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.9);
-        padding: 10px;
+        background: rgba(0, 0, 0, 0.95);
+        padding: 8px;
         border-radius: 10px;
         border: 1px solid #333;
         z-index: 1000;
+        backdrop-filter: blur(10px);
+        max-width: 95vw;
       }
 
       .keyboard-row {
         display: flex;
-        gap: 5px;
-        margin-bottom: 5px;
+        gap: 3px;
+        margin-bottom: 3px;
+        justify-content: center;
       }
 
       .keyboard-row:last-child {
@@ -345,17 +348,24 @@
         background: #333;
         border: 1px solid #555;
         color: #00ff00;
-        padding: 8px 12px;
+        padding: 6px 8px;
         border-radius: 5px;
         font-family: inherit;
-        font-size: 12px;
+        font-size: 10px;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: all 0.2s;
+        min-width: 35px;
+        touch-action: manipulation;
       }
 
       .mobile-keyboard button:hover,
       .mobile-keyboard button:active {
         background: #555;
+        transform: scale(0.95);
+      }
+
+      .mobile-keyboard button.wide {
+        min-width: 60px;
       }
 
       /* Theme Styles */
@@ -395,6 +405,99 @@
 
       .theme-light .success {
         color: #008000;
+      }
+
+      /* Matrix Theme */
+      .theme-matrix {
+        background: linear-gradient(135deg, #000000 0%, #001100 100%);
+      }
+
+      .theme-matrix .terminal-container {
+        background: rgba(0, 0, 0, 0.98);
+        border-color: #00ff00;
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+      }
+
+      .theme-matrix .prompt,
+      .theme-matrix #commandInput,
+      .theme-matrix .cursor,
+      .theme-matrix .command,
+      .theme-matrix .success {
+        color: #00ff41;
+        text-shadow: 0 0 5px #00ff41;
+      }
+
+      .theme-matrix .output-text,
+      .theme-matrix .menu-option,
+      .theme-matrix .contact-item {
+        color: #00ff41;
+      }
+
+      .theme-matrix .highlight {
+        color: #ffffff;
+        text-shadow: 0 0 10px #00ff41;
+      }
+
+      /* Hacker Theme */
+      .theme-hacker {
+        background: linear-gradient(135deg, #000000 0%, #330000 100%);
+      }
+
+      .theme-hacker .terminal-container {
+        background: rgba(0, 0, 0, 0.98);
+        border-color: #ff0000;
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+      }
+
+      .theme-hacker .prompt,
+      .theme-hacker #commandInput,
+      .theme-hacker .cursor,
+      .theme-hacker .command,
+      .theme-hacker .success {
+        color: #ff0040;
+        text-shadow: 0 0 5px #ff0040;
+      }
+
+      .theme-hacker .output-text,
+      .theme-hacker .menu-option,
+      .theme-hacker .contact-item {
+        color: #ff6666;
+      }
+
+      .theme-hacker .highlight {
+        color: #ffffff;
+        text-shadow: 0 0 10px #ff0040;
+      }
+
+      /* Retro Theme */
+      .theme-retro {
+        background: linear-gradient(135deg, #1a0f00 0%, #2d1a00 100%);
+      }
+
+      .theme-retro .terminal-container {
+        background: rgba(26, 15, 0, 0.95);
+        border-color: #ffaa00;
+        box-shadow: 0 0 30px rgba(255, 170, 0, 0.2);
+      }
+
+      .theme-retro .prompt,
+      .theme-retro #commandInput,
+      .theme-retro .cursor,
+      .theme-retro .command,
+      .theme-retro .success {
+        color: #ffaa00;
+        text-shadow: 0 0 3px #ffaa00;
+      }
+
+      .theme-retro .output-text,
+      .theme-retro .menu-option,
+      .theme-retro .contact-item {
+        color: #ffcc66;
+      }
+
+      .theme-retro .highlight {
+        color: #ffffff;
+        text-shadow: 0 0 8px #ffaa00;
       }
 
       /* Responsive */
@@ -509,14 +612,20 @@
         <button onclick="typeChar('1')">1</button>
         <button onclick="typeChar('2')">2</button>
         <button onclick="typeChar('3')">3</button>
-        <button onclick="typeCommand('help')">help</button>
-        <button onclick="typeCommand('clear')">clear</button>
+        <button onclick="typeCommand('help')" class="wide">help</button>
+        <button onclick="typeCommand('clear')" class="wide">clear</button>
       </div>
       <div class="keyboard-row">
         <button onclick="typeCommand('menu')">menu</button>
         <button onclick="typeCommand('about')">about</button>
+        <button onclick="typeCommand('skills')">skills</button>
+        <button onclick="typeCommand('status')">status</button>
+      </div>
+      <div class="keyboard-row">
         <button onclick="typeCommand('projects')">projects</button>
         <button onclick="typeCommand('contact')">contact</button>
+        <button onclick="typeCommand('whoami')">whoami</button>
+        <button onclick="typeCommand('theme matrix')">matrix</button>
       </div>
     </div>
 
@@ -526,11 +635,13 @@
           this.output = document.getElementById("output");
           this.input = document.getElementById("commandInput");
           this.cursor = document.getElementById("cursor");
-          this.commandHistory = [];
+          this.commandHistory = this.loadHistory();
           this.historyIndex = -1;
-          this.currentTheme = "dark";
+          this.currentTheme = this.loadTheme();
           this.isTyping = false;
           this.typewriterSpeed = 50;
+          this.suggestions = [];
+          this.suggestionIndex = -1;
 
           this.commands = {
             help: this.showHelp.bind(this),
@@ -559,6 +670,9 @@
             sudo: this.sudoResponse.bind(this),
             "theme dark": () => this.changeTheme("dark"),
             "theme light": () => this.changeTheme("light"),
+            "theme matrix": () => this.changeTheme("matrix"),
+            "theme hacker": () => this.changeTheme("hacker"),
+            "theme retro": () => this.changeTheme("retro"),
             "h4x0r-mode": this.hackerMode.bind(this),
             matrix: this.matrixMode.bind(this),
             konami: this.konamiCode.bind(this),
@@ -577,7 +691,12 @@
         init() {
           this.setupEventListeners();
           this.createClock();
+          this.applyTheme();
           this.startInitialSequence();
+        }
+
+        applyTheme() {
+          document.body.className = `theme-${this.currentTheme}`;
         }
 
         setupEventListeners() {
@@ -605,6 +724,11 @@
 
           this.input.addEventListener("input", () => {
             this.updateCursor();
+            this.showSuggestions();
+          });
+
+          this.input.addEventListener("blur", () => {
+            setTimeout(() => this.hideSuggestions(), 200);
           });
 
           document.addEventListener("click", () => {
@@ -686,6 +810,7 @@
 
           if (command !== this.commandHistory[this.commandHistory.length - 1]) {
             this.commandHistory.push(command);
+            this.saveHistory();
           }
           this.historyIndex = -1;
 
@@ -743,7 +868,7 @@
 <span class="success">ls</span>             - Lista arquivos
 <span class="success">pwd</span>            - Diretório atual
 <span class="success">sudo</span>           - Tentar privilégios de admin
-<span class="success">theme dark/light</span> - Mudar tema
+<span class="success">theme dark/light/matrix/hacker/retro</span> - Mudar tema
 <span class="success">coffee</span> | <span class="success">tdah</span> - Diagnóstico TDAH/cafeína
 
 <span class="highlight">🎮 Easter eggs:</span>
@@ -1009,10 +1134,19 @@ Assistente virtual avançado com processamento de linguagem natural.
         }
 
         changeTheme(theme) {
+          const themes = {
+            dark: '🌑 Escuro',
+            light: '☀️ Claro', 
+            matrix: '🔢 Matrix',
+            hacker: '🔴 Hacker',
+            retro: '🟠 Retrô'
+          };
+          
           this.currentTheme = theme;
           document.body.className = `theme-${theme}`;
+          this.saveTheme(theme);
           this.addToOutput(
-            `<span class="success">🎨 Tema alterado para: ${theme}</span>`
+            `<span class="success">🎨 Tema alterado para: ${themes[theme] || theme}</span>`
           );
 
           // Add smooth transition effect
@@ -1451,6 +1585,30 @@ Assistente virtual avançado com processamento de linguagem natural.
           }, 1000);
         }
 
+        loadHistory() {
+          try {
+            return JSON.parse(localStorage.getItem('terminal-history') || '[]');
+          } catch {
+            return [];
+          }
+        }
+
+        saveHistory() {
+          try {
+            localStorage.setItem('terminal-history', JSON.stringify(this.commandHistory.slice(-50)));
+          } catch {}
+        }
+
+        loadTheme() {
+          return localStorage.getItem('terminal-theme') || 'dark';
+        }
+
+        saveTheme(theme) {
+          try {
+            localStorage.setItem('terminal-theme', theme);
+          } catch {}
+        }
+
         navigateHistory(direction) {
           if (this.commandHistory.length === 0) return;
 
@@ -1475,6 +1633,65 @@ Assistente virtual avançado com processamento de linguagem natural.
           this.updateCursor();
         }
 
+        showSuggestions() {
+          const currentInput = this.input.value.toLowerCase();
+          if (!currentInput) {
+            this.hideSuggestions();
+            return;
+          }
+
+          const availableCommands = Object.keys(this.commands);
+          this.suggestions = availableCommands.filter(
+            (cmd) => cmd.startsWith(currentInput) && cmd !== currentInput
+          ).slice(0, 5);
+
+          if (this.suggestions.length > 0) {
+            this.displaySuggestions();
+          } else {
+            this.hideSuggestions();
+          }
+        }
+
+        displaySuggestions() {
+          let suggestionBox = document.getElementById('suggestions');
+          if (!suggestionBox) {
+            suggestionBox = document.createElement('div');
+            suggestionBox.id = 'suggestions';
+            suggestionBox.style.cssText = `
+              position: absolute;
+              background: rgba(0, 0, 0, 0.9);
+              border: 1px solid #333;
+              border-radius: 5px;
+              padding: 5px;
+              margin-top: 20px;
+              z-index: 1000;
+              font-family: inherit;
+              font-size: 12px;
+            `;
+            document.getElementById('inputLine').appendChild(suggestionBox);
+          }
+
+          suggestionBox.innerHTML = this.suggestions.map((cmd, index) => 
+            `<div style="padding: 2px 5px; color: ${index === this.suggestionIndex ? '#00ffff' : '#00ff00'}; cursor: pointer;" onclick="terminal.selectSuggestion('${cmd}')">${cmd}</div>`
+          ).join('');
+        }
+
+        hideSuggestions() {
+          const suggestionBox = document.getElementById('suggestions');
+          if (suggestionBox) {
+            suggestionBox.remove();
+          }
+          this.suggestions = [];
+          this.suggestionIndex = -1;
+        }
+
+        selectSuggestion(cmd) {
+          this.input.value = cmd;
+          this.hideSuggestions();
+          this.updateCursor();
+          this.input.focus();
+        }
+
         autoComplete() {
           const currentInput = this.input.value.toLowerCase();
           if (!currentInput) return;
@@ -1487,6 +1704,7 @@ Assistente virtual avançado com processamento de linguagem natural.
           if (matches.length === 1) {
             this.input.value = matches[0];
             this.updateCursor();
+            this.hideSuggestions();
           } else if (matches.length > 1) {
             this.addToOutput(
               `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${currentInput}</span>`
