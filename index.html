@@ -590,7 +590,7 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
         }
 
         .ascii-art {
-          font-size: 7px;
+          font-size: 8px;
           line-height: 0.8;
         }
 
@@ -943,11 +943,11 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
 
         showMenu() {
           const menuText = `
-<span class="ascii-art">
-╔══════════════════════════════════════════════════════════════╗
-║                    🚀 PORTFOLIO TERMINAL v0.1-beta           ║
-║                        Felipe Macedo                         ║
-╚══════════════════════════════════════════════════════════════╝
+<span class="ascii-art align-center">
+╔══════════════════════════════════════════════════╗
+           🚀 PORTFOLIO TERMINAL v0.1-beta            
+                     Felipe Macedo                     
+╚══════════════════════════════════════════════════╝
 </span>
 
 <span class="highlight">📋 Selecione uma opção:</span>
@@ -983,9 +983,9 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
         showAbout() {
           const aboutText = `
 <span class="ascii-art">
-    ╔════════════════════════════════════════╗
-    ║              👨‍💻 SOBRE MIM                ║
-    ╚════════════════════════════════════════╝
+    ╔════════════════════════════════════╗
+    ║            👨‍💻 SOBRE MIM            ║
+    ╚════════════════════════════════════╝
 </span>
 
 <span class="highlight">🧑‍💻 Felipe Macedo</span>
@@ -1019,9 +1019,9 @@ body{font-family:"Courier New","Monaco","Lucida Console",monospace;background:li
         showProjects() {
           const projectsText = `
 <span class="ascii-art">
-    ╔════════════════════════════════════════╗
-    ║             🚀 MEUS PROJETOS              ║
-    ╚════════════════════════════════════════╝
+    ╔═══════════════════════════════╗
+    ║        🚀 MEUS PROJETOS       ║
+    ╚═══════════════════════════════╝
 </span>
 
 <div class="project-item">
@@ -1076,9 +1076,9 @@ Assistente virtual avançado com processamento de linguagem natural.
         showContact() {
           const contactText = `
 <span class="ascii-art">
-    ╔════════════════════════════════════════╗
-    ║            💬 VAMOS CONVERSAR?            ║
-    ╚════════════════════════════════════════╝
+    ╔═══════════════════════════╗
+    ║    💬 VAMOS CONVERSAR?    ║
+    ╚═══════════════════════════╝
 </span>
 
 <span class="highlight">📧 Contato Profissional:</span>
@@ -1362,9 +1362,9 @@ Assistente virtual avançado com processamento de linguagem natural.
         showSkills() {
           const skillsText = `
 <span class="ascii-art">
-    ╔════════════════════════════════════════╗
-    ║              🛠️ STACK TECNOLÓGICO              ║
-    ╚════════════════════════════════════════╝
+    ╔═══════════════════════════╗
+    ║   🛠️ STACK TECNOLÓGICO    ║
+    ╚═══════════════════════════╝
 </span>
 
 <span class="highlight">🚀 Backend & APIs:</span>
@@ -1398,9 +1398,9 @@ Assistente virtual avançado com processamento de linguagem natural.
         showExperience() {
           const experienceText = `
 <span class="ascii-art">
-    ╔════════════════════════════════════════╗
-    ║            💼 EXPERIÊNCIA PROFISSIONAL            ║
-    ╚════════════════════════════════════════╝
+    ╔════════════════════════════════════╗
+    ║     💼 EXPERIÊNCIA PROFISSIONAL    ║
+    ╚════════════════════════════════════╝
 </span>
 
 <div class="project-item">
@@ -1797,20 +1797,23 @@ Assistente virtual avançado com processamento de linguagem natural.
             suggestionBox.id = 'suggestions';
             suggestionBox.style.cssText = `
               position: absolute;
-              background: rgba(0, 0, 0, 0.9);
-              border: 1px solid #333;
+              background: rgba(0, 0, 0, 0.95);
+              border: 1px solid #00ff00;
               border-radius: 5px;
-              padding: 5px;
-              margin-top: 20px;
+              padding: 8px;
+              bottom: 25px;
+              left: 0;
+              min-width: 200px;
               z-index: 1000;
               font-family: inherit;
               font-size: 12px;
+              box-shadow: 0 4px 8px rgba(0, 255, 0, 0.2);
             `;
             document.getElementById('inputLine').appendChild(suggestionBox);
           }
 
           suggestionBox.innerHTML = this.suggestions.map((cmd, index) => 
-            `<div style="padding: 2px 5px; color: ${index === this.suggestionIndex ? '#00ffff' : '#00ff00'}; cursor: pointer;" onclick="terminal.selectSuggestion('${cmd}')">${cmd}</div>`
+            `<div style="padding: 4px 8px; color: ${index === this.suggestionIndex ? '#00ffff' : '#00ff00'}; cursor: pointer; border-radius: 3px; transition: background 0.2s;" onmouseover="this.style.background='rgba(0,255,0,0.1)'" onmouseout="this.style.background='transparent'" onclick="terminal.selectSuggestion('${cmd}')">${cmd}</div>`
           ).join('');
         }
 
