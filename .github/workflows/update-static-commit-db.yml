@@ -1,0 +1,168 @@
+name: Atualiza commits globais por author e ano
+
+on:
+  schedule:
+    - cron: '0 0,12 * * *'  # meia-noite e meio-dia UTC (ajuste se quiser outra frequência)
+  workflow_dispatch:
+    inputs:
+      year:
+        description: 'Ano para agregar (ex: 2024)'
+        required: true
+        default: '2025'
+      author:
+        description: 'GitHub username do author'
+        required: true
+        default: 'felipemacedo1'
+
+permissions:
+  contents: write  # necessário para commitar de volta o JSON
+
+jobs:
+  aggregate:
+    concurrency:
+      group: "commit-counts-${{ github.event.inputs.author }}-${{ github.event.inputs.year }}"
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (para poder commitar o arquivo)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Garantir que jq está disponível
+        run: |
+          if ! command -v jq >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+          fi
+
+      - name: Define variáveis
+        id: vars
+        run: |
+          YEAR="${{ github.event.inputs.year }}"
+          AUTHOR="${{ github.event.inputs.author }}"
+          OUT_DIR=contributions
+          OUT_FILE="$OUT_DIR/commits-${YEAR}-${AUTHOR}.json"
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "outfile=$OUT_FILE" >> $GITHUB_OUTPUT
+
+      - name: Agrega commits globais por author/ano via Search Commits API
+        env:
+          GITHUB_TOKEN_API: ${{ secrets.GH_PAT }}
+        run: |
+          set -euo pipefail
+          YEAR=${{ steps.vars.outputs.year }}
+          AUTHOR=${{ steps.vars.outputs.author }}
+          OUT_FILE=${{ steps.vars.outputs.outfile }}
+
+          mkdir -p "$(dirname "$OUT_FILE")"
+
+          HEADER_ACCEPT="application/vnd.github.cloak-preview+json"
+          AUTH="token $GITHUB_TOKEN_API"
+          PER_PAGE=100
+          declare -A COUNTS
+
+          # chama e agrega páginas para intervalo [START, END]
+          process_pages() {
+            local START=$1
+            local END=$2
+            local QUERY="author:${AUTHOR} committer-date:${START}..${END}"
+            local page=1
+            while true; do
+              resp=$(curl -sSL -H "Accept: $HEADER_ACCEPT" -H "Authorization: $AUTH" \
+                "https://api.github.com/search/commits?q=$(jq -sRr @uri <<<"$QUERY")&per_page=${PER_PAGE}&page=${page}")
+              items=$(echo "$resp" | jq -c '.items[]?')
+              if [[ -z "$items" ]]; then break; fi
+              while read -r item; do
+                date=$(echo "$item" | jq -r '.commit.author.date' | cut -d"T" -f1)
+                COUNTS["$date"]=$((COUNTS["$date"]+1))
+              done <<< "$items"
+              count_items=$(echo "$resp" | jq '.items | length')
+              if (( count_items < PER_PAGE )); then break; fi
+              page=$((page+1))
+              sleep 0.1
+            done
+          }
+
+          # recursivo: divide intervalos que têm >=1000 resultados
+          fetch_range() {
+            local START=$1
+            local END=$2
+            local QUERY="author:${AUTHOR} committer-date:${START}..${END}"
+            echo "Consultando intervalo $START .. $END"
+            summary=$(curl -sSL -H "Accept: $HEADER_ACCEPT" -H "Authorization: $AUTH" \
+              "https://api.github.com/search/commits?q=$(jq -sRr @uri <<<"$QUERY")&per_page=1&page=1")
+            total=$(echo "$summary" | jq -r '.total_count // 0')
+            if (( total >= 1000 )); then
+              # meio do intervalo em epoch
+              start_ts=$(date -d "$START" +%s)
+              end_ts=$(date -d "$END" +%s)
+              mid_ts=$(( (start_ts + end_ts) / 2 ))
+              mid=$(date -u -d "@$mid_ts" +%F)
+              if [[ "$mid" == "$START" || "$mid" == "$END" ]]; then
+                echo "Intervalo muito grande e não pode subdividir mais: $START..$END (total $total). Paginação direta."
+                process_pages "$START" "$END"
+              else
+                fetch_range "$START" "$mid"
+                # dia seguinte ao mid
+                next=$(date -d "$mid +1 day" +%F)
+                if [[ $(date -d "$next" +%s) -le $(date -d "$END" +%s) ]]; then
+                  fetch_range "$next" "$END"
+                fi
+              fi
+            else
+              process_pages "$START" "$END"
+            fi
+          }
+
+          # intervalo do ano completo
+          START="${YEAR}-01-01"
+          END="${YEAR}-12-31"
+
+          fetch_range "$START" "$END"
+
+          # timestamp de geração
+          GENERATED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          # monta JSON com todos os dias do ano (zeros inclusos), com generated_at e counts
+          {
+            echo "{"
+            echo "  \"generated_at\": \"${GENERATED_AT}\","
+            echo "  \"counts\": {"
+            first=true
+            current="$START"
+            end_epoch=$(date -d "$END" +%s)
+            while [[ $(date -d "$current" +%s) -le $end_epoch ]]; do
+              cnt=${COUNTS[$current]:-0}
+              if $first; then
+                first=false
+              else
+                echo ","
+              fi
+              printf "    \"%s\": %d" "$current" "$cnt"
+              current=$(date -I -d "$current +1 day")
+            done
+            echo
+            echo "  }"
+            echo "}"
+          } > "$OUT_FILE"
+
+      - name: Preview do JSON gerado
+        run: |
+          echo "=== ${{
+steps.vars.outputs.outfile }} ==="
+          head -n 80 "${{ steps.vars.outputs.outfile }}" || true
+
+      - name: Comitar se houver mudança
+        run: |
+          OUT_FILE=${{ steps.vars.outputs.outfile }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet --exit-code "$OUT_FILE"; then
+            echo "Nenhuma mudança em $OUT_FILE"
+          else
+            git add "$OUT_FILE"
+            git commit -m "Atualiza commits globais ${OUT_FILE} [skip ci]"
+            git push
+          fi
