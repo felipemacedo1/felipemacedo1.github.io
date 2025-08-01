@@ -1,7 +1,22 @@
 
-# 💻 Terminal Portfolio - Felipe Macedo
+# 💻 Terminal Portfolio -## 🎮 Como Usar
 
-[![Version](https://img.shields.io/badge/Version-2.0.0-blue?style=for-the-badge)]()
+### Desktop (Terminal)
+1. Abra `index.html` em qualquer navegador
+2. Digite `help` para ver todos os 25+ comandos
+3. Use setas ↑↓ para navegar no histórico
+4. Tab para auto-complete inteligente
+5. `Ctrl+L` para limpar, `Ctrl+C` para cancelar
+
+### Mobile (BIOS)
+1. Acesse automaticamente ou vá direto para `mobile.html`
+2. Navegue pelos menus touch-friendly organizados
+3. Acesse "Desktop Version" para forçar terminal
+4. Boot sequence animada na primeira visita
+
+**✨ Detecção automática** - dispositivos móveis são redirecionados para a interface BIOS
+
+[![Version](https://img.shields.io/badge/Version-2.1.0-blue?style=for-the-badge)]()
 [![HTML5](https://img.shields.io/badge/HTML-5-E34F26?style=for-the-badge&logo=html5&logoColor=white)]()
 [![CSS3](https://img.shields.io/badge/CSS-3-1572B6?style=for-the-badge&logo=css3&logoColor=white)]()
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
@@ -13,8 +28,8 @@
 > 🚀 Portfólio interativo dual: Terminal retrô para desktop + Interface BIOS Android para mobile
 
 Um portfólio web único que oferece duas experiências distintas:
-- **Desktop**: Terminal Linux/Unix retro com comandos interativos
-- **Mobile**: Interface BIOS Android moderna e touch-friendly
+- **Desktop**: Terminal Linux/Unix retro com 25+ comandos interativos e 6 temas
+- **Mobile**: Interface BIOS Android moderna e touch-friendly com Material Design
 
 Desenvolvido com HTML, CSS e JavaScript vanilla - **sem dependências externas!**
 
@@ -90,6 +105,54 @@ Desenvolvido com HTML, CSS e JavaScript vanilla - **sem dependências externas!*
 - `contact` / `3` - Informações de contato
 
 ### 💼 Informações Profissionais
+- `skills` - Skills técnicas com barras de progresso animadas
+- `experience` - Timeline de experiência profissional detalhada
+- `education` - Formação acadêmica completa
+- `certifications` - Certificados e cursos conquistados
+- `resume` - Download do currículo (PDF)
+- `status` - Status atual e disponibilidade para projetos
+- `whoami` - Apresentação pessoal técnica
+
+### 🔧 Comandos Sistema
+- `date` - Data e hora atual formatada
+- `pwd` - Diretório atual simulado
+- `ls` - Lista arquivos do portfólio
+- `ls -la` - Lista detalhada com permissões simuladas
+- `sudo` - Tentativa de privilégios (easter egg)
+
+### 🎨 Sistema de Temas (6 temas)
+- `theme dark` - Tema escuro clássico
+- `theme light` - Tema claro moderno
+- `theme matrix` - Estilo Matrix verde
+- `theme hacker` - Tema hacker verde/preto
+- `theme retro` - Tema retrô nostálgico
+- `theme contrast` - Alto contraste (acessibilidade)
+
+### 🎮 Easter Eggs (8 implementados)
+- `coffee` / `tdah` - Diagnóstico TDAH engraçado
+- `h4x0r-mode` - Modo hacker com efeitos
+- `matrix` - Entra na Matrix com animações
+- `konami` - Código Konami clássico
+- `glitch` - Efeito glitch na tela
+- `ascii` - Logo ASCII animado
+- `growthfolio` - Organização GitHub
+- `eastereggs` - Lista todos os ovos de páscoa
+
+### 🌐 Links Externos
+- `github` - Perfil GitHub principal
+- `linkedin` - Perfil LinkedIn profissional
+
+## 🛠️ Comandos Completos
+
+### 📋 Comandos Básicos
+- `help` - Lista todos os comandos disponíveis
+- `clear` - Limpa a tela do terminal
+- `menu` - Menu principal interativo
+- `about` / `1` - Informações pessoais e apresentação
+- `projects` / `2` - Portfólio completo de projetos
+- `contact` / `3` - Informações de contato
+
+### 💼 Informações Profissionais
 - `skills` - Skills técnicas com barras de progresso
 - `experience` - Timeline de experiência profissional
 - `education` - Formação acadêmica completa
@@ -140,11 +203,26 @@ static-port/
 
 ## 🚀 Tecnologias
 
-- **HTML5** - Estrutura semântica e acessível
-- **CSS3** - Variáveis, Grid, Flexbox, Animations
-- **JavaScript ES6+** - Modules, Classes, Async/Await
-- **Material Design** - Cores e componentes mobile
-- **PWA Ready** - Preparado para Progressive Web App
+### Frontend
+- **HTML5** - Estrutura semântica e acessível (ARIA labels)
+- **CSS3** - Variáveis, Grid, Flexbox, Animations keyframes
+- **JavaScript ES6+** - Modules, Classes, Async/Await, EventListeners
+
+### Mobile Experience
+- **Material Design** - Cores teal/purple, componentes touch-friendly
+- **Android BIOS Style** - Boot sequence, status bar, navigation grid
+- **Responsive Design** - Adaptação automática para diferentes telas
+
+### Desktop Experience
+- **Terminal Simulation** - Cursor piscante, typewriter effects
+- **Command System** - 25+ comandos funcionais com auto-complete
+- **Theme System** - 6 temas completos com localStorage
+
+### Arquitetura
+- **ES6 Modules** - Imports/exports nativos organizados
+- **Command Pattern** - Comandos registrados dinamicamente
+- **Single Responsibility** - Classes focadas e modulares
+- **Device Detection** - Redirecionamento inteligente automático
 
 ## 🔄 Integração Dual
 
