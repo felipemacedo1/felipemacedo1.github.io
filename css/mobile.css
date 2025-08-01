@@ -1,0 +1,89 @@
+/* ===== MOBILE STYLES ===== */
+.mobile-keyboard {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--terminal-bg);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--terminal-border);
+  z-index: var(--z-keyboard);
+  backdrop-filter: blur(10px);
+  max-width: 95vw;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+  justify-content: center;
+}
+
+.keyboard-row:last-child {
+  margin-bottom: 0;
+}
+
+.mobile-keyboard button {
+  background: var(--terminal-border);
+  border: 1px solid #555;
+  color: var(--primary-green);
+  padding: 6px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 10px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  min-width: 35px;
+  touch-action: manipulation;
+}
+
+.mobile-keyboard button:hover,
+.mobile-keyboard button:active {
+  background: #555;
+  transform: scale(0.95);
+}
+
+.mobile-keyboard button.wide {
+  min-width: 60px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  .terminal-container {
+    height: calc(100vh - 20px);
+    max-height: none;
+  }
+  
+  .terminal-body {
+    padding: var(--spacing-md);
+  }
+  
+  .mobile-keyboard {
+    display: block;
+  }
+  
+  #terminal-clock {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminal-container {
+    border-radius: 0;
+    height: 100vh;
+  }
+  
+  .terminal-body {
+    padding: 10px;
+  }
+  
+  .ascii-art {
+    font-size: 10px;
+  }
+}

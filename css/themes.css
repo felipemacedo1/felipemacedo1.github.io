@@ -1,0 +1,191 @@
+/* ===== THEMES ===== */
+
+/* Dark Theme (Default) */
+.theme-dark {
+  --current-bg: var(--bg-dark);
+  --current-terminal-bg: var(--terminal-bg);
+  --current-text: var(--primary-green);
+  --current-output: var(--primary-white);
+  --current-highlight: var(--primary-cyan);
+  --current-success: var(--primary-green);
+}
+
+/* Light Theme */
+.theme-light {
+  background: var(--bg-light);
+  --current-text: #008000;
+  --current-output: var(--primary-black);
+  --current-highlight: #0066cc;
+  --current-success: #008000;
+}
+
+.theme-light .terminal-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #ccc;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .prompt,
+.theme-light #commandInput,
+.theme-light .cursor,
+.theme-light .command {
+  color: var(--current-text);
+}
+
+.theme-light .output-text,
+.theme-light .menu-option,
+.theme-light .contact-item {
+  color: var(--current-output);
+}
+
+.theme-light .highlight {
+  color: var(--current-highlight);
+}
+
+.theme-light .success {
+  color: var(--current-success);
+}
+
+/* Matrix Theme */
+.theme-matrix {
+  background: var(--bg-matrix);
+  --current-text: #00ff41;
+  --current-output: #00ff41;
+  --current-highlight: var(--primary-white);
+}
+
+.theme-matrix .terminal-container {
+  background: rgba(0, 0, 0, 0.98);
+  border-color: var(--primary-green);
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+}
+
+.theme-matrix .prompt,
+.theme-matrix #commandInput,
+.theme-matrix .cursor,
+.theme-matrix .command,
+.theme-matrix .success {
+  color: var(--current-text);
+  text-shadow: var(--shadow-glow) var(--current-text);
+}
+
+.theme-matrix .output-text,
+.theme-matrix .menu-option,
+.theme-matrix .contact-item {
+  color: var(--current-output);
+}
+
+.theme-matrix .highlight {
+  color: var(--current-highlight);
+  text-shadow: var(--shadow-glow) var(--current-text);
+}
+
+/* Hacker Theme */
+.theme-hacker {
+  background: var(--bg-hacker);
+  --current-text: #ff0040;
+  --current-output: #ff6666;
+  --current-highlight: var(--primary-white);
+}
+
+.theme-hacker .terminal-container {
+  background: rgba(0, 0, 0, 0.98);
+  border-color: var(--primary-red);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+}
+
+.theme-hacker .prompt,
+.theme-hacker #commandInput,
+.theme-hacker .cursor,
+.theme-hacker .command,
+.theme-hacker .success {
+  color: var(--current-text);
+  text-shadow: var(--shadow-glow) var(--current-text);
+}
+
+.theme-hacker .output-text,
+.theme-hacker .menu-option,
+.theme-hacker .contact-item {
+  color: var(--current-output);
+}
+
+.theme-hacker .highlight {
+  color: var(--current-highlight);
+  text-shadow: var(--shadow-glow) var(--current-text);
+}
+
+/* Retro Theme */
+.theme-retro {
+  background: var(--bg-retro);
+  --current-text: var(--primary-yellow);
+  --current-output: #ffcc66;
+  --current-highlight: var(--primary-white);
+}
+
+.theme-retro .terminal-container {
+  background: rgba(26, 15, 0, 0.95);
+  border-color: var(--primary-yellow);
+  box-shadow: 0 0 30px rgba(255, 170, 0, 0.2);
+}
+
+.theme-retro .prompt,
+.theme-retro #commandInput,
+.theme-retro .cursor,
+.theme-retro .command,
+.theme-retro .success {
+  color: var(--current-text);
+  text-shadow: 0 0 3px var(--current-text);
+}
+
+.theme-retro .output-text,
+.theme-retro .menu-option,
+.theme-retro .contact-item {
+  color: var(--current-output);
+}
+
+.theme-retro .highlight {
+  color: var(--current-highlight);
+  text-shadow: 0 0 8px var(--current-text);
+}
+
+/* High Contrast Theme */
+.theme-contrast {
+  background: var(--primary-black);
+  --current-text: var(--primary-white);
+  --current-output: var(--primary-white);
+  --current-highlight: #ffff00;
+}
+
+.theme-contrast .terminal-container {
+  background: var(--primary-black);
+  border: 3px solid var(--primary-white);
+  box-shadow: none;
+}
+
+.theme-contrast .prompt,
+.theme-contrast #commandInput,
+.theme-contrast .cursor,
+.theme-contrast .command,
+.theme-contrast .success {
+  color: var(--current-text);
+  font-weight: bold;
+}
+
+.theme-contrast .output-text,
+.theme-contrast .menu-option,
+.theme-contrast .contact-item {
+  color: var(--current-output);
+  font-weight: bold;
+}
+
+.theme-contrast .highlight {
+  color: var(--current-highlight);
+  background: var(--primary-black);
+  font-weight: bold;
+}
+
+.theme-contrast .error {
+  color: var(--primary-red);
+  background: var(--primary-white);
+  font-weight: bold;
+}

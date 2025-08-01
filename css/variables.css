@@ -1,0 +1,52 @@
+/* ===== CSS VARIABLES ===== */
+:root {
+  /* Colors */
+  --primary-green: #00ff00;
+  --primary-cyan: #00ffff;
+  --primary-yellow: #ffaa00;
+  --primary-red: #ff4444;
+  --primary-white: #ffffff;
+  --primary-black: #000000;
+  
+  /* Background Colors */
+  --bg-dark: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+  --bg-light: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+  --bg-matrix: linear-gradient(135deg, #000000 0%, #001100 100%);
+  --bg-hacker: linear-gradient(135deg, #000000 0%, #330000 100%);
+  --bg-retro: linear-gradient(135deg, #1a0f00 0%, #2d1a00 100%);
+  
+  /* Terminal Colors */
+  --terminal-bg: rgba(0, 0, 0, 0.95);
+  --terminal-border: #333;
+  --terminal-header: #2d2d2d;
+  
+  /* Typography */
+  --font-mono: "Courier New", "Monaco", "Lucida Console", monospace;
+  --font-size-base: 14px;
+  --font-size-small: 12px;
+  --font-size-large: 16px;
+  
+  /* Spacing */
+  --spacing-xs: 3px;
+  --spacing-sm: 8px;
+  --spacing-md: 15px;
+  --spacing-lg: 20px;
+  --spacing-xl: 40px;
+  
+  /* Border Radius */
+  --radius-sm: 5px;
+  --radius-md: 10px;
+  
+  /* Shadows */
+  --shadow-terminal: 0 20px 40px rgba(0, 255, 0, 0.1);
+  --shadow-glow: 0 0 10px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  
+  /* Z-index */
+  --z-keyboard: 1000;
+  --z-suggestions: 1000;
+  --z-loading: 9999;
+}

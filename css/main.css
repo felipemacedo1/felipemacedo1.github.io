@@ -1,0 +1,10 @@
+/* ===== MAIN CSS FILE ===== */
+/* Import all CSS modules in correct order */
+
+@import url('variables.css');
+@import url('base.css');
+@import url('animations.css');
+@import url('terminal.css');
+@import url('components.css');
+@import url('themes.css');
+@import url('mobile.css');
