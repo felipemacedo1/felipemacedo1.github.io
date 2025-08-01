@@ -2,6 +2,7 @@
 import { Terminal } from './core/Terminal.js';
 import { CommandProcessor } from './core/CommandProcessor.js';
 import { BasicCommands } from './commands/BasicCommands.js';
+import { AdditionalCommands } from './commands/AdditionalCommands.js';
 import { ThemeManager } from './features/ThemeManager.js';
 import { AutoComplete } from './features/AutoComplete.js';
 import { Storage } from './utils/Storage.js';
@@ -32,9 +33,11 @@ export class TerminalPortfolio {
 
   registerCommands() {
     const basicCommands = new BasicCommands(this.terminal);
+    const additionalCommands = new AdditionalCommands(this.terminal);
     
     this.commandProcessor.registerCommands({
       ...basicCommands.getCommands(),
+      ...additionalCommands.getCommands(),
       ...this.themeManager.getCommands(),
       menu: () => this.showMenu(),
       projects: () => this.showProjects(),

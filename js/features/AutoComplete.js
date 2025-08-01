@@ -68,7 +68,7 @@ export class AutoComplete {
     score += Math.max(0, 20 - cmd.length);
     
     // Bonus para comandos populares
-    const popularCommands = ['help', 'about', 'projects', 'contact', 'clear', 'menu'];
+    const popularCommands = ['help', 'about', 'projects', 'contact', 'clear', 'menu', 'skills', 'whoami', 'status'];
     if (popularCommands.includes(cmd)) score += 10;
     
     return score;
