@@ -21,7 +21,7 @@ permissions:
 jobs:
   aggregate-data:
     concurrency:
-      group: "activity-aggregation-${{ github.event.inputs.username || 'default' }}-${{ github.event.inputs.year || 'current' }}"
+      group: data-aggregation-${{ github.event.inputs.username || 'default' }}-${{ github.event.inputs.year || 'current' }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
 
@@ -29,7 +29,6 @@ jobs:
       ITEMS_PER_PAGE: 100
       BASE_DELAY: 1
       MAX_RETRIES: 5
-      API_VERSION: "2022-11-28"
 
     steps:
       - name: Checkout repository
@@ -62,7 +61,7 @@ jobs:
             TARGET_YEAR=$(date -u +%Y)
           fi
 
-          # Validate year format
+          # Validate year format and range
           if ! [[ "$TARGET_YEAR" =~ ^[0-9]{4}$ ]] || (( TARGET_YEAR < 2008 || TARGET_YEAR > $(date -u +%Y) )); then
             echo "::error::Invalid year: $TARGET_YEAR (must be 2008-$(date -u +%Y))"
             exit 1
@@ -75,7 +74,7 @@ jobs:
             TARGET_USER="felipemacedo1"
           fi
 
-          # Validate username format (basic)
+          # Validate username format
           if ! [[ "$TARGET_USER" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$ ]]; then
             echo "::error::Invalid username format: $TARGET_USER"
             exit 1
@@ -107,10 +106,9 @@ jobs:
 
           mkdir -p "$DATA_DIR"
 
-          # API configuration
-          ACCEPT_HEADER="Accept: application/vnd.github+json"
+          # API configuration - CRITICAL: Use cloak-preview header for Search Commits API
+          ACCEPT_HEADER="Accept: application/vnd.github.cloak-preview+json"
           AUTH_HEADER="Authorization: Bearer $GH_PAT"
-          VERSION_HEADER="X-GitHub-Api-Version: $API_VERSION"
 
           declare -A daily_activity
 
@@ -124,7 +122,6 @@ jobs:
               response=$(curl -sSL \
                 -H "$ACCEPT_HEADER" \
                 -H "$AUTH_HEADER" \
-                -H "$VERSION_HEADER" \
                 "$url" 2>/dev/null) || {
                 echo "::warning::Network error on attempt $attempt"
                 if (( attempt >= MAX_RETRIES )); then
@@ -156,6 +153,7 @@ jobs:
                   continue
                 else
                   echo "::error::API error: $error_msg"
+                  echo "::debug::Full response: $response"
                   return 1
                 fi
               fi
