@@ -1,168 +1,362 @@
-name: Atualiza commits globais por author e ano
+name: Daily Activity Aggregation
 
 on:
   schedule:
-    - cron: '0 0,12 * * *'  # meia-noite e meio-dia UTC (ajuste se quiser outra frequência)
+    - cron: '0 6 * * *'  # Daily at 06:00 UTC for current year
   workflow_dispatch:
     inputs:
       year:
-        description: 'Ano para agregar (ex: 2024)'
+        description: 'Target year (e.g., 2024). If empty, uses current UTC year.'
+        required: false
+        type: string
+      username:
+        description: 'GitHub username'
         required: true
-        default: '2025'
-      author:
-        description: 'GitHub username do author'
-        required: true
+        type: string
         default: 'felipemacedo1'
 
 permissions:
-  contents: write  # necessário para commitar de volta o JSON
+  contents: write
 
 jobs:
-  aggregate:
+  aggregate-data:
     concurrency:
-      group: "commit-counts-${{ github.event.inputs.author }}-${{ github.event.inputs.year }}"
+      group: "activity-aggregation-${{ github.event.inputs.username || 'default' }}-${{ github.event.inputs.year || 'current' }}"
       cancel-in-progress: false
     runs-on: ubuntu-latest
+
+    env:
+      ITEMS_PER_PAGE: 100
+      BASE_DELAY: 1
+      MAX_RETRIES: 5
+      API_VERSION: "2022-11-28"
+
     steps:
-      - name: Checkout (para poder commitar o arquivo)
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Garantir que jq está disponível
+      - name: Setup environment
         run: |
-          if ! command -v jq >/dev/null; then
-            sudo apt-get update
+          # Ensure jq is available
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "Installing jq..."
+            sudo apt-get update -qq
             sudo apt-get install -y jq
           fi
+          
+          # Verify token availability
+          if [[ -z "${{ secrets.GH_PAT }}" ]]; then
+            echo "::error::GH_PAT secret is required but not set"
+            exit 1
+          fi
 
-      - name: Define variáveis
-        id: vars
+      - name: Configure workflow parameters
+        id: config
         run: |
-          YEAR="${{ github.event.inputs.year }}"
-          AUTHOR="${{ github.event.inputs.author }}"
-          OUT_DIR=contributions
-          OUT_FILE="$OUT_DIR/commits-${YEAR}-${AUTHOR}.json"
-          echo "year=$YEAR" >> $GITHUB_OUTPUT
-          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
-          echo "outfile=$OUT_FILE" >> $GITHUB_OUTPUT
+          # Set target year (default to current UTC year)
+          if [[ -n "${{ github.event.inputs.year }}" ]]; then
+            TARGET_YEAR="${{ github.event.inputs.year }}"
+          else
+            TARGET_YEAR=$(date -u +%Y)
+          fi
 
-      - name: Agrega commits globais por author/ano via Search Commits API
+          # Validate year format
+          if ! [[ "$TARGET_YEAR" =~ ^[0-9]{4}$ ]] || (( TARGET_YEAR < 2008 || TARGET_YEAR > $(date -u +%Y) )); then
+            echo "::error::Invalid year: $TARGET_YEAR (must be 2008-$(date -u +%Y))"
+            exit 1
+          fi
+
+          # Set target user
+          if [[ -n "${{ github.event.inputs.username }}" ]]; then
+            TARGET_USER="${{ github.event.inputs.username }}"
+          else
+            TARGET_USER="felipemacedo1"
+          fi
+
+          # Validate username format (basic)
+          if ! [[ "$TARGET_USER" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$ ]]; then
+            echo "::error::Invalid username format: $TARGET_USER"
+            exit 1
+          fi
+
+          DATA_DIR="analytics"
+          OUTPUT_FILE="${DATA_DIR}/activity-${TARGET_YEAR}-${TARGET_USER}.json"
+
+          # Export variables
+          {
+            echo "target_year=$TARGET_YEAR"
+            echo "target_user=$TARGET_USER"
+            echo "output_file=$OUTPUT_FILE"
+            echo "data_dir=$DATA_DIR"
+          } >> "$GITHUB_OUTPUT"
+          
+          echo "✓ Configuration: year=$TARGET_YEAR, user=$TARGET_USER"
+
+      - name: Aggregate repository activity data
         env:
-          GITHUB_TOKEN_API: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           set -euo pipefail
-          YEAR=${{ steps.vars.outputs.year }}
-          AUTHOR=${{ steps.vars.outputs.author }}
-          OUT_FILE=${{ steps.vars.outputs.outfile }}
 
-          mkdir -p "$(dirname "$OUT_FILE")"
+          YEAR=${{ steps.config.outputs.target_year }}
+          USER=${{ steps.config.outputs.target_user }}
+          OUT_FILE=${{ steps.config.outputs.output_file }}
+          DATA_DIR=${{ steps.config.outputs.data_dir }}
 
-          HEADER_ACCEPT="application/vnd.github.cloak-preview+json"
-          AUTH="token $GITHUB_TOKEN_API"
-          PER_PAGE=100
-          declare -A COUNTS
+          mkdir -p "$DATA_DIR"
 
-          # chama e agrega páginas para intervalo [START, END]
-          process_pages() {
-            local START=$1
-            local END=$2
-            local QUERY="author:${AUTHOR} committer-date:${START}..${END}"
-            local page=1
-            while true; do
-              resp=$(curl -sSL -H "Accept: $HEADER_ACCEPT" -H "Authorization: $AUTH" \
-                "https://api.github.com/search/commits?q=$(jq -sRr @uri <<<"$QUERY")&per_page=${PER_PAGE}&page=${page}")
-              items=$(echo "$resp" | jq -c '.items[]?')
-              if [[ -z "$items" ]]; then break; fi
-              while read -r item; do
-                date=$(echo "$item" | jq -r '.commit.author.date' | cut -d"T" -f1)
-                COUNTS["$date"]=$((COUNTS["$date"]+1))
-              done <<< "$items"
-              count_items=$(echo "$resp" | jq '.items | length')
-              if (( count_items < PER_PAGE )); then break; fi
-              page=$((page+1))
-              sleep 0.1
+          # API configuration
+          ACCEPT_HEADER="Accept: application/vnd.github+json"
+          AUTH_HEADER="Authorization: Bearer $GH_PAT"
+          VERSION_HEADER="X-GitHub-Api-Version: $API_VERSION"
+
+          declare -A daily_activity
+
+          # Enhanced API request function with exponential backoff
+          api_request() {
+            local url=$1
+            local attempt=1
+            
+            while (( attempt <= MAX_RETRIES )); do
+              local response
+              response=$(curl -sSL \
+                -H "$ACCEPT_HEADER" \
+                -H "$AUTH_HEADER" \
+                -H "$VERSION_HEADER" \
+                "$url" 2>/dev/null) || {
+                echo "::warning::Network error on attempt $attempt"
+                if (( attempt >= MAX_RETRIES )); then
+                  echo "::error::Max retries exceeded for: $url"
+                  return 1
+                fi
+                local delay=$((BASE_DELAY * (2 ** (attempt - 1))))
+                echo "Retrying in ${delay}s..."
+                sleep "$delay"
+                attempt=$((attempt + 1))
+                continue
+              }
+
+              # Check for API errors
+              local error_msg
+              error_msg=$(echo "$response" | jq -r '.message? // empty' 2>/dev/null || echo "")
+              
+              if [[ -n "$error_msg" ]]; then
+                if [[ "$error_msg" == *"rate limit"* ]] || [[ "$error_msg" == *"API rate limit exceeded"* ]]; then
+                  echo "::warning::Rate limit hit on attempt $attempt: $error_msg"
+                  if (( attempt >= MAX_RETRIES )); then
+                    echo "::error::Rate limit persists after $MAX_RETRIES attempts"
+                    return 1
+                  fi
+                  local delay=$((BASE_DELAY * (2 ** attempt)))
+                  echo "Backing off for ${delay}s..."
+                  sleep "$delay"
+                  attempt=$((attempt + 1))
+                  continue
+                else
+                  echo "::error::API error: $error_msg"
+                  return 1
+                fi
+              fi
+
+              # Success
+              printf "%s" "$response"
+              return 0
             done
           }
 
-          # recursivo: divide intervalos que têm >=1000 resultados
-          fetch_range() {
-            local START=$1
-            local END=$2
-            local QUERY="author:${AUTHOR} committer-date:${START}..${END}"
-            echo "Consultando intervalo $START .. $END"
-            summary=$(curl -sSL -H "Accept: $HEADER_ACCEPT" -H "Authorization: $AUTH" \
-              "https://api.github.com/search/commits?q=$(jq -sRr @uri <<<"$QUERY")&per_page=1&page=1")
-            total=$(echo "$summary" | jq -r '.total_count // 0')
-            if (( total >= 1000 )); then
-              # meio do intervalo em epoch
-              start_ts=$(date -d "$START" +%s)
-              end_ts=$(date -d "$END" +%s)
+          # Process API response pages for a date range
+          process_range_pages() {
+            local start_date=$1
+            local end_date=$2
+            local query="author:${USER} committer-date:${start_date}..${end_date}"
+            local page=1
+
+            while true; do
+              echo "Processing page $page for range $start_date..$end_date"
+              local encoded_query
+              encoded_query=$(printf '%s' "$query" | jq -sRr @uri)
+              local api_url="https://api.github.com/search/commits?q=${encoded_query}&per_page=${ITEMS_PER_PAGE}&page=${page}"
+              
+              local response
+              response=$(api_request "$api_url") || return 1
+
+              # Extract items
+              local items
+              items=$(echo "$response" | jq -c '.items[]?' 2>/dev/null || echo "")
+              if [[ -z "$items" ]]; then
+                break
+              fi
+
+              # Process each item
+              while IFS= read -r item; do
+                [[ -z "$item" ]] && continue
+                local commit_date
+                commit_date=$(echo "$item" | jq -r '.commit.author.date' | cut -d'T' -f1)
+                daily_activity["$commit_date"]=$((${daily_activity[$commit_date]:-0} + 1))
+              done <<< "$items"
+
+              # Check pagination
+              local items_count
+              items_count=$(echo "$response" | jq '.items | length')
+              if (( items_count < ITEMS_PER_PAGE )); then
+                break
+              fi
+              
+              page=$((page + 1))
+              sleep 0.1  # Rate limiting courtesy
+            done
+          }
+
+          # Recursive function to handle large date ranges
+          fetch_activity_range() {
+            local start_date=$1
+            local end_date=$2
+            local query="author:${USER} committer-date:${start_date}..${end_date}"
+            
+            echo "Checking range: $start_date to $end_date"
+            
+            local encoded_query
+            encoded_query=$(printf '%s' "$query" | jq -sRr @uri)
+            local summary_url="https://api.github.com/search/commits?q=${encoded_query}&per_page=1"
+            
+            local summary_response
+            summary_response=$(api_request "$summary_url") || return 1
+            
+            local total_count
+            total_count=$(echo "$summary_response" | jq -r '.total_count // 0')
+
+            if (( total_count >= 1000 )); then
+              # Split range in half
+              local start_ts end_ts mid_ts mid_date
+              start_ts=$(date -d "$start_date" +%s)
+              end_ts=$(date -d "$end_date" +%s)
               mid_ts=$(( (start_ts + end_ts) / 2 ))
-              mid=$(date -u -d "@$mid_ts" +%F)
-              if [[ "$mid" == "$START" || "$mid" == "$END" ]]; then
-                echo "Intervalo muito grande e não pode subdividir mais: $START..$END (total $total). Paginação direta."
-                process_pages "$START" "$END"
+              mid_date=$(date -u -d "@$mid_ts" +%F)
+              
+              if [[ "$mid_date" == "$start_date" || "$mid_date" == "$end_date" ]]; then
+                echo "::warning::Cannot split range further: $start_date..$end_date (total: $total_count)"
+                process_range_pages "$start_date" "$end_date"
               else
-                fetch_range "$START" "$mid"
-                # dia seguinte ao mid
-                next=$(date -d "$mid +1 day" +%F)
-                if [[ $(date -d "$next" +%s) -le $(date -d "$END" +%s) ]]; then
-                  fetch_range "$next" "$END"
+                fetch_activity_range "$start_date" "$mid_date"
+                local next_day
+                next_day=$(date -u -d "$mid_date +1 day" +%F)
+                if [[ $(date -d "$next_day" +%s) -le $(date -d "$end_date" +%s) ]]; then
+                  fetch_activity_range "$next_day" "$end_date"
                 fi
               fi
             else
-              process_pages "$START" "$END"
+              process_range_pages "$start_date" "$end_date"
             fi
           }
 
-          # intervalo do ano completo
-          START="${YEAR}-01-01"
-          END="${YEAR}-12-31"
+          # Main execution
+          YEAR_START="${YEAR}-01-01"
+          YEAR_END="${YEAR}-12-31"
 
-          fetch_range "$START" "$END"
+          echo "Starting activity aggregation for $USER in $YEAR"
+          fetch_activity_range "$YEAR_START" "$YEAR_END"
 
-          # timestamp de geração
-          GENERATED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-          # monta JSON com todos os dias do ano (zeros inclusos), com generated_at e counts
+          # Generate comprehensive JSON output
           {
-            echo "{"
-            echo "  \"generated_at\": \"${GENERATED_AT}\","
-            echo "  \"counts\": {"
-            first=true
-            current="$START"
-            end_epoch=$(date -d "$END" +%s)
-            while [[ $(date -d "$current" +%s) -le $end_epoch ]]; do
-              cnt=${COUNTS[$current]:-0}
-              if $first; then
-                first=false
+            cat << EOF
+{
+  "metadata": {
+    "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "target_year": $YEAR,
+    "target_user": "$USER",
+    "date_range": {
+      "start": "$YEAR_START",
+      "end": "$YEAR_END"
+    },
+    "workflow_run": "${{ github.run_id }}"
+  },
+  "daily_metrics": {
+EOF
+            
+            # Generate daily entries for entire year
+            local is_first=true
+            local current_date="$YEAR_START"
+            local end_timestamp
+            end_timestamp=$(date -d "$YEAR_END" +%s)
+            
+            while [[ $(date -d "$current_date" +%s) -le $end_timestamp ]]; do
+              local count=${daily_activity[$current_date]:-0}
+              
+              if [[ "$is_first" == "true" ]]; then
+                is_first=false
               else
                 echo ","
               fi
-              printf "    \"%s\": %d" "$current" "$cnt"
-              current=$(date -I -d "$current +1 day")
+              
+              printf "    \"%s\": %d" "$current_date" "$count"
+              current_date=$(date -I -d "$current_date +1 day")
             done
-            echo
-            echo "  }"
-            echo "}"
+            
+            cat << EOF
+
+  }
+}
+EOF
           } > "$OUT_FILE"
 
-      - name: Preview do JSON gerado
-        run: |
-          echo "=== ${{
-steps.vars.outputs.outfile }} ==="
-          head -n 80 "${{ steps.vars.outputs.outfile }}" || true
+          echo "✓ Activity aggregation completed: $OUT_FILE"
 
-      - name: Comitar se houver mudança
+      - name: Validate generated data
         run: |
-          OUT_FILE=${{ steps.vars.outputs.outfile }}
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet --exit-code "$OUT_FILE"; then
-            echo "Nenhuma mudança em $OUT_FILE"
+          OUTPUT_FILE="${{ steps.config.outputs.output_file }}"
+
+          # Check file exists
+          if [[ ! -f "$OUTPUT_FILE" ]]; then
+            echo "::error::Output file not generated: $OUTPUT_FILE"
+            exit 1
+          fi
+
+          # Validate JSON format
+          if ! jq empty "$OUTPUT_FILE" 2>/dev/null; then
+            echo "::error::Invalid JSON format in $OUTPUT_FILE"
+            exit 1
+          fi
+
+          # Generate summary
+          echo "=== Data Summary ==="
+          echo "File: $OUTPUT_FILE"
+          echo "Size: $(du -h "$OUTPUT_FILE" | cut -f1)"
+          echo "Total days: $(jq '.daily_metrics | length' "$OUTPUT_FILE")"
+          echo "Active days: $(jq '[.daily_metrics[] | select(. > 0)] | length' "$OUTPUT_FILE")"
+          echo "Total activity: $(jq '[.daily_metrics[]] | add' "$OUTPUT_FILE")"
+          
+          echo -e "\n=== File Preview ==="
+          head -n 30 "$OUTPUT_FILE"
+
+      - name: Commit data changes
+        run: |
+          OUTPUT_FILE="${{ steps.config.outputs.output_file }}"
+          YEAR="${{ steps.config.outputs.target_year }}"
+          USER="${{ steps.config.outputs.target_user }}"
+
+          # Configure git
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Check for changes
+          git add "$OUTPUT_FILE"
+          
+          if git diff --staged --quiet; then
+            echo "No changes detected in $OUTPUT_FILE"
           else
-            git add "$OUT_FILE"
-            git commit -m "Atualiza commits globais ${OUT_FILE} [skip ci]"
-            git push
+            # Create conventional commit
+            git commit -m "feat(analytics): update activity metrics for ${YEAR}" \
+                      -m "Auto-generated activity aggregation for user ${USER}
+
+- Updated daily activity metrics
+- Data source: GitHub Search API  
+- Target period: ${YEAR}
+- Workflow run: ${{ github.run_id }}
+
+[skip ci]"
+            
+            git push origin HEAD
+            echo "✓ Successfully committed updates to $OUTPUT_FILE"
           fi
