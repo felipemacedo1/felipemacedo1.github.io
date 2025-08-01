@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Felipe Macedo - Mobile BIOS</title>
+    <meta name="description" content="Portfólio Mobile de Felipe Macedo - Interface BIOS Android Style">
+    <meta name="theme-color" content="#03DAC6">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    
+    <link rel="stylesheet" href="css/mobile-bios.css">
+</head>
+<body>
+    <div class="bios-container" id="biosContainer">
+        <!-- Boot Screen -->
+        <div class="boot-screen" id="bootScreen">
+            <div class="boot-logo">
+                <div class="android-logo">🤖</div>
+                <div class="boot-text">ANDROID BIOS</div>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <div class="boot-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="boot-status" id="bootStatus">Initializing system...</div>
+            </div>
+        </div>
+
+        <!-- Main BIOS Interface -->
+        <div class="bios-interface" id="biosInterface" style="display: none;">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="time" id="currentTime"></div>
+                <div class="battery">
+                    <span class="battery-icon">🔋</span>
+                    <span id="batteryLevel">100%</span>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="bios-header">
+                <h1>FELIPE MACEDO</h1>
+                <div class="subtitle">Developer & System Architect</div>
+            </div>
+
+            <!-- Main Menu Grid -->
+            <div class="bios-menu">
+                <div class="menu-section">
+                    <h2>📋 SYSTEM INFO</h2>
+                    <div class="menu-items">
+                        <div class="menu-item" data-action="about">
+                            <span class="icon">👨‍💻</span>
+                            <span class="label">About</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="menu-item" data-action="status">
+                            <span class="icon">📊</span>
+                            <span class="label">Status</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="menu-item" data-action="whoami">
+                            <span class="icon">🆔</span>
+                            <span class="label">Who Am I</span>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <h2>⚡ SKILLS & TECH</h2>
+                    <div class="menu-items">
+                        <div class="menu-item" data-action="skills">
+                            <span class="icon">🛠️</span>
+                            <span class="label">Skills</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="menu-item" data-action="experience">
+                            <span class="icon">💼</span>
+                            <span class="label">Experience</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="menu-item" data-action="certifications">
+                            <span class="icon">🏆</span>
+                            <span class="label">Certifications</span>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <h2>🚀 PROJECTS</h2>
+                    <div class="menu-items">
+                        <div class="menu-item" data-action="projects">
+                            <span class="icon">📁</span>
+                            <span class="label">All Projects</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="menu-item" data-action="github">
+                            <span class="icon">💻</span>
+                            <span class="label">GitHub</span>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <h2>📞 CONTACT</h2>
+                    <div class="menu-items">
+                        <div class="menu-item" data-action="contact">
+                            <span class="icon">📧</span>
+                            <span class="label">Contact Info</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="menu-item" data-action="linkedin">
+                            <span class="icon">💼</span>
+                            <span class="label">LinkedIn</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="menu-item" data-action="desktop-link">
+                            <span class="icon">💻</span>
+                            <span class="label">Desktop Version</span>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Footer -->
+            <div class="nav-footer">
+                <div class="nav-item" data-action="home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Home</span>
+                </div>
+                <div class="nav-item" data-action="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Settings</span>
+                </div>
+                <div class="nav-item" data-action="desktop">
+                    <span class="nav-icon">💻</span>
+                    <span class="nav-label">Desktop</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div class="detail-view" id="detailView" style="display: none;">
+            <div class="detail-header">
+                <button class="back-btn" id="backBtn">← Back</button>
+                <h2 id="detailTitle">Detail</h2>
+            </div>
+            <div class="detail-content" id="detailContent">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/mobile-bios.js"></script>
+</body>
+</html>
