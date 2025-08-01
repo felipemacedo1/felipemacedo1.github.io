@@ -272,13 +272,12 @@ jobs:
             echo "  \"daily_metrics\": {"
             
             # Generate daily entries for entire year
-            local is_first=true
-            local current_date="$YEAR_START"
-            local end_timestamp
+            is_first=true
+            current_date="$YEAR_START"
             end_timestamp=$(date -d "$YEAR_END" +%s)
             
             while [[ $(date -d "$current_date" +%s) -le $end_timestamp ]]; do
-              local count=${daily_activity[$current_date]:-0}
+              count=${daily_activity[$current_date]:-0}
               
               if [[ "$is_first" == "true" ]]; then
                 is_first=false
@@ -342,12 +341,12 @@ jobs:
           else
             # Create conventional commit message
             COMMIT_MSG="Auto-generated activity aggregation for user ${USER}
-            - Updated daily activity metrics
-            - Data source: GitHub Search API  
-            - Target period: ${YEAR}
-            - Workflow run: ${{ github.run_id }}
-
-            [skip ci]"
+          - Updated daily activity metrics
+          - Data source: GitHub Search API  
+          - Target period: ${YEAR}
+          - Workflow run: ${{ github.run_id }}
+          
+          [skip ci]"
             
             git commit -m "feat(analytics): update activity metrics for ${YEAR}" -m "$COMMIT_MSG"
             git push origin HEAD
