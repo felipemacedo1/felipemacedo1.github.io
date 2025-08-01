@@ -413,6 +413,12 @@
         margin: 8px 0;
       }
 
+      .ascii-art.align-center {
+        text-align: center;
+        display: block;
+        width: 100%;
+      }
+
       .mobile-keyboard {
         display: none;
         position: fixed;
@@ -1143,13 +1149,23 @@
 
         async fetchVersion() {
           try {
-            const response = await fetch(
-              "https://api.github.com/repos/felipemacedo1/felipemacedo1.github.io/releases/latest"
-            );
-            const data = await response.json();
-            this.version = data.tag_name || "v0.0.0";
+            const repo = "felipemacedo1/felipemacedo1.github.io";
+            const apiUrl = `https://api.github.com/repos/${repo}/releases/latest`;
+
+            const response = await fetch(apiUrl, {
+              headers: {
+                "Accept": "application/vnd.github.v3+json",
+              },
+            });
+            
+            if (response.ok) {
+              const data = await response.json();
+              this.version = data.tag_name || "v1.0.1";
+            } else {
+              this.version = "v1.0.1";
+            }
           } catch {
-            this.version = "v1.0.0";
+            this.version = "v1.0.1";
           }
         }
 
@@ -1194,9 +1210,9 @@
 
         showAbout() {
           const aboutText = `
-<span class="ascii-art">
+<span class="ascii-art align-center">
     ╔════════════════════════════════════╗
-    ║            👨‍💻 SOBRE MIM            ║
+                 👨‍💻 SOBRE MIM            
     ╚════════════════════════════════════╝
 </span>
 
@@ -1230,9 +1246,9 @@
 
         showProjects() {
           const projectsText = `
-<span class="ascii-art">
+<span class="ascii-art align-center">
     ╔═══════════════════════════════╗
-    ║        🚀 MEUS PROJETOS       ║
+             🚀 MEUS PROJETOS       
     ╚═══════════════════════════════╝
 </span>
 
@@ -1287,9 +1303,9 @@ Assistente virtual avançado com processamento de linguagem natural.
 
         showContact() {
           const contactText = `
-<span class="ascii-art">
+<span class="ascii-art align-center">
     ╔═══════════════════════════╗
-    ║    💬 VAMOS CONVERSAR?    ║
+         💬 VAMOS CONVERSAR?    
     ╚═══════════════════════════╝
 </span>
 
@@ -1481,15 +1497,23 @@ Assistente virtual avançado com processamento de linguagem natural.
 
         ascii() {
           const art = `
-<span class="ascii-art">
- ______ _      _ _             
-|  ____| |    (_) |            
-| |__  | |     _| | ___   ___  
-|  __| | |    | | |/ _ \\ / _ \\ 
-| |____| |____| | | (_) | (_) |
-|______|______|_|_|\\___/ \\___/ 
+<span class="ascii-art align-center">
+┌─────────────────────────────────────────────────────────────┐
+│  ███████ ███████ ██      ██ ██████  ███████                 │
+│  ██      ██      ██      ██ ██   ██ ██                      │
+│  █████   █████   ██      ██ ██████  █████                   │
+│  ██      ██      ██      ██ ██      ██                      │
+│  ██      ███████ ███████ ██ ██      ███████                 │
+│                                                             │
+│  ███    ███  █████   ██████ ███████ ██████   ██████         │
+│  ████  ████ ██   ██ ██      ██      ██   ██ ██    ██        │
+│  ██ ████ ██ ███████ ██      █████   ██   ██ ██    ██        │
+│  ██  ██  ██ ██   ██ ██      ██      ██   ██ ██    ██        │
+│  ██      ██ ██   ██  ██████ ███████ ██████   ██████         │
+└─────────────────────────────────────────────────────────────┘
 </span>
-<span class="output-text">Desenvolvedor Full Cycle | Java • Go • Spring Boot</span>
+<span class="output-text">💻 Desenvolvedor Full Cycle | ☕ Java • 🐹 Go • 🍃 Spring Boot</span>
+<span class="success">📊 Commits: ████████████████████████████████████████ 2.5k+</span>
 `;
           this.addToOutput(art);
         }
@@ -1574,9 +1598,9 @@ Assistente virtual avançado com processamento de linguagem natural.
 
         showSkills() {
           const skillsText = `
-<span class="ascii-art">
+<span class="ascii-art align-center">
     ╔═══════════════════════════╗
-    ║   🛠️ STACK TECNOLÓGICO    ║
+        🛠️ STACK TECNOLÓGICO    
     ╚═══════════════════════════╝
 </span>
 
@@ -1610,9 +1634,9 @@ Assistente virtual avançado com processamento de linguagem natural.
 
         showExperience() {
           const experienceText = `
-<span class="ascii-art">
+<span class="ascii-art align-center">
     ╔════════════════════════════════════╗
-    ║     💼 EXPERIÊNCIA PROFISSIONAL    ║
+          💼 EXPERIÊNCIA PROFISSIONAL    
     ╚════════════════════════════════════╝
 </span>
 
@@ -1669,9 +1693,9 @@ Assistente virtual avançado com processamento de linguagem natural.
 
         showEducation() {
           const educationText = `
-<span class="ascii-art">
+<span class="ascii-art align-center">
     ╔════════════════════════════════════════╗
-    ║              🎓 FORMAÇÃO ACADÊmica              ║
+               🎓 FORMAÇÃO ACADÊMICA    
     ╚════════════════════════════════════════╝
 </span>
 
@@ -1714,9 +1738,9 @@ Assistente virtual avançado com processamento de linguagem natural.
 
         showCertifications() {
           const certificationsText = `
-<span class="ascii-art">
+<span class="ascii-art align-center">
     ╔════════════════════════════════════════╗
-    ║            🏅 CERTIFICAÇÕES & CURSOS            ║
+            🏅 CERTIFICAÇÕES & CURSOS            
     ╚════════════════════════════════════════╝
 </span>
 
