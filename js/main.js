@@ -1,5 +1,25 @@
 // Main entry point
 import { TerminalPortfolio } from './TerminalPortfolio.js';
+import { DeviceDetector } from './utils/DeviceDetector.js';
+
+// Check if should redirect to mobile version
+function checkMobileRedirect() {
+  const deviceInfo = DeviceDetector.getDeviceInfo();
+  
+  // Don't redirect if user specifically wants desktop version
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceDesktop = urlParams.get('desktop') === 'true';
+  
+  if (deviceInfo.isMobile && !forceDesktop) {
+    // Add a small delay to show loading, then redirect
+    setTimeout(() => {
+      window.location.href = './mobile.html';
+    }, 800);
+    return true;
+  }
+  
+  return false;
+}
 
 // Mobile keyboard functions
 function typeChar(char) {
@@ -58,6 +78,11 @@ function createLoadingScreen() {
 
 // Initialize application
 document.addEventListener("DOMContentLoaded", () => {
+  // Check if should redirect to mobile
+  if (checkMobileRedirect()) {
+    return; // Stop initialization if redirecting
+  }
+  
   window.terminal = new TerminalPortfolio();
   
   // Expose mobile functions globally
