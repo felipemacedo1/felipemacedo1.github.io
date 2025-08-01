@@ -340,17 +340,16 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes detected in $OUTPUT_FILE"
           else
-            # Create conventional commit with proper YAML syntax
-            git commit -m "feat(analytics): update activity metrics for ${YEAR}" \
-                      -m "Auto-generated activity aggregation for user ${USER}
+            # Create conventional commit message
+            COMMIT_MSG="Auto-generated activity aggregation for user ${USER}
+            - Updated daily activity metrics
+            - Data source: GitHub Search API  
+            - Target period: ${YEAR}
+            - Workflow run: ${{ github.run_id }}
 
-- Updated daily activity metrics
-- Data source: GitHub Search API  
-- Target period: ${YEAR}
-- Workflow run: ${{ github.run_id }}
-
-[skip ci]"
+            [skip ci]"
             
+            git commit -m "feat(analytics): update activity metrics for ${YEAR}" -m "$COMMIT_MSG"
             git push origin HEAD
             echo "✓ Successfully committed updates to $OUTPUT_FILE"
           fi
