@@ -258,20 +258,18 @@ jobs:
 
           # Generate comprehensive JSON output
           {
-            cat << EOF
-{
-  "metadata": {
-    "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-    "target_year": $YEAR,
-    "target_user": "$USER",
-    "date_range": {
-      "start": "$YEAR_START",
-      "end": "$YEAR_END"
-    },
-    "workflow_run": "${{ github.run_id }}"
-  },
-  "daily_metrics": {
-EOF
+            echo "{"
+            echo "  \"metadata\": {"
+            echo "    \"generated_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\","
+            echo "    \"target_year\": $YEAR,"
+            echo "    \"target_user\": \"$USER\","
+            echo "    \"date_range\": {"
+            echo "      \"start\": \"$YEAR_START\","
+            echo "      \"end\": \"$YEAR_END\""
+            echo "    },"
+            echo "    \"workflow_run\": \"${{ github.run_id }}\""
+            echo "  },"
+            echo "  \"daily_metrics\": {"
             
             # Generate daily entries for entire year
             local is_first=true
@@ -292,11 +290,9 @@ EOF
               current_date=$(date -I -d "$current_date +1 day")
             done
             
-            cat << EOF
-
-  }
-}
-EOF
+            echo
+            echo "  }"
+            echo "}"
           } > "$OUT_FILE"
 
           echo "✓ Activity aggregation completed: $OUT_FILE"
