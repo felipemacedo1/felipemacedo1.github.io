@@ -49,10 +49,13 @@ export class TerminalPortfolio {
 
       switch (e.key) {
         case "Enter":
-          if (this.autoComplete.suggestions.length > 0 && this.autoComplete.suggestionIndex >= 0) {
+          // Apenas usar sugestão se explicitamente navegada pelo usuário (índice > 0)
+          if (this.autoComplete.suggestions.length > 0 && this.autoComplete.suggestionIndex > 0) {
             e.preventDefault();
             this.autoComplete.selectSuggestion(this.autoComplete.suggestions[this.autoComplete.suggestionIndex]);
           } else {
+            // Esconder sugestões e processar comando normalmente
+            this.autoComplete.hideSuggestions();
             this.processCommand();
           }
           break;

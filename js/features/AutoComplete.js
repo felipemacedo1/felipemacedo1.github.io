@@ -5,32 +5,73 @@ export class AutoComplete {
     this.commandProcessor = commandProcessor;
     this.suggestions = [];
     this.suggestionIndex = -1;
+    this.debounceTimer = null;
+    this.isVisible = false;
   }
 
   showSuggestions(input) {
-    const currentInput = input.toLowerCase();
-    if (!currentInput || currentInput.length < 2) {
+    // Debounce para melhor performance
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this._processSuggestions(input);
+    }, 150);
+  }
+
+  _processSuggestions(input) {
+    const currentInput = input.toLowerCase().trim();
+    
+    // Mostrar sugestões a partir de 1 caractere
+    if (!currentInput || currentInput.length < 1) {
       this.hideSuggestions();
       return;
     }
 
     const availableCommands = this.commandProcessor.getAvailableCommands();
+    
+    // Algoritmo de relevância melhorado
     this.suggestions = availableCommands
-      .filter((cmd) => cmd.includes(currentInput) && cmd !== currentInput)
-      .sort((a, b) => {
-        const aStarts = a.startsWith(currentInput);
-        const bStarts = b.startsWith(currentInput);
-        if (aStarts && !bStarts) return -1;
-        if (!aStarts && bStarts) return 1;
-        return a.length - b.length;
-      })
-      .slice(0, 4);
+      .filter((cmd) => cmd !== currentInput)
+      .map(cmd => ({
+        command: cmd,
+        score: this._calculateRelevanceScore(cmd, currentInput)
+      }))
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map(item => item.command);
 
     if (this.suggestions.length > 0) {
       this.displaySuggestions(currentInput);
+      this.isVisible = true;
     } else {
       this.hideSuggestions();
     }
+  }
+
+  _calculateRelevanceScore(command, input) {
+    const cmd = command.toLowerCase();
+    const inp = input.toLowerCase();
+    
+    // Comando exato = não mostrar
+    if (cmd === inp) return 0;
+    
+    // Pontuação baseada em relevância
+    let score = 0;
+    
+    // Começa com o input (maior relevância)
+    if (cmd.startsWith(inp)) score += 100;
+    
+    // Contém o input
+    else if (cmd.includes(inp)) score += 50;
+    
+    // Bonus para comandos mais curtos (mais específicos)
+    score += Math.max(0, 20 - cmd.length);
+    
+    // Bonus para comandos populares
+    const popularCommands = ['help', 'about', 'projects', 'contact', 'clear', 'menu'];
+    if (popularCommands.includes(cmd)) score += 10;
+    
+    return score;
   }
 
   displaySuggestions(currentInput) {
@@ -38,32 +79,81 @@ export class AutoComplete {
     if (!suggestionBox) {
       suggestionBox = document.createElement("div");
       suggestionBox.id = "suggestions";
-      suggestionBox.className = "suggestion-box";
+      suggestionBox.style.cssText = `
+        position: absolute;
+        background: rgba(0, 0, 0, 0.95);
+        border: 1px solid var(--primary-green);
+        border-radius: 6px;
+        padding: 4px 0;
+        bottom: 35px;
+        left: 0;
+        min-width: 200px;
+        max-width: 350px;
+        z-index: 1001;
+        max-height: 200px;
+        font-family: inherit;
+        font-size: 12px;
+        box-shadow: 0 -4px 12px rgba(0, 255, 0, 0.3);
+        backdrop-filter: blur(8px);
+        animation: slideUp 0.2s ease;
+      `;
       document.getElementById("inputLine").appendChild(suggestionBox);
     }
 
     suggestionBox.innerHTML = this.suggestions
       .map((cmd, index) => {
-        const highlighted = cmd.replace(
-          new RegExp(`(${currentInput})`, "gi"),
-          '<span class="suggestion-highlight">$1</span>'
-        );
+        const highlighted = this._highlightMatch(cmd, currentInput);
+        const isActive = index === this.suggestionIndex;
+        
         return `<div class="suggestion-item ${
-          index === this.suggestionIndex ? "active" : ""
-        }" onclick="terminal.selectSuggestion('${cmd}')">
-          <span class="suggestion-arrow">▶</span>${highlighted}
+          isActive ? "active" : ""
+        }" 
+        data-command="${cmd}"
+        onmouseenter="this.classList.add('hover')"
+        onmouseleave="this.classList.remove('hover')"
+        onclick="window.terminal.selectSuggestion('${cmd}')"
+        style="
+          padding: 8px 12px;
+          color: ${isActive ? '#00ffff' : '#00ff00'};
+          background: ${isActive ? 'rgba(0, 255, 0, 0.1)' : 'transparent'};
+          cursor: pointer;
+          border-radius: 3px;
+          transition: all 0.15s ease;
+          display: flex;
+          align-items: center;
+          border-left: 3px solid ${isActive ? '#00ffff' : 'transparent'};
+        ">
+          <span style="margin-right: 8px; opacity: 0.7;">▶</span>
+          <span>${highlighted}</span>
+          <span style="margin-left: auto; font-size: 10px; opacity: 0.5;">↵</span>
         </div>`;
       })
       .join("");
+
+    // Não auto-selecionar sugestões para evitar seleção acidental
+  }
+
+  _highlightMatch(command, input) {
+    if (!input) return command;
+    
+    const regex = new RegExp(`(${this._escapeRegex(input)})`, 'gi');
+    return command.replace(regex, '<span style="background: rgba(0,255,255,0.3); color: #00ffff; font-weight: bold;">$1</span>');
+  }
+
+  _escapeRegex(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   hideSuggestions() {
+    clearTimeout(this.debounceTimer);
     const suggestionBox = document.getElementById("suggestions");
     if (suggestionBox) {
-      suggestionBox.remove();
+      suggestionBox.style.animation = 'fadeOut 0.15s ease';
+      setTimeout(() => suggestionBox.remove(), 150);
     }
     this.suggestions = [];
     this.suggestionIndex = -1;
+    this.isVisible = false;
   }
 
   selectSuggestion(cmd) {
@@ -71,54 +161,95 @@ export class AutoComplete {
     this.hideSuggestions();
     this.terminal.updateCursor();
     this.terminal.input.focus();
+    
+    // Feedback visual
+    this.terminal.input.style.background = 'rgba(0, 255, 0, 0.1)';
+    setTimeout(() => {
+      this.terminal.input.style.background = 'transparent';
+    }, 200);
   }
 
   navigateSuggestions(direction) {
     if (this.suggestions.length === 0) return false;
 
+    const prevIndex = this.suggestionIndex;
+    
     if (direction === "up") {
+      // Começar do final se nenhuma sugestão estiver selecionada
       this.suggestionIndex =
         this.suggestionIndex <= 0
           ? this.suggestions.length - 1
           : this.suggestionIndex - 1;
     } else {
+      // Começar do início se nenhuma sugestão estiver selecionada
       this.suggestionIndex =
         this.suggestionIndex >= this.suggestions.length - 1
           ? 0
           : this.suggestionIndex + 1;
     }
 
-    this.displaySuggestions(this.terminal.input.value.toLowerCase());
+    // Só re-renderizar se o índice mudou
+    if (prevIndex !== this.suggestionIndex) {
+      this.displaySuggestions(this.terminal.input.value.toLowerCase());
+    }
+    
     return true;
   }
 
   autoComplete(input) {
-    const currentInput = input.toLowerCase();
+    const currentInput = input.toLowerCase().trim();
     if (!currentInput) return false;
 
+    // Apenas usar sugestão se explicitamente navegada pelo usuário
+    if (this.isVisible && this.suggestionIndex > 0 && this.suggestions[this.suggestionIndex]) {
+      this.selectSuggestion(this.suggestions[this.suggestionIndex]);
+      return true;
+    }
+
     const availableCommands = this.commandProcessor.getAvailableCommands();
-    const matches = availableCommands.filter(
+    const exactMatches = availableCommands.filter(
       (cmd) => cmd.startsWith(currentInput) && cmd !== currentInput
     );
 
-    if (matches.length === 1) {
-      this.terminal.input.value = matches[0];
+    if (exactMatches.length === 1) {
+      // Auto-completar único match
+      this.terminal.input.value = exactMatches[0];
       this.terminal.updateCursor();
       this.hideSuggestions();
       return true;
-    } else if (matches.length > 1) {
+    } else if (exactMatches.length > 1) {
+      // Mostrar opções disponíveis com melhor formatação
       this.terminal.addToOutput(
         `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${currentInput}</span>`
       );
+      
+      const formattedMatches = exactMatches
+        .slice(0, 8) // Limitar a 8 opções
+        .map(cmd => `<span class="success">${cmd}</span>`)
+        .join(', ');
+      
       this.terminal.addToOutput(
-        `<span class="output-text">💡 Opções disponíveis: <span class="success">${matches.join(
-          ", "
-        )}</span></span>`
+        `<span class="output-text">💡 ${exactMatches.length} opções disponíveis: ${formattedMatches}${exactMatches.length > 8 ? '...' : ''}</span>`
       );
       this.terminal.scrollToBottom();
       return true;
     }
 
     return false;
+  }
+
+  showCommandPreview(command) {
+    const descriptions = {
+      help: 'Mostra todos os comandos disponíveis',
+      about: 'Informações sobre Felipe Macedo',
+      projects: 'Portfólio de projetos desenvolvidos',
+      contact: 'Informações de contato profissional',
+      clear: 'Limpa a tela do terminal',
+      menu: 'Menu principal do portfolio',
+      skills: 'Tecnologias e níveis de conhecimento',
+      whoami: 'Apresentação rápida'
+    };
+    
+    return descriptions[command] || 'Comando disponível';
   }
 }
