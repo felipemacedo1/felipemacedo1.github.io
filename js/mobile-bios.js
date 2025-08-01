@@ -6,6 +6,7 @@ class MobileBIOS {
     this.currentView = 'boot';
     this.bootProgress = 0;
     this.isBooted = false;
+    this.isDetailViewOpen = false;
     
     this.init();
   }
@@ -90,7 +91,7 @@ class MobileBIOS {
       } else if (navItem) {
         this.handleNavClick(navItem.dataset.action);
       } else if (backBtn) {
-        this.showMainInterface();
+        this.hideDetailView();
       }
     });
 
@@ -123,7 +124,7 @@ class MobileBIOS {
 
     switch (action) {
       case 'home':
-        this.showMainInterface();
+        this.hideDetailView();
         break;
       case 'settings':
         this.showDetailView('settings');
@@ -149,9 +150,24 @@ class MobileBIOS {
 
     detailView.style.display = 'flex';
     detailView.classList.add('slide-in');
+    this.isDetailViewOpen = true;
 
     setTimeout(() => {
       detailView.classList.remove('slide-in');
+    }, 300);
+  }
+
+  hideDetailView() {
+    if (!this.isDetailViewOpen) return;
+    
+    const detailView = document.getElementById('detailView');
+    
+    detailView.classList.add('slide-out');
+    this.isDetailViewOpen = false;
+    
+    setTimeout(() => {
+      detailView.style.display = 'none';
+      detailView.classList.remove('slide-out');
     }, 300);
   }
 
