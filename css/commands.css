@@ -1,0 +1,356 @@
+/* ===== ADDITIONAL COMMANDS STYLES ===== */
+
+/* Skills Progress Bars */
+.skill-bar {
+  margin: var(--spacing-md) 0;
+  line-height: 1.8;
+}
+
+.skill-label {
+  display: inline-block;
+  width: 120px;
+  color: var(--primary-green);
+  font-weight: 500;
+}
+
+.skill-progress {
+  color: var(--primary-green);
+  margin: 0 var(--spacing-sm);
+  font-family: monospace;
+}
+
+.skill-level {
+  color: var(--text-muted);
+  font-size: 0.9em;
+}
+
+/* Timeline Styles */
+.timeline-item {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border-left: 3px solid var(--primary-green);
+  background: rgba(0, 255, 0, 0.05);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.timeline-date {
+  display: block;
+  color: var(--warning-yellow);
+  font-size: 0.9em;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.timeline-title {
+  display: block;
+  color: var(--primary-green);
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.timeline-description {
+  display: block;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Education Styles */
+.education-item {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: rgba(0, 255, 0, 0.03);
+  border: 1px solid rgba(0, 255, 0, 0.2);
+  border-radius: var(--radius-sm);
+}
+
+.education-degree {
+  display: block;
+  color: var(--primary-green);
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.education-institution {
+  display: block;
+  color: var(--warning-yellow);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.education-period {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.9em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.education-description {
+  display: block;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Bootcamp Styles */
+.bootcamp-item {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 165, 0, 0.1);
+  border-left: 3px solid var(--warning-yellow);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.bootcamp-name {
+  color: var(--warning-yellow);
+  font-weight: 600;
+  margin-right: var(--spacing-md);
+}
+
+.bootcamp-period {
+  color: var(--text-muted);
+  font-size: 0.9em;
+  margin-right: var(--spacing-md);
+}
+
+.bootcamp-description {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.95em;
+  margin-top: var(--spacing-xs);
+}
+
+/* Certification Styles */
+.cert-item {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(0, 150, 255, 0.1);
+  border-left: 3px solid #0096ff;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.cert-badge {
+  font-size: 1.2em;
+  margin-right: var(--spacing-sm);
+}
+
+.cert-name {
+  color: #0096ff;
+  font-weight: 600;
+  margin-right: var(--spacing-md);
+}
+
+.cert-issuer {
+  color: var(--warning-yellow);
+  margin-right: var(--spacing-sm);
+}
+
+.cert-date {
+  color: var(--text-muted);
+  font-size: 0.9em;
+}
+
+.cert-description {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.95em;
+  margin-top: var(--spacing-xs);
+}
+
+/* Download Styles */
+.download-item {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: rgba(0, 255, 0, 0.05);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  border-radius: var(--radius-sm);
+}
+
+.download-icon {
+  font-size: 1.5em;
+  margin-right: var(--spacing-sm);
+  vertical-align: middle;
+}
+
+.download-name {
+  color: var(--primary-green);
+  font-weight: 600;
+  margin-right: var(--spacing-md);
+}
+
+.download-description {
+  display: block;
+  color: var(--text-secondary);
+  margin: var(--spacing-xs) 0;
+}
+
+/* Status Grid */
+.status-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-md);
+  background: rgba(0, 255, 0, 0.05);
+  border-radius: var(--radius-sm);
+}
+
+.status-label {
+  color: var(--primary-green);
+  font-weight: 500;
+}
+
+.status-value {
+  color: var(--text-primary);
+}
+
+/* Availability Styles */
+.availability-item {
+  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+}
+
+.availability-icon {
+  margin-right: var(--spacing-sm);
+  font-size: 1.1em;
+}
+
+.availability-text {
+  color: var(--text-secondary);
+}
+
+/* Diagnosis Styles */
+.diagnosis-item {
+  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 165, 0, 0.1);
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diagnosis-label {
+  color: var(--warning-yellow);
+}
+
+/* Hacker Mode Styles */
+.hacker-mode {
+  filter: hue-rotate(120deg) saturate(2);
+  animation: hackerpulse 0.5s infinite alternate;
+}
+
+.hacker-info {
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-md);
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff0000;
+  border-radius: var(--radius-sm);
+  font-family: monospace;
+}
+
+@keyframes hackerpulse {
+  0% { filter: hue-rotate(120deg) saturate(2) brightness(1); }
+  100% { filter: hue-rotate(120deg) saturate(2) brightness(1.2); }
+}
+
+/* Matrix Effect */
+.matrix-effect {
+  color: #00ff00;
+  background: #000;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+/* Glitch Effect */
+.glitch-effect {
+  animation: glitch 0.3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  60% {
+    transform: translate(2px, 2px);
+    filter: hue-rotate(270deg);
+  }
+  80% {
+    transform: translate(2px, -2px);
+    filter: hue-rotate(360deg);
+  }
+  100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+}
+
+/* Easter Egg Styles */
+.easter-egg-item {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 215, 0, 0.1);
+  border-left: 3px solid #ffd700;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.egg-icon {
+  font-size: 1.2em;
+  margin-right: var(--spacing-sm);
+}
+
+.egg-name {
+  color: #ffd700;
+  font-weight: 600;
+  margin-right: var(--spacing-md);
+}
+
+.egg-description {
+  display: block;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+  font-size: 0.95em;
+}
+
+/* Shake Animation for Invalid Commands */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+/* Mobile Responsiveness for New Styles */
+@media (max-width: 768px) {
+  .status-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+  }
+  
+  .skill-label {
+    width: 100px;
+    font-size: 0.9em;
+  }
+  
+  .timeline-item,
+  .education-item,
+  .cert-item,
+  .download-item {
+    padding: var(--spacing-sm);
+  }
+  
+  .diagnosis-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+}
