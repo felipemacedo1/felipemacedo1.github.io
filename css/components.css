@@ -47,7 +47,13 @@
   text-decoration: underline;
   cursor: pointer;
   margin-top: 5px;
-  display: block;
+  display: inline;
+  transition: color 0.2s ease;
+}
+
+.project-link:hover {
+  color: var(--primary-cyan);
+  text-shadow: 0 0 5px var(--primary-cyan);
 }
 
 /* Contact */

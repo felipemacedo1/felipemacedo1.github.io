@@ -49,12 +49,14 @@ export const CONTENT = {
 
 <span class="success">🎓 Formação Acadêmica:</span>
 • Cursando Bacharelado em Ciência da Computação (FMU - 2025 a 2029)
-• Graduando também em Gestão da TI (Anhembi Morumbi - conclusão em 2024)
-• Bootcamps e certificações: AWS re/Start, Full Stack Java, Blockchain com Solidity
+• Concluindo Gestão da TI (Anhembi Morumbi - conclusão em 2025)
+• Bootcamps: AWS re/Start, Full Stack Java (Generation Brasil)
+• Certificações: Azure AZ-900, Blockchain com Solidity
 
-<span class="success">💼 Experiência:</span>
-• Analista de Sistemas na Sansuy S.A. (Java, JavaFX, Spring Boot)
-• Ex-Backend Developer na Asapcard (Go, soluções financeiras)
+<span class="success">💼 Experiência Profissional:</span>
+• Analista de Sistemas - Sansuy S.A. (Java, JavaFX, Spring Boot)
+• Backend Developer - Asapcard (Go, microserviços financeiros)
+• Trainee Developer - Generation Brasil (Bootcamp Full Stack)
 
 <span class="success">🛠️ Tecnologias que domino:</span>
 • Java (8+), Spring Boot, JPA/Hibernate, JavaFX
@@ -71,43 +73,61 @@ export const CONTENT = {
 
   contact: `
 <span class="ascii-art align-center">
-    ╔═══════════════════════════╗
-         💬 VAMOS CONVERSAR?    
-    ╚═══════════════════════════╝
+    ╔═══════════════════════════════════════╗
+            💬 CONECTE-SE COMIGO            
+    ╚═══════════════════════════════════════╝
 </span>
 
-<span class="highlight">📧 Contato Profissional:</span>
+<span class="highlight">🚀 Canais Principais:</span>
+
 <div class="contact-item">
-<span class="contact-label">📧 Email:</span> contato.dev.macedo@gmail.com
-</div>
-<div class="contact-item">
-<span class="contact-label">💼 LinkedIn:</span> linkedin.com/in/felipemacedo1
-</div>
-<div class="contact-item">
-<span class="contact-label">🐙 GitHub:</span> github.com/felipemacedo1
-</div>
-<div class="contact-item">
-<span class="contact-label">🌐 Portfolio:</span> https://github.com/orgs/growthfolio/
+<span class="contact-label">📧 Email:</span> <a href="mailto:contato.dev.macedo@gmail.com" class="project-link">contato.dev.macedo@gmail.com</a>
+<span class="output-text">   └─ Resposta em até 24h • Projetos e oportunidades</span>
 </div>
 
-<span class="contact-label">📱 WhatsApp:</span> +55 (11) 99753-4105
-</div>
-
-<span class="success">📲 Redes Sociais:</span>
 <div class="contact-item">
-<span class="contact-label">🐦 Twitter(X):</span> ainda não tenho
+<span class="contact-label">💼 LinkedIn:</span> <a href="https://linkedin.com/in/felipemacedo1" target="_blank" class="project-link">linkedin.com/in/felipemacedo1</a>
+<span class="output-text">   └─ Networking profissional • Atualizações de carreira</span>
 </div>
+
 <div class="contact-item">
-<span class="contact-label">📸 Instagram:</span> é, sou low profile...(ou 'no profile')
+<span class="contact-label">🐙 GitHub:</span> <a href="https://github.com/felipemacedo1" target="_blank" class="project-link">github.com/felipemacedo1</a>
+<span class="output-text">   └─ Código aberto • Contribuições • Projetos pessoais</span>
 </div>
 
-<span class="warning">💼 Status:</span> <span class="success">✅ Disponível para freelances</span>
+<div class="contact-item">
+<span class="contact-label">📱 WhatsApp:</span> <a href="https://wa.me/5511997534105" target="_blank" class="project-link">+55 (11) 99753-4105</a>
+<span class="output-text">   └─ Contato direto • Projetos • Consultoria</span>
+</div>
 
-<span class="output-text">
-📍 <strong>Localização:</strong> Itapecerica da Serra - São Paulo, Brasil
-⏰ <strong>Fuso horário:</strong> GMT-3 (Brasília)
-🗣️ <strong>Idiomas:</strong> Português (nativo), Inglês (desenvolvendo)
-</span>
+<span class="highlight">🏢 Organizações:</span>
 
-<span class="highlight">🚀 Vamos construir algo incrível juntos!</span>`
+<div class="contact-item">
+<span class="contact-label">🌐 Growthfolio:</span> <a href="https://github.com/orgs/growthfolio" target="_blank" class="project-link">github.com/orgs/growthfolio</a>
+<span class="output-text">   └─ Projetos open source • Bibliotecas • Microserviços</span>
+</div>
+
+<span class="highlight">💼 Disponibilidade:</span>
+
+<div class="project-item">
+<span class="success">🟢 DISPONÍVEL PARA:</span>
+<span class="output-text">• Projetos freelance (desenvolvimento web/backend)</span>
+<span class="output-text">• Projetos acadêmicos e estudos colaborativos</span>
+<span class="output-text">• Contribuições open source</span>
+<span class="output-text">• Networking e troca de experiências</span>
+</div>
+
+<span class="highlight">📍 Informações Gerais:</span>
+
+<span class="output-text">🌎 <strong>Localização:</strong> Itapecerica da Serra - São Paulo, Brasil</span>
+<span class="output-text">⏰ <strong>Fuso horário:</strong> GMT-3 (Brasília) • Disponível: 18h-22h</span>
+<span class="output-text">🗣️ <strong>Idiomas:</strong> Português (nativo) • Inglês (intermediário)</span>
+<span class="output-text">🎓 <strong>Status:</strong> Estudante de Ciência da Computação</span>
+
+<span class="ascii-art align-center">
+    ╔═══════════════════════════════════════╗
+    ║  🚀 Vamos construir algo incrível!    ║
+    ╚═══════════════════════════════════════╝
+</span>`
 };
+
