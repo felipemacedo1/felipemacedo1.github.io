@@ -41,6 +41,8 @@ export class AdditionalCommands {
 <span class="skill-label">Go</span>           <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
 <span class="skill-label">Spring Boot</span>  <span class="skill-progress">█████████░</span> <span class="skill-level">Expert (85%)</span>
 <span class="skill-label">PostgreSQL</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
+<span class="skill-label">SQL Server</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
+<span class="skill-label">MongoDB</span>      <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
 <span class="skill-label">Redis</span>        <span class="skill-progress">███████░░░</span> <span class="skill-level">Intermediate (75%)</span>
 </div>
 
@@ -48,8 +50,8 @@ export class AdditionalCommands {
 <div class="skill-bar">
 <span class="skill-label">JavaScript</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
 <span class="skill-label">HTML/CSS</span>     <span class="skill-progress">█████████░</span> <span class="skill-level">Expert (85%)</span>
-<span class="skill-label">React</span>        <span class="skill-progress">███████░░░</span> <span class="skill-level">Intermediate (70%)</span>
-<span class="skill-label">TypeScript</span>   <span class="skill-progress">███████░░░</span> <span class="skill-level">Intermediate (75%)</span>
+<span class="skill-label">React</span>        <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
+<span class="skill-label">TypeScript</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
 </div>
 
 <span class="highlight">🚀 DevOps & Cloud:</span>
@@ -73,30 +75,30 @@ export class AdditionalCommands {
 </span>
 
 <div class="timeline-item">
-<span class="timeline-date">2024 - Atual</span>
+<span class="timeline-date">Março 2025 - presente</span>
 <span class="timeline-title">🏢 Analista de Sistemas - Sansuy S.A.</span>
 <span class="timeline-description">
-• Desenvolvimento de sistemas corporativos com Java e JavaFX
+• Manutenção e modernização de sistemas legados em Java e JavaFX
 • Implementação de APIs REST com Spring Boot
-• Manutenção e otimização de aplicações legadas
-• Integração com bancos de dados PostgreSQL
+• Uso de SQL Server, SVN, e padrões como Facade em ERP corporativo
+• Desenvolvimento de soluções corporativas escaláveis
 </span>
 </div>
 
 <div class="timeline-item">
-<span class="timeline-date">2023 - 2024</span>
+<span class="timeline-date">Fevereiro 2024 - Agosto 2024</span>
 <span class="timeline-title">🚀 Backend Developer - Asapcard</span>
 <span class="timeline-description">
 • Desenvolvimento de microserviços financeiros em Go
-• Implementação de sistemas de pagamento e cartão
-• APIs de alta performance com Gorilla Mux
-• Mensageria com RabbitMQ e Redis para cache
+• Implementação de sistemas de pagamento e soluções financeiras
+• APIs focadas em performance e segurança
+• Trabalho com tecnologias de ponta no setor fintech
 </span>
 </div>
 
 <div class="timeline-item">
 <span class="timeline-date">2023</span>
-<span class="timeline-title">🎓 Trainee Developer - Generation Brasil</span>
+<span class="timeline-title">🎓 Trainee Developer / Alumni - Generation Brasil</span>
 <span class="timeline-description">
 • Bootcamp intensivo de 3 meses em desenvolvimento Full Stack
 • Projetos práticos com Java, Spring Boot, React
@@ -105,7 +107,7 @@ export class AdditionalCommands {
 </span>
 </div>
 
-<span class="success">📈 Crescimento contínuo:</span> +2 anos de experiência hands-on em desenvolvimento`;
+<span class="success">📈 Crescimento contínuo:</span> 3+ anos de experiência hands-on em desenvolvimento`;
     this.terminal.addToOutput(experienceText);
   }
 
@@ -130,7 +132,7 @@ Banco de Dados, Redes, Inteligência Artificial
 <div class="education-item">
 <span class="education-degree">🎯 Tecnólogo em Gestão da TI</span>
 <span class="education-institution">Universidade Anhembi Morumbi</span>
-<span class="education-period">2022 - 2025 (Concluindo)</span>
+<span class="education-period">Agosto 2022 – Dezembro 2024 (Concluído)</span>
 <span class="education-description">
 Gestão de projetos, ITIL, governança de TI, análise de sistemas,
 planejamento estratégico de tecnologia
@@ -141,7 +143,7 @@ planejamento estratégico de tecnologia
 
 <div class="bootcamp-item">
 <span class="bootcamp-name">☁️ AWS re/Start</span>
-<span class="bootcamp-period">2023</span>
+<span class="bootcamp-period">2025</span>
 <span class="bootcamp-description">Cloud computing, AWS services, DevOps fundamentals</span>
 </div>
 
@@ -167,7 +169,7 @@ planejamento estratégico de tecnologia
 
 <div class="cert-item">
 <span class="cert-badge">🔵</span> <span class="cert-name">Microsoft Azure AZ-900</span>
-<span class="cert-issuer">Microsoft</span> | <span class="cert-date">2024</span>
+<span class="cert-issuer">Microsoft</span> | <span class="cert-date">2023</span>
 <span class="cert-description">Azure Fundamentals - Cloud concepts, services, security</span>
 </div>
 
@@ -189,8 +191,30 @@ planejamento estratégico de tecnologia
 
 <div class="cert-item">
 <span class="cert-badge">🌐</span> <span class="cert-name">AWS re/Start Graduate</span>
-<span class="cert-issuer">Amazon Web Services</span> | <span class="cert-date">2023</span>
+<span class="cert-issuer">Amazon Web Services</span> | <span class="cert-date">2025</span>
 <span class="cert-description">Cloud fundamentals, Linux, Python scripting</span>
+</div>
+
+<span class="highlight">📊 Gerenciamento & Liderança:</span>
+
+<div class="cert-item">
+<span class="cert-badge">📋</span> <span class="cert-name">Fundamentos do Gerenciamento de Projetos</span>
+<span class="cert-issuer">Google</span> | <span class="cert-date">2024</span>
+<span class="cert-description">Planejamento, execução e monitoramento de projetos</span>
+</div>
+
+<span class="highlight">🎓 Educação & Bootcamps:</span>
+
+<div class="cert-item">
+<span class="cert-badge">💻</span> <span class="cert-name">Desenvolvedor Web Full Stack Junior</span>
+<span class="cert-issuer">Generation Brasil</span> | <span class="cert-date">2024</span>
+<span class="cert-description">Spring Boot, React, TypeScript, Spring Security, APIs REST</span>
+</div>
+
+<div class="cert-item">
+<span class="cert-badge">🌐</span> <span class="cert-name">Introdução à Programação com foco em Front-End</span>
+<span class="cert-issuer">Proz + Meta + AWS</span> | <span class="cert-date">2023</span>
+<span class="cert-description">300h - Git, HTML, CSS, JavaScript, desenvolvimento web</span>
 </div>
 
 <span class="warning">📚 Em progresso:</span>
@@ -252,17 +276,17 @@ planejamento estratégico de tecnologia
 <span class="status-label">📅 Data:</span> <span class="status-value">${now.toLocaleDateString('pt-BR')}</span>
 <span class="status-label">⏰ Hora:</span> <span class="status-value">${now.toLocaleTimeString('pt-BR')}</span>
 <span class="status-label">📍 Local:</span> <span class="status-value">São Paulo, Brasil (UTC-3)</span>
-<span class="status-label">💼 Situação:</span> <span class="status-value">Empregado + Freelancer</span>
+<span class="status-label">💼 Situação:</span> <span class="status-value">Empregado + Estudante</span>
 </div>
 
 <span class="highlight">🚀 Disponibilidade para projetos:</span>
 
 <div class="availability-item">
-<span class="availability-icon">🟢</span> <span class="availability-text">Projetos freelance (desenvolvimento backend)</span>
+<span class="availability-icon">�</span> <span class="availability-text">Indisponível para trabalho/estudo durante a semana</span>
 </div>
 
 <div class="availability-item">
-<span class="availability-icon">🟢</span> <span class="availability-text">Consultoria técnica e code review</span>
+<span class="availability-icon">🟢</span> <span class="availability-text">Freelances apenas finais de semana</span>
 </div>
 
 <div class="availability-item">
@@ -270,7 +294,7 @@ planejamento estratégico de tecnologia
 </div>
 
 <div class="availability-item">
-<span class="availability-icon">🟡</span> <span class="availability-text">Oportunidades full-time (dependendo da proposta)</span>
+<span class="availability-icon">�</span> <span class="availability-text">Networking e mentoria técnica</span>
 </div>
 
 <span class="highlight">⏰ Horário de trabalho freelance:</span>
