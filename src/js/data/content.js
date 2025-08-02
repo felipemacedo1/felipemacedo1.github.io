@@ -25,6 +25,12 @@ export const CONTENT = {
 <span class="success">theme dark/light/matrix/hacker/retro/contrast</span> - Mudar tema
 <span class="success">coffee</span> | <span class="success">tdah</span> - Diagnóstico TDAH/cafeína
 
+<span class="highlight">📊 GitHub Activity:</span>
+<span class="success">contributions</span>  - Gráfico de contribuições GitHub
+<span class="success">contrib</span>        - Alias para contributions
+<span class="success">activity</span>       - Estatísticas de commits
+<span class="success">stats</span>          - Estatísticas detalhadas
+
 <span class="highlight">🎮 Easter eggs:</span>
 <span class="success">h4x0r-mode</span>     - Modo hacker
 <span class="success">matrix</span>         - Entre na Matrix

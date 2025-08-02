@@ -2,6 +2,35 @@
 
 Todas as mudanças notáveis do projeto serão documentadas neste arquivo.
 
+## [2.2.0] - 2025-08-02
+
+### Added
+- Unified contribution widget system with mobile optimization
+- Enhanced mobile BIOS interface with comprehensive menus
+- Real-time GitHub API integration for dynamic version display
+- Advanced autocomplete system with intelligent suggestions
+- Multiple theme support (GitHub, Terminal, BIOS, Dark)
+- Professional Experience and Certifications display
+
+### Changed
+- Reorganized project structure to src/ directory
+- Improved mobile UX with horizontal scrolling monthly cards
+- Enhanced timestamp formatting with full year display
+- Better error handling and fallback mechanisms
+
+### Fixed
+- Mobile responsiveness issues with contribution graphs
+- File path references updated to new src/ structure
+- Loading states and API timeout handling
+
+### Technical
+- Modular JavaScript architecture with ES6 imports
+- CSS organization with component-based structure
+- Dynamic GitHub releases API integration
+- Responsive design improvements
+
+
+
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto segue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
