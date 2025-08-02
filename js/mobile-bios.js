@@ -261,8 +261,8 @@ class MobileBIOS {
                 Specialization: Backend Architecture<br>
                 Primary Languages: Java, Go<br>
                 Location: Brazil<br>
-                Experience: 5+ years<br>
-                Status: Available for projects
+                Experience: 3+ years<br>
+                Status: Employed + Weekend freelances
               </div>
             </div>
           </div>
@@ -279,16 +279,16 @@ class MobileBIOS {
             </div>
             
             <div style="margin-bottom: 20px;">
-              <h4 style="color: #BB86FC; margin-bottom: 12px;">🌐 Frontend & Mobile</h4>
+              <h4 style="color: #BB86FC; margin-bottom: 12px;">🌐 Frontend & Web</h4>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                ${this.createSkillBadges(['JavaScript', 'HTML5', 'CSS3', 'React', 'Vue.js', 'Android'])}
+                ${this.createSkillBadges(['JavaScript', 'TypeScript', 'HTML5', 'CSS3', 'React'])}
               </div>
             </div>
             
             <div style="margin-bottom: 20px;">
               <h4 style="color: #FF9800; margin-bottom: 12px;">🛠️ DevOps & Tools</h4>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                ${this.createSkillBadges(['Docker', 'Kubernetes', 'AWS', 'Git', 'Jenkins', 'Linux'])}
+                ${this.createSkillBadges(['Docker', 'AWS', 'Git', 'Linux'])}
               </div>
             </div>
           </div>
@@ -309,20 +309,27 @@ class MobileBIOS {
                 name: 'Terminal Portfolio',
                 tech: 'JavaScript, CSS3, HTML5',
                 desc: 'Interactive terminal-style portfolio website',
-                status: 'Active'
+                status: 'Live'
               },
               {
-                name: 'Microservices Platform',
-                tech: 'Java, Spring Boot, Docker',
-                desc: 'Scalable microservices architecture',
-                status: 'In Development'
+                name: 'PriceFeed API',
+                tech: 'Go, PostgreSQL, Redis',
+                desc: 'Cryptocurrency price monitoring API',
+                status: 'Active development'
               },
               {
-                name: 'API Gateway',
-                tech: 'Go, Redis, PostgreSQL',
-                desc: 'High-performance API gateway service',
-                status: 'Production'
+                name: 'GPT Service Go',
+                tech: 'Go, OpenAI API, Docker',
+                desc: 'Microservice integrating with OpenAI GPT',
+                status: 'Active development'
+              },
+              {
+                name: 'Spring MCD Wallet',
+                tech: 'Java, Spring Framework, bitcoinj',
+                desc: 'Modular Bitcoin wallet with SPV',
+                status: 'In progress'
               }
+            ])}
             ])}
           </div>
         `;
@@ -335,7 +342,7 @@ class MobileBIOS {
               
               <div style="margin-bottom: 12px;">
                 <div style="color: #BB86FC; font-size: 14px; margin-bottom: 4px;">📧 Email</div>
-                <div style="font-size: 12px; font-family: monospace;">felipe.macedo@email.com</div>
+                <div style="font-size: 12px; font-family: monospace;">contato.dev.macedo@gmail.com</div>
               </div>
               
               <div style="margin-bottom: 12px;">
