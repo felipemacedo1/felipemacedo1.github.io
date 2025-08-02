@@ -49,8 +49,8 @@ export const CONTENT = {
 
 <span class="success">🎓 Formação Acadêmica:</span>
 • Cursando Bacharelado em Ciência da Computação (FMU - 2025 a 2029)
-• Concluindo Gestão da TI (Anhembi Morumbi - conclusão em 2025)
-• Bootcamps: AWS re/Start, Full Stack Java (Generation Brasil)
+• Concluído Gestão da TI (Anhembi Morumbi - Agosto 2022 – Dezembro 2024)
+• Bootcamps: AWS re/Start (2025), Full Stack Java (Generation Brasil)
 • Certificações: Azure AZ-900, Blockchain com Solidity
 
 <span class="success">💼 Experiência Profissional:</span>
@@ -59,10 +59,10 @@ export const CONTENT = {
 • Trainee Developer - Generation Brasil (Bootcamp Full Stack)
 
 <span class="success">🛠️ Tecnologias que domino:</span>
-• Java (8+), Spring Boot, JPA/Hibernate, JavaFX
-• Go (Gorilla Mux, GORM), APIs REST, mensageria com RabbitMQ
-• PostgreSQL, Redis, Docker, GitHub Actions
-• HTML, CSS, TypeScript, React (para UIs pontuais)
+• Java (8+), Spring Boot, Spring Security, JPA/Hibernate, JavaFX
+• Go (Gorilla Mux, GORM), APIs REST, microserviços
+• PostgreSQL, SQL Server, MongoDB, Redis, Docker, GitHub Actions
+• HTML, CSS, TypeScript, React (para UIs completas)
 
 <span class="success">🚀 Destaques:</span>
 • Sistemas escaláveis com foco em performance e manutenção
@@ -110,17 +110,17 @@ export const CONTENT = {
 <span class="highlight">💼 Disponibilidade:</span>
 
 <div class="project-item">
-<span class="success">🟢 DISPONÍVEL PARA:</span>
-<span class="output-text">• Projetos freelance (desenvolvimento web/backend)</span>
-<span class="output-text">• Projetos acadêmicos e estudos colaborativos</span>
+<span class="success">� DISPONIBILIDADE LIMITADA:</span>
+<span class="output-text">• Indisponível trabalho/estudo durante a semana</span>
+<span class="output-text">• Freelances apenas finais de semana</span>
 <span class="output-text">• Contribuições open source</span>
-<span class="output-text">• Networking e troca de experiências</span>
+<span class="output-text">• Networking e mentoria técnica</span>
 </div>
 
 <span class="highlight">📍 Informações Gerais:</span>
 
 <span class="output-text">🌎 <strong>Localização:</strong> Itapecerica da Serra - São Paulo, Brasil</span>
-<span class="output-text">⏰ <strong>Fuso horário:</strong> GMT-3 (Brasília) • Disponível: 18h-22h</span>
+<span class="output-text">⏰ <strong>Fuso horário:</strong> GMT-3 (Brasília) • Finais de semana disponível</span>
 <span class="output-text">🗣️ <strong>Idiomas:</strong> Português (nativo) • Inglês (intermediário)</span>
 <span class="output-text">🎓 <strong>Status:</strong> Estudante de Ciência da Computação</span>
 
