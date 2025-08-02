@@ -237,37 +237,85 @@ export class TerminalPortfolio {
 </span>
 
 <div class="project-item">
-<span class="project-title">🛒 Sistema de E-commerce Escalável</span>
+<span class="project-title">� Terminal Portfolio</span>
 <span class="project-description">
-Plataforma completa de e-commerce construída com arquitetura de microserviços.
-• <strong>Backend:</strong> Java Spring Boot + Go para processamento de pagamentos
-• <strong>Frontend:</strong> React.js com TypeScript e Material-UI
-• <strong>Infraestrutura:</strong> Kubernetes + AWS EKS
-• <strong>Performance:</strong> 10k+ transações simultâneas com latência < 100ms
-• <strong>Features:</strong> Cache Redis, Circuit Breaker, Rate Limiting
+Portfólio interativo dual com interface terminal para desktop e BIOS Android para mobile.
+• <strong>Frontend:</strong> HTML5, CSS3, JavaScript ES6+ vanilla
+• <strong>Features:</strong> 25+ comandos, 6 temas, auto-complete, detecção de dispositivo
+• <strong>Mobile:</strong> Interface BIOS Android com Material Design
+• <strong>Arquitetura:</strong> Modular, responsiva, zero dependências
 </span>
-<span class="project-link">🔗 github.com/felipemacedo/ecommerce-platform</span>
+<span class="project-link">🔗 <a href="https://felipemacedo1.github.io" target="_blank" class="project-link">felipemacedo1.github.io</a></span>
 </div>
 
 <div class="project-item">
-<span class="project-title">⚡ API Gateway de Alta Performance</span>
+<span class="project-title">⚡ PriceFeed API</span>
 <span class="project-description">
-Gateway desenvolvido em Go para gerenciamento centralizado de APIs corporativas.
-• <strong>Rate Limiting:</strong> Algoritmo Token Bucket inteligente
-• <strong>Resilience:</strong> Circuit breaker pattern com fallbacks
-• <strong>Monitoring:</strong> Métricas em tempo real com Prometheus + Grafana
-• <strong>Performance:</strong> Latência média < 5ms, 50k RPS
-• <strong>Security:</strong> JWT validation, OAuth2, API Key management
+API de monitoramento de preços de criptomoedas integrando CoinGecko e Binance.
+• <strong>Backend:</strong> Go com PostgreSQL e Redis para cache
+• <strong>Features:</strong> WebSocket real-time, alertas de preço, rate limiting
+• <strong>Integração:</strong> CoinGecko API, Binance API
+• <strong>Performance:</strong> Cache inteligente, baixa latência
 </span>
-<span class="project-link">🔗 github.com/felipemacedo/go-api-gateway</span>
+<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-pricefeed" target="_blank" class="project-link">github.com/felipemacedo1/go-pricefeed</a></span>
+</div>
+
+<div class="project-item">
+<span class="project-title">🤖 GPT Service Go</span>
+<span class="project-description">
+Microserviço em Go integrando com OpenAI GPT para geração de respostas e automações.
+• <strong>Backend:</strong> Go com Docker containerização
+• <strong>Integração:</strong> OpenAI API, gestão de tokens
+• <strong>Features:</strong> Rate limiting, error handling, logs estruturados
+• <strong>Deploy:</strong> Docker ready, configurações via env
+</span>
+<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-service-gpt" target="_blank" class="project-link">github.com/felipemacedo1/go-service-gpt</a></span>
+</div>
+
+<div class="project-item">
+<span class="project-title">₿ Spring MCD Wallet</span>
+<span class="project-description">
+Wallet Bitcoin modular com SPV (Simple Payment Verification) construída em Java.
+• <strong>Backend:</strong> Java com Spring Framework e bitcoinj
+• <strong>Features:</strong> SPV client, gerenciamento de chaves, transações
+• <strong>Segurança:</strong> Criptografia, backup de seeds, validação
+• <strong>Arquitetura:</strong> Modular, extensível, testável
+</span>
+<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/spring-mcd-wallet" target="_blank" class="project-link">github.com/felipemacedo1/spring-mcd-wallet</a></span>
+</div>
+
+<span class="highlight">🏢 Projetos Organizacionais (Growthfolio):</span>
+
+<div class="project-item">
+<span class="project-title">📝 Spring Blog Platform</span>
+<span class="project-description">
+Backend completo para plataforma de blog full-stack com Spring Boot.
+</span>
+<span class="project-link">🔗 <a href="https://github.com/growthfolio/spring-blog-platform" target="_blank" class="project-link">github.com/growthfolio/spring-blog-platform</a></span>
+</div>
+
+<div class="project-item">
+<span class="project-title">⚛️ React Blog Platform</span>
+<span class="project-description">
+Frontend em React/TypeScript para blog, demonstrando integração com APIs REST.
+</span>
+<span class="project-link">🔗 <a href="https://github.com/growthfolio/react-blog-plataform" target="_blank" class="project-link">github.com/growthfolio/react-blog-plataform</a></span>
+</div>
+
+<div class="project-item">
+<span class="project-title">🔄 AMQP Transactions Microservices</span>
+<span class="project-description">
+Pipeline de microserviços com RabbitMQ para processamento transacional.
+</span>
+<span class="project-link">🔗 <a href="https://github.com/growthfolio/amqp-transactions-ms" target="_blank" class="project-link">github.com/growthfolio/amqp-transactions-ms</a></span>
 </div>
 
 <span class="success">📋 Características dos Projetos:</span>
-<span class="output-text">✅ Documentação completa com Swagger/OpenAPI</span>
-<span class="output-text">🧪 Testes automatizados (Unit, Integration, E2E)</span>
-<span class="output-text">🔄 CI/CD pipelines com GitHub Actions</span>
-<span class="output-text">📊 Monitoramento e logging estruturado</span>
-<span class="output-text">🔒 Práticas de segurança (OWASP Top 10)</span>`;
+<span class="output-text">✅ Código open source disponível no GitHub</span>
+<span class="output-text">🧪 Foco em boas práticas e clean code</span>
+<span class="output-text">🔄 Projetos em desenvolvimento ativo</span>
+<span class="output-text">📊 Demonstração de diferentes tecnologias</span>
+<span class="output-text">🔒 Aplicação de padrões de segurança</span>`;
     this.terminal.addToOutput(projectsText);
   }
 
