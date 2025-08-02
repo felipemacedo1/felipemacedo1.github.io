@@ -82,16 +82,25 @@ jobs:
 
           DATA_DIR="analytics"
           OUTPUT_FILE="${DATA_DIR}/activity-${TARGET_YEAR}-${TARGET_USER}.json"
+          
+          # Calculate 365-day range (from 365 days ago to today)
+          DAYS_365_START=$(date -u -d "365 days ago" +%F)
+          TODAY=$(date -u +%F)
+          ROLLING_OUTPUT_FILE="${DATA_DIR}/activity-rolling-365d-${TARGET_USER}.json"
 
           # Export variables
           {
             echo "target_year=$TARGET_YEAR"
             echo "target_user=$TARGET_USER"
             echo "output_file=$OUTPUT_FILE"
+            echo "rolling_output_file=$ROLLING_OUTPUT_FILE"
+            echo "twelve_months_start=$DAYS_365_START"
+            echo "today=$TODAY"
             echo "data_dir=$DATA_DIR"
           } >> "$GITHUB_OUTPUT"
           
           echo "✓ Configuration: year=$TARGET_YEAR, user=$TARGET_USER"
+          echo "✓ Rolling 365-day range: $DAYS_365_START to $TODAY"
 
       - name: Aggregate repository activity data
         env:
@@ -102,6 +111,9 @@ jobs:
           YEAR=${{ steps.config.outputs.target_year }}
           USER=${{ steps.config.outputs.target_user }}
           OUT_FILE=${{ steps.config.outputs.output_file }}
+          ROLLING_OUT_FILE=${{ steps.config.outputs.rolling_output_file }}
+          TWELVE_MONTHS_START=${{ steps.config.outputs.twelve_months_start }}
+          TODAY=${{ steps.config.outputs.today }}
           DATA_DIR=${{ steps.config.outputs.data_dir }}
 
           mkdir -p "$DATA_DIR"
@@ -109,8 +121,6 @@ jobs:
           # API configuration - CRITICAL: Use cloak-preview header for Search Commits API
           ACCEPT_HEADER="Accept: application/vnd.github.cloak-preview+json"
           AUTH_HEADER="Authorization: Bearer $GH_PAT"
-
-          declare -A daily_activity
 
           # Enhanced API request function with exponential backoff
           api_request() {
@@ -168,6 +178,7 @@ jobs:
           process_range_pages() {
             local start_date=$1
             local end_date=$2
+            local activity_array_ref=$3
             local query="author:${USER} committer-date:${start_date}..${end_date}"
             local page=1
 
@@ -192,7 +203,8 @@ jobs:
                 [[ -z "$item" ]] && continue
                 local commit_date
                 commit_date=$(echo "$item" | jq -r '.commit.author.date' | cut -d'T' -f1)
-                daily_activity["$commit_date"]=$((${daily_activity[$commit_date]:-0} + 1))
+                local -n activity_ref=$activity_array_ref
+                activity_ref["$commit_date"]=$((${activity_ref[$commit_date]:-0} + 1))
               done <<< "$items"
 
               # Check pagination
@@ -211,6 +223,7 @@ jobs:
           fetch_activity_range() {
             local start_date=$1
             local end_date=$2
+            local activity_array_ref=$3
             local query="author:${USER} committer-date:${start_date}..${end_date}"
             
             echo "Checking range: $start_date to $end_date"
@@ -235,97 +248,132 @@ jobs:
               
               if [[ "$mid_date" == "$start_date" || "$mid_date" == "$end_date" ]]; then
                 echo "::warning::Cannot split range further: $start_date..$end_date (total: $total_count)"
-                process_range_pages "$start_date" "$end_date"
+                process_range_pages "$start_date" "$end_date" "$activity_array_ref"
               else
-                fetch_activity_range "$start_date" "$mid_date"
+                fetch_activity_range "$start_date" "$mid_date" "$activity_array_ref"
                 local next_day
                 next_day=$(date -u -d "$mid_date +1 day" +%F)
                 if [[ $(date -d "$next_day" +%s) -le $(date -d "$end_date" +%s) ]]; then
-                  fetch_activity_range "$next_day" "$end_date"
+                  fetch_activity_range "$next_day" "$end_date" "$activity_array_ref"
                 fi
               fi
             else
-              process_range_pages "$start_date" "$end_date"
+              process_range_pages "$start_date" "$end_date" "$activity_array_ref"
             fi
           }
 
-          # Main execution
+          # Function to generate JSON output
+          generate_json_output() {
+            local output_file=$1
+            local start_date=$2
+            local end_date=$3
+            local activity_array_ref=$4
+            local period_type=$5
+            
+            local -n activity_ref=$activity_array_ref
+            
+            {
+              echo "{"
+              echo "  \"metadata\": {"
+              echo "    \"generated_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\","
+              if [[ "$period_type" == "yearly" ]]; then
+                echo "    \"target_year\": $YEAR,"
+              else
+                echo "    \"period_type\": \"rolling_365_days\","
+              fi
+              echo "    \"target_user\": \"$USER\","
+              echo "    \"date_range\": {"
+              echo "      \"start\": \"$start_date\","
+              echo "      \"end\": \"$end_date\""
+              echo "    },"
+              echo "    \"workflow_run\": \"${{ github.run_id }}\""
+              echo "  },"
+              echo "  \"daily_metrics\": {"
+              
+              # Generate daily entries for the date range
+              is_first=true
+              current_date="$start_date"
+              end_timestamp=$(date -d "$end_date" +%s)
+              
+              while [[ $(date -d "$current_date" +%s) -le $end_timestamp ]]; do
+                count=${activity_ref[$current_date]:-0}
+                
+                if [[ "$is_first" == "true" ]]; then
+                  is_first=false
+                else
+                  echo ","
+                fi
+                
+                printf "    \"%s\": %d" "$current_date" "$count"
+                current_date=$(date -I -d "$current_date +1 day")
+              done
+              
+              echo
+              echo "  }"
+              echo "}"
+            } > "$output_file"
+          }
+
+          # Generate yearly data
+          declare -A yearly_activity
           YEAR_START="${YEAR}-01-01"
           YEAR_END="${YEAR}-12-31"
 
-          echo "Starting activity aggregation for $USER in $YEAR"
-          fetch_activity_range "$YEAR_START" "$YEAR_END"
+          echo "=== Starting yearly activity aggregation for $USER in $YEAR ==="
+          fetch_activity_range "$YEAR_START" "$YEAR_END" "yearly_activity"
+          generate_json_output "$OUT_FILE" "$YEAR_START" "$YEAR_END" "yearly_activity" "yearly"
+          echo "✓ Yearly activity aggregation completed: $OUT_FILE"
 
-          # Generate comprehensive JSON output
-          {
-            echo "{"
-            echo "  \"metadata\": {"
-            echo "    \"generated_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\","
-            echo "    \"target_year\": $YEAR,"
-            echo "    \"target_user\": \"$USER\","
-            echo "    \"date_range\": {"
-            echo "      \"start\": \"$YEAR_START\","
-            echo "      \"end\": \"$YEAR_END\""
-            echo "    },"
-            echo "    \"workflow_run\": \"${{ github.run_id }}\""
-            echo "  },"
-            echo "  \"daily_metrics\": {"
-            
-            # Generate daily entries for entire year
-            is_first=true
-            current_date="$YEAR_START"
-            end_timestamp=$(date -d "$YEAR_END" +%s)
-            
-            while [[ $(date -d "$current_date" +%s) -le $end_timestamp ]]; do
-              count=${daily_activity[$current_date]:-0}
-              
-              if [[ "$is_first" == "true" ]]; then
-                is_first=false
-              else
-                echo ","
-              fi
-              
-              printf "    \"%s\": %d" "$current_date" "$count"
-              current_date=$(date -I -d "$current_date +1 day")
-            done
-            
-            echo
-            echo "  }"
-            echo "}"
-          } > "$OUT_FILE"
-
-          echo "✓ Activity aggregation completed: $OUT_FILE"
+          # Generate rolling 365-day data
+          declare -A rolling_activity
+          
+          echo "=== Starting rolling 365-day activity aggregation for $USER ==="
+          echo "Date range: $TWELVE_MONTHS_START to $TODAY"
+          fetch_activity_range "$TWELVE_MONTHS_START" "$TODAY" "rolling_activity"
+          generate_json_output "$ROLLING_OUT_FILE" "$TWELVE_MONTHS_START" "$TODAY" "rolling_activity" "rolling"
+          echo "✓ Rolling 365-day activity aggregation completed: $ROLLING_OUT_FILE"
 
       - name: Validate generated data
         run: |
           OUTPUT_FILE="${{ steps.config.outputs.output_file }}"
+          ROLLING_OUTPUT_FILE="${{ steps.config.outputs.rolling_output_file }}"
 
-          # Check file exists
-          if [[ ! -f "$OUTPUT_FILE" ]]; then
-            echo "::error::Output file not generated: $OUTPUT_FILE"
-            exit 1
-          fi
+          validate_file() {
+            local file=$1
+            local description=$2
+            
+            # Check file exists
+            if [[ ! -f "$file" ]]; then
+              echo "::error::$description file not generated: $file"
+              return 1
+            fi
 
-          # Validate JSON format
-          if ! jq empty "$OUTPUT_FILE" 2>/dev/null; then
-            echo "::error::Invalid JSON format in $OUTPUT_FILE"
-            exit 1
-          fi
+            # Validate JSON format
+            if ! jq empty "$file" 2>/dev/null; then
+              echo "::error::Invalid JSON format in $file"
+              return 1
+            fi
 
-          # Generate summary
-          echo "=== Data Summary ==="
-          echo "File: $OUTPUT_FILE"
-          echo "Size: $(du -h "$OUTPUT_FILE" | cut -f1)"
-          echo "Total days: $(jq '.daily_metrics | length' "$OUTPUT_FILE")"
-          echo "Active days: $(jq '[.daily_metrics[] | select(. > 0)] | length' "$OUTPUT_FILE")"
-          echo "Total activity: $(jq '[.daily_metrics[]] | add' "$OUTPUT_FILE")"
-          
-          echo -e "\n=== File Preview ==="
-          head -n 30 "$OUTPUT_FILE"
+            # Generate summary
+            echo "=== $description Data Summary ==="
+            echo "File: $file"
+            echo "Size: $(du -h "$file" | cut -f1)"
+            echo "Total days: $(jq '.daily_metrics | length' "$file")"
+            echo "Active days: $(jq '[.daily_metrics[] | select(. > 0)] | length' "$file")"
+            echo "Total activity: $(jq '[.daily_metrics[]] | add' "$file")"
+            
+            echo -e "\n=== $description File Preview ==="
+            head -n 20 "$file"
+            echo ""
+          }
+
+          validate_file "$OUTPUT_FILE" "Yearly"
+          validate_file "$ROLLING_OUTPUT_FILE" "Rolling 365-Day"
 
       - name: Commit data changes
         run: |
           OUTPUT_FILE="${{ steps.config.outputs.output_file }}"
+          ROLLING_OUTPUT_FILE="${{ steps.config.outputs.rolling_output_file }}"
           YEAR="${{ steps.config.outputs.target_year }}"
           USER="${{ steps.config.outputs.target_user }}"
 
@@ -333,22 +381,22 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Check for changes
-          git add "$OUTPUT_FILE"
+          # Check for changes in both files
+          git add "$OUTPUT_FILE" "$ROLLING_OUTPUT_FILE"
           
           if git diff --staged --quiet; then
-            echo "No changes detected in $OUTPUT_FILE"
+            echo "No changes detected in activity files"
           else
             # Create conventional commit message
             COMMIT_MSG="Auto-generated activity aggregation for user ${USER}
-          - Updated daily activity metrics
+          - Updated yearly activity metrics (${YEAR})
+          - Updated rolling 365-day activity metrics
           - Data source: GitHub Search API  
-          - Target period: ${YEAR}
           - Workflow run: ${{ github.run_id }}
           
           [skip ci]"
             
-            git commit -m "feat(analytics): update activity metrics for ${YEAR}" -m "$COMMIT_MSG"
+            git commit -m "feat(analytics): update activity metrics for ${USER}" -m "$COMMIT_MSG"
             git push origin HEAD
-            echo "✓ Successfully committed updates to $OUTPUT_FILE"
+            echo "✓ Successfully committed updates to activity files"
           fi
