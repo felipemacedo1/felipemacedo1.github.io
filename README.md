@@ -271,7 +271,7 @@ static-port/
 ### GitHub Pages
 ```bash
 # 1. Configure GitHub Pages na branch main
-# 2. Acesse: https://seu-usuario.github.io/static-port/
+# 2. Acesse: https://felipemacedo1.github.io/
 # 3. Mobile redireciona automaticamente
 ```
 
@@ -308,10 +308,9 @@ Distribuído sob a licença MIT. Veja o arquivo [LICENSE](./LICENSE) para mais d
 **Organização** [Growthfolio](https://github.com/orgs/growthfolio/)
 
 © 2025 Felipe Macedo. Todos os direitos reservados.
-
+<!--
 ---
 
 *⭐ Se este projeto foi útil, considere dar uma estrela no GitHub!*
 
-<!--
 Tags: portfolio, terminal, javascript, html, css, retro, interactive, personal, webdev
