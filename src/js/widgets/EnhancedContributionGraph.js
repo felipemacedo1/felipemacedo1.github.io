@@ -378,6 +378,9 @@ class EnhancedContributionGraph {
     const graph = this.container.querySelector('.enhanced-contribution-graph');
     if (graph) {
       graph.className = `enhanced-contribution-graph ${this.options.theme}`;
+    } else {
+      // Warn if updateTheme is called before render
+      console.warn('updateTheme: .enhanced-contribution-graph element not found. Make sure to call updateTheme after render().');
     }
   }
 
