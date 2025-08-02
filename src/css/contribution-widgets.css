@@ -1,0 +1,118 @@
+/* Contribution Widget Styles for Terminal Integration */
+.command-section {
+  margin: 16px 0;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(0, 255, 0, 0.05);
+  border: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+.command-section h3 {
+  color: #00ff00;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.command-links {
+  margin-top: 12px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.command-links a {
+  color: #00ff00;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.command-links a:hover {
+  background: rgba(0, 255, 0, 0.1);
+  border-color: #00ff00;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  border-left: 3px solid #00ff00;
+}
+
+.stat-label {
+  color: #ccc;
+  font-size: 12px;
+}
+
+.stat-value {
+  color: #00ff00;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.stats-detailed {
+  margin: 12px 0;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.command-tip {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+}
+
+.command-tip code {
+  color: #00ff00;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .command-links {
+    flex-direction: column;
+  }
+  
+  .stat-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

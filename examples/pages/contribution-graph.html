@@ -140,8 +140,9 @@
 
   <div id="ascii-output" class="ascii-output"></div>
 
-  <script src="contribution.js"></script>
-  <script>
+  <script type="module">
+    import ContributionGraph from '../../src/js/widgets/ContributionGraph.js';
+
     // Parse URL params
     const urlParams = new URLSearchParams(window.location.search);
     const urlYear = urlParams.get('year');
@@ -150,7 +151,7 @@
     // Initialize
     const currentYear = new Date().getFullYear();
     const defaultAuthor = urlAuthor || 'felipemacedo1';
-    const defaultPeriod = urlYear || 'rolling'; // Default to rolling 365 days
+    const defaultPeriod = urlYear || 'rolling';
 
     document.getElementById('author').value = defaultAuthor;
 
@@ -159,7 +160,7 @@
       ContributionGraph.loadAndRender(period, document.getElementById('author').value.trim() || defaultAuthor);
     });
 
-    // Set active button (rolling is default)
+    // Set active button
     if (urlYear && urlYear !== 'rolling') {
       const yearBtn = document.querySelector(`[data-year="${urlYear}"]`);
       if (yearBtn) {

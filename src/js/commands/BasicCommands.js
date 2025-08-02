@@ -1,9 +1,11 @@
 // Basic terminal commands
 import { CONTENT } from '../data/content.js';
+import ContributionCommands from './ContributionCommands.js';
 
 export class BasicCommands {
   constructor(terminal) {
     this.terminal = terminal;
+    this.contributionCommands = new ContributionCommands(terminal);
   }
 
   getCommands() {
@@ -20,7 +22,11 @@ export class BasicCommands {
       pwd: () => this.showPath(),
       ls: () => this.listFiles(),
       "ls -la": () => this.listFilesDetailed(),
-      whoami: () => this.whoami()
+      whoami: () => this.whoami(),
+      contributions: (args) => this.contributionCommands.showContributions(args),
+      contrib: (args) => this.contributionCommands.showContributions(args),
+      activity: (args) => this.contributionCommands.showActivity(args),
+      stats: (args) => this.contributionCommands.showStats(args)
     };
   }
 
@@ -77,7 +83,9 @@ export class BasicCommands {
 ⚙️ Foco em soluções escaláveis, microserviços e automação backend
 
 <span class="success">📊 Status:</span> Em constante evolução — aprendendo, construindo e compartilhando!
-<span class="warning">💬 Stack preferido:</span> Go pra performance. Java pra manter vivo.`;
+<span class="warning">💬 Stack preferido:</span> Go pra performance. Java pra manter vivo.
+
+<span class="info">💡 Dica:</span> Digite <code>contributions</code> para ver minha atividade no GitHub`;
     this.terminal.addToOutput(introText);
   }
 }
