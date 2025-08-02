@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contribution Graph Enhanced - Felipe Macedo</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --border-primary: #30363d;
+      --text-primary: #f0f6fc;
+      --text-secondary: #e6edf3;
+      --text-muted: #7d8590;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-orange: #d29922;
+      --accent-red: #f85149;
+      --level-0: #161b22;
+      --level-1: #0e4429;
+      --level-2: #006d32;
+      --level-3: #26a641;
+      --level-4: #39d353;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      color: var(--text-primary);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border-primary);
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn, .input {
+      padding: 8px 12px;
+      border: 1px solid var(--border-primary);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover { background: var(--border-primary); }
+    .btn.active { background: var(--accent-blue); color: var(--bg-primary); }
+    .btn.period-365d.active { background: var(--accent-green); }
+
+    .input { cursor: text; }
+    .input:focus { outline: none; border-color: var(--accent-blue); }
+
+    /* Stats Cards */
+    .stats-section {
+      margin-bottom: 32px;
+    }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(88, 166, 255, 0.1);
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .stat-trend {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+
+    .trend-up { background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
+    .trend-down { background: rgba(248, 81, 73, 0.1); color: var(--accent-red); }
+
+    /* Graph Container */
+    .graph-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .graph-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .graph-info {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .graph-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .size-btn {
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    /* Grid */
+    .grid-wrapper {
+      position: relative;
+      overflow-x: auto;
+      padding: 16px 0;
+    }
+
+    .grid {
+      display: flex;
+      gap: 3px;
+      min-width: fit-content;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .week {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .cell {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .cell:hover {
+      transform: scale(1.3);
+      z-index: 10;
+      border: 2px solid var(--text-primary);
+    }
+
+    .cell.today {
+      border: 2px solid var(--accent-blue);
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.4);
+    }
+
+    .cell.weekend {
+      opacity: 0.8;
+    }
+
+    /* Levels */
+    .level-0 { background: var(--level-0); }
+    .level-1 { background: var(--level-1); }
+    .level-2 { background: var(--level-2); }
+    .level-3 { background: var(--level-3); }
+    .level-4 { 
+      background: linear-gradient(45deg, var(--level-4), var(--level-3));
+      box-shadow: 0 0 6px rgba(57, 211, 83, 0.3);
+    }
+
+    /* Size variants */
+    .grid.compact .cell { width: 8px; height: 8px; }
+    .grid.large .cell { width: 14px; height: 14px; }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-box {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-primary);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-primary);
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      max-width: 200px;
+    }
+
+    .tooltip.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tooltip-date {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .tooltip-commits {
+      color: var(--accent-green);
+      font-weight: 500;
+    }
+
+    .tooltip-day {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    /* Monthly Breakdown */
+    .monthly-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .month-bars {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 8px;
+      height: 120px;
+      align-items: end;
+    }
+
+    .month-bar {
+      background: var(--accent-blue);
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0.8;
+    }
+
+    .month-bar:hover {
+      opacity: 1;
+      transform: scaleY(1.05);
+    }
+
+    .month-label {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .month-value {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: var(--text-primary);
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .month-bar:hover .month-value {
+      opacity: 1;
+    }
+
+    /* Streak Info */
+    .streak-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .streak-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .streak-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-orange), var(--accent-red));
+    }
+
+    .streak-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .streak-number {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .streak-label {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Loading States */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      color: var(--text-muted);
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    /* Export Controls */
+    .export-section {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-primary);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .export-btn:hover {
+      background: var(--border-primary);
+      transform: translateY(-1px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { padding: 12px; }
+      .controls { flex-direction: column; gap: 12px; }
+      .stats-cards { grid-template-columns: repeat(2, 1fr); }
+      .graph-header { flex-direction: column; align-items: stretch; }
+      .month-bars { grid-template-columns: repeat(6, 1fr); height: 80px; }
+      .cell { width: 8px; height: 8px; }
+      .grid.large .cell { width: 10px; height: 10px; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-cards { grid-template-columns: 1fr; }
+      .streak-section { grid-template-columns: repeat(2, 1fr); }
+      .month-bars { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Theme variants */
+    .theme-halloween {
+      --level-0: #161b22;
+      --level-1: #631c03;
+      --level-2: #bd561d;
+      --level-3: #fa7a18;
+      --level-4: #fddf68;
+    }
+
+    .theme-arctic {
+      --level-0: #161b22;
+      --level-1: #0a3069;
+      --level-2: #0969da;
+      --level-3: #54aeff;
+      --level-4: #80ccff;
+    }
+
+    .theme-pink {
+      --level-0: #161b22;
+      --level-1: #7d1a7d;
+      --level-2: #a475a4;
+      --level-3: #d084d0;
+      --level-4: #f692f6;
+    }
+
+    /* Compact mode for terminal integration */
+    .compact-mode {
+      max-width: 800px;
+      padding: 12px;
+    }
+
+    .compact-mode .header h1 { font-size: 1.5rem; }
+    .compact-mode .stats-cards { grid-template-columns: repeat(4, 1fr); }
+    .compact-mode .stat-card { padding: 12px; }
+    .compact-mode .stat-number { font-size: 1.8rem; }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <div class="header">
+      <h1>📊 Contribution Graph</h1>
+      <p>Visualização interativa da atividade de desenvolvimento</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Período:</span>
+        <div id="period-buttons"></div>
+      </div>
+      
+      <div class="control-group">
+        <span class="control-label">Author:</span>
+        <input id="author" class="input" type="text" value="felipemacedo1" />
+      </div>
+
+      <div class="control-group">
+        <button id="refresh" class="btn">🔄 Atualizar</button>
+        <button id="toggle-ascii" class="btn">📟 ASCII</button>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Tema:</span>
+        <select id="theme-selector" class="input">
+          <option value="github">GitHub</option>
+          <option value="halloween">Halloween</option>
+          <option value="arctic">Arctic</option>
+          <option value="pink">Pink</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-section">
+      <div class="stats-cards" id="stats-cards">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+    <!-- Streak Info -->
+    <div class="streak-section" id="streak-section">
+      <!-- Generated by JS -->
+    </div>
+
+    <!-- Graph -->
+    <div class="graph-container">
+      <div class="graph-header">
+        <div class="graph-info" id="graph-info">Carregando...</div>
+        <div class="graph-controls">
+          <span class="control-label">Tamanho:</span>
+          <button class="btn size-btn" data-size="compact">Compacto</button>
+          <button class="btn size-btn active" data-size="normal">Normal</button>
+          <button class="btn size-btn" data-size="large">Grande</button>
+        </div>
+      </div>
+      
+      <div class="grid-wrapper">
+        <div id="graph" class="grid">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+
+      <div class="legend">
+        <span>Menos</span>
+        <div class="legend-item">
+          <div class="legend-box level-0"></div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-1"></div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-2"></div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-3"></div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-4"></div>
+        </div>
+        <span>Mais</span>
+      </div>
+    </div>
+
+    <!-- Monthly Breakdown -->
+    <div class="monthly-section">
+      <h3 class="section-title">📈 Atividade por Mês</h3>
+      <div class="month-bars" id="month-bars">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+    <!-- Export Controls -->
+    <div class="export-section">
+      <button class="export-btn" id="export-png">📸 Exportar PNG</button>
+      <button class="export-btn" id="export-svg">🎨 Exportar SVG</button>
+      <button class="export-btn" id="share-link">🔗 Compartilhar</button>
+    </div>
+
+    <!-- ASCII Output -->
+    <div id="ascii-output" style="display: none; background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 12px; padding: 16px; margin-top: 24px; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.2; white-space: pre; overflow-x: auto;"></div>
+  </div>
+
+  <!-- Tooltip -->
+  <div id="tooltip" class="tooltip"></div>
+
+  <script src="contribution-enhanced.js"></script>
+  <script>
+    // Initialize enhanced contribution graph
+    document.addEventListener('DOMContentLoaded', () => {
+      window.contributionGraph = new EnhancedContributionGraph();
+    });
+  </script>
+</body>
+</html>

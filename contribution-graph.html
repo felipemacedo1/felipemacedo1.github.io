@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contribution Graph - Felipe Macedo</title>
+  <style>
+    body { 
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; 
+      padding: 20px; 
+      max-width: 900px; 
+      margin: 0 auto; 
+      background: #0d1117; 
+      color: #e6edf3; 
+    }
+    h1 { color: #f0f6fc; margin-bottom: 20px; }
+    .controls { 
+      margin-bottom: 16px; 
+      display: flex; 
+      gap: 12px; 
+      flex-wrap: wrap; 
+      align-items: center; 
+    }
+    .btn { 
+      padding: 8px 12px; 
+      border: 1px solid #30363d; 
+      border-radius: 6px; 
+      background: #21262d; 
+      color: #e6edf3; 
+      cursor: pointer; 
+      font-size: 14px; 
+      transition: all 0.2s;
+    }
+    .btn:hover { background: #30363d; }
+    .btn.active { background: #238636; border-color: #238636; }
+    .input { 
+      padding: 8px 12px; 
+      border: 1px solid #30363d; 
+      border-radius: 6px; 
+      background: #0d1117; 
+      color: #e6edf3; 
+      font-size: 14px; 
+    }
+    .info { 
+      margin: 16px 0; 
+      font-size: 14px; 
+      color: #7d8590; 
+    }
+    .graph-container { 
+      background: #0d1117; 
+      border: 1px solid #30363d; 
+      border-radius: 6px; 
+      padding: 16px; 
+      margin: 16px 0; 
+    }
+    .grid { 
+      display: flex; 
+      gap: 3px; 
+      overflow-x: auto; 
+      font-size: 10px; 
+    }
+    .week { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 3px; 
+    }
+    .cell {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .level-0 { background: #161b22; }
+    .level-1 { background: #0e4429; }
+    .level-2 { background: #006d32; }
+    .level-3 { background: #26a641; }
+    .level-4 { background: #39d353; }
+    .legend { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      font-size: 12px; 
+      color: #7d8590; 
+      margin-top: 8px; 
+    }
+    .legend-item { display: flex; align-items: center; gap: 4px; }
+    .legend-box { width: 11px; height: 11px; border-radius: 2px; }
+    .ascii-output {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: pre;
+      overflow-x: auto;
+      margin-top: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Contribution Graph</h1>
+  
+  <div class="controls">
+    <div id="year-buttons"></div>
+    <div>
+      <label for="author">Author:</label>
+      <input id="author" class="input" type="text" value="felipemacedo1" />
+    </div>
+    <button id="refresh" class="btn">🔄 Recarregar</button>
+    <button id="toggle-ascii" class="btn">📟 ASCII</button>
+  </div>
+
+  <div id="info" class="info">Carregando...</div>
+
+  <div class="graph-container">
+    <div id="graph"></div>
+    <div class="legend">
+      <span>Menos</span>
+      <div class="legend-item">
+        <div class="legend-box level-0"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box level-1"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box level-2"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box level-3"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box level-4"></div>
+      </div>
+      <span>Mais</span>
+    </div>
+  </div>
+
+  <div id="ascii-output" class="ascii-output"></div>
+
+  <script src="contribution.js"></script>
+  <script>
+    // Parse URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlYear = urlParams.get('year');
+    const urlAuthor = urlParams.get('author');
+
+    // Initialize
+    const currentYear = new Date().getFullYear();
+    const defaultAuthor = urlAuthor || 'felipemacedo1';
+    const defaultPeriod = urlYear || 'rolling'; // Default to rolling 365 days
+
+    document.getElementById('author').value = defaultAuthor;
+
+    // Create year buttons
+    ContributionGraph.createYearButtons(currentYear, (period) => {
+      ContributionGraph.loadAndRender(period, document.getElementById('author').value.trim() || defaultAuthor);
+    });
+
+    // Set active button (rolling is default)
+    if (urlYear && urlYear !== 'rolling') {
+      const yearBtn = document.querySelector(`[data-year="${urlYear}"]`);
+      if (yearBtn) {
+        document.querySelectorAll('#year-buttons .btn').forEach(b => b.classList.remove('active'));
+        yearBtn.classList.add('active');
+      }
+    }
+
+    // Event listeners
+    document.getElementById('refresh').addEventListener('click', () => {
+      const activePeriod = document.querySelector('#year-buttons .btn.active');
+      const period = activePeriod ? activePeriod.dataset.year : 'rolling';
+      const finalPeriod = period === 'rolling' ? 'rolling' : parseInt(period);
+      const author = document.getElementById('author').value.trim() || defaultAuthor;
+      ContributionGraph.loadAndRender(finalPeriod, author);
+    });
+
+    document.getElementById('toggle-ascii').addEventListener('click', () => {
+      const asciiOutput = document.getElementById('ascii-output');
+      const isVisible = asciiOutput.style.display !== 'none';
+      
+      if (isVisible) {
+        asciiOutput.style.display = 'none';
+      } else {
+        const activePeriod = document.querySelector('#year-buttons .btn.active');
+        const period = activePeriod ? activePeriod.dataset.year : 'rolling';
+        const finalPeriod = period === 'rolling' ? 'rolling' : parseInt(period);
+        const author = document.getElementById('author').value.trim() || defaultAuthor;
+        
+        ContributionGraph.loadData(finalPeriod, author).then(data => {
+          if (data && data.daily_metrics) {
+            const ascii = ContributionGraph.generateASCII(data.daily_metrics, finalPeriod);
+            asciiOutput.textContent = ascii;
+            asciiOutput.style.display = 'block';
+          }
+        });
+      }
+    });
+
+    // Initial load
+    ContributionGraph.loadAndRender(defaultPeriod, defaultAuthor);
+  </script>
+</body>
+</html>
