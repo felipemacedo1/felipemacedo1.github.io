@@ -134,10 +134,18 @@ export class AutoComplete {
   }
 
   _highlightMatch(command, input) {
-    if (!input) return command;
+    if (!input) return this._sanitizeHTML(command);
     
-    const regex = new RegExp(`(${this._escapeRegex(input)})`, 'gi');
-    return command.replace(regex, '<span style="background: rgba(0,255,255,0.3); color: #00ffff; font-weight: bold;">$1</span>');
+    const sanitizedCommand = this._sanitizeHTML(command);
+    const sanitizedInput = this._sanitizeHTML(input);
+    const regex = new RegExp(`(${this._escapeRegex(sanitizedInput)})`, 'gi');
+    return sanitizedCommand.replace(regex, '<span style="background: rgba(0,255,255,0.3); color: #00ffff; font-weight: bold;">$1</span>');
+  }
+
+  _sanitizeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   _escapeRegex(string) {

@@ -145,6 +145,7 @@ class MobileBIOS {
     const detailContent = document.getElementById('detailContent');
 
     detailTitle.textContent = this.getActionTitle(action);
+    // Use innerHTML but content is controlled (not user input)
     detailContent.innerHTML = this.getActionContent(action);
 
     detailView.style.display = 'flex';
@@ -240,6 +241,20 @@ class MobileBIOS {
           }
         }, { passive: false });
       });
+    });
+  }
+
+  sanitizeInput(input) {
+    // Basic XSS prevention
+    return input.replace(/[<>"'&]/g, function(match) {
+      const escapeMap = {
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#x27;',
+        '&': '&amp;'
+      };
+      return escapeMap[match];
     });
   }
 
