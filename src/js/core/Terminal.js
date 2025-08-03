@@ -8,11 +8,21 @@ export class Terminal {
     this.typewriterSpeed = 50;
   }
 
-  addToOutput(text) {
+  addToOutput(text, type = 'normal') {
     const outputElement = document.createElement("div");
-    // Sanitize HTML to prevent XSS and code injection
-    outputElement.textContent = text;
+    
+    if (type === 'system' || type === 'achievement') {
+      outputElement.innerHTML = text; // Allow HTML for system messages
+    } else {
+      outputElement.textContent = text; // Sanitize user content
+    }
+    
+    if (type === 'achievement') {
+      outputElement.classList.add('achievement-output');
+    }
+    
     this.output.appendChild(outputElement);
+    this.scrollToBottom();
   }
 
   clearTerminal() {

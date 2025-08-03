@@ -336,16 +336,38 @@ body {
   background: none;
   border: none;
   color: var(--primary);
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
   margin-right: var(--spacing-md);
-  border-radius: 4px;
-  transition: background 0.2s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-primary);
+}
+
+.back-btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
 }
 
 .back-btn:hover {
   background: var(--bios-gray);
+  transform: translateX(-2px);
+}
+
+.back-btn:hover svg {
+  transform: translateX(-2px);
+}
+
+.back-btn:active {
+  transform: translateX(-1px) scale(0.98);
+  background: var(--primary-variant);
+  color: var(--on-primary);
 }
 
 .detail-content {
@@ -443,37 +465,63 @@ body {
   background: var(--primary-variant);
 }
 
-/* ===== GITHUB SECTION SCROLLING ===== */
+/* ===== IMPROVED GITHUB SECTION SCROLLING ===== */
 .github-section {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.github-content-scroll {
+  flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  max-height: 100%;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  position: relative;
+  /* Improved scroll performance */
+  will-change: scroll-position;
+  transform: translateZ(0);
 }
 
 .github-contrib-container {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: 300px;
-  padding: 8px;
+  overflow: hidden;
+  max-height: none;
+  position: relative;
 }
 
 .github-stats-grid {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.github-stats-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .github-repos-list {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: 400px;
+  overflow: visible;
+  max-height: none;
 }
 
-/* ===== CONTRIBUTION WIDGET SCROLLING ===== */
+/* ===== CONTRIBUTION WIDGET OPTIMIZATION ===== */
 #mobile-contrib-widget {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: 200px;
+  overflow: hidden;
+  max-height: 120px;
   border-radius: 6px;
+  touch-action: none;
+  position: relative;
+}
+
+#mobile-contrib-widget svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* ===== IMPROVED TOUCH SCROLLING ===== */
@@ -496,4 +544,155 @@ body {
 
 .detail-view {
   overscroll-behavior: none;
+}
+
+/* ===== SCROLL INDICATORS ===== */
+.scroll-indicator {
+  position: absolute;
+  right: 2px;
+  width: 4px;
+  height: 30px;
+  background: rgba(3, 218, 198, 0.6);
+  border-radius: 2px;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+}
+
+.scroll-indicator.visible {
+  opacity: 0.7;
+}
+
+/* ===== LOADING SHIMMER ===== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ===== ENHANCED GITHUB SCROLL OPTIMIZATION ===== */
+.github-content-scroll {
+  /* Enhanced scroll performance */
+  will-change: scroll-position;
+  transform: translateZ(0); /* Force hardware acceleration */
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.github-content-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.github-content-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.github-content-scroll::-webkit-scrollbar-thumb {
+  background: rgba(3, 218, 198, 0.5);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.github-content-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(3, 218, 198, 0.8);
+}
+
+/* ===== PULL TO REFRESH STYLES ===== */
+.pull-to-refresh {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 12px;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.pull-to-refresh.active {
+  opacity: 1;
+  top: 10px;
+}
+
+.pull-to-refresh .refresh-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ===== IMPROVED TOUCH FEEDBACK ===== */
+.menu-item:active,
+.nav-item:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* ===== BETTER CONTRAST FOR READABILITY ===== */
+.github-section .detail-content {
+  background: #0d1117;
+  color: #f0f6fc;
+}
+
+.github-section h3,
+.github-section h4 {
+  color: #f0f6fc;
+}
+
+/* ===== RESPONSIVE SCROLL IMPROVEMENTS ===== */
+@media (max-height: 700px) {
+  .github-content-scroll {
+    max-height: calc(100vh - 120px);
+  }
+}
+
+@media (max-height: 600px) {
+  .github-content-scroll {
+    max-height: calc(100vh - 100px);
+  }
+}
+
+/* ===== CONTRIBUTION GRAPH MOBILE OPTIMIZATION ===== */
+.github-contrib-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.github-contrib-container svg {
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+/* ===== PERIOD SELECTOR IMPROVEMENTS ===== */
+.period-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.period-btn:active {
+  transform: scale(0.95);
+}
+
+/* ===== SMOOTH TRANSITIONS FOR BETTER UX ===== */
+.github-section * {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.github-section .loading {
+  opacity: 0.7;
+  pointer-events: none;
 }

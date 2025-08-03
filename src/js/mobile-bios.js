@@ -1,5 +1,5 @@
 // Mobile BIOS Interface
-import { DeviceDetector } from './utils/DeviceDetector.js';
+// import { DeviceDetector } from './utils/DeviceDetector.js';
 
 class MobileBIOS {
   constructor() {
@@ -16,6 +16,8 @@ class MobileBIOS {
     this.setupEventListeners();
     this.updateClock();
     this.updateBattery();
+    this.addHapticFeedback();
+    this.addLoadingStates();
     
     // Update clock every second
     setInterval(() => this.updateClock(), 1000);
@@ -169,6 +171,9 @@ class MobileBIOS {
     // Re-setup scrollable containers for new content
     setTimeout(() => {
       this.setupScrollableContainers();
+      this.optimizeGitHubScroll();
+      this.addPullToRefresh();
+      this.addScrollIndicators();
       detailView.classList.remove('slide-in');
     }, 300);
   }
@@ -203,12 +208,13 @@ class MobileBIOS {
   }
 
   setupScrollableContainers() {
-    // Identify scrollable containers
+    // Identify scrollable containers with improved selectors
     const scrollableSelectors = [
       '.bios-menu',
       '.detail-content',
-      '#mobile-contrib-widget',
-      '.github-section'
+      '.github-content-scroll',
+      '.github-contrib-container',
+      '.scrollable'
     ];
 
     scrollableSelectors.forEach(selector => {
@@ -216,10 +222,13 @@ class MobileBIOS {
       elements.forEach(element => {
         // Enable smooth scrolling
         element.style.scrollBehavior = 'smooth';
+        element.style.overscrollBehavior = 'contain';
         
         // Prevent parent scroll when this element is scrolling
+        let startY = 0;
+        
         element.addEventListener('touchstart', (e) => {
-          this.startY = e.touches[0].clientY;
+          startY = e.touches[0].clientY;
         }, { passive: true });
 
         element.addEventListener('touchmove', (e) => {
@@ -227,17 +236,21 @@ class MobileBIOS {
           const scrollTop = element.scrollTop;
           const scrollHeight = element.scrollHeight;
           const clientHeight = element.clientHeight;
+          const deltaY = currentY - startY;
           
-          // Allow scrolling within the element
+          // Only prevent default if we're at scroll boundaries
           if (scrollHeight > clientHeight) {
             // At top and trying to scroll up
-            if (scrollTop === 0 && currentY > this.startY) {
+            if (scrollTop <= 0 && deltaY > 0) {
               e.preventDefault();
             }
             // At bottom and trying to scroll down
-            else if (scrollTop + clientHeight >= scrollHeight && currentY < this.startY) {
+            else if (scrollTop + clientHeight >= scrollHeight && deltaY < 0) {
               e.preventDefault();
             }
+          } else {
+            // If content doesn't scroll, prevent all movement
+            e.preventDefault();
           }
         }, { passive: false });
       });
@@ -558,9 +571,9 @@ class MobileBIOS {
 
       case 'github':
         return `
-          <div class="github-section scrollable" style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-radius: 12px; overflow: hidden;">
+          <div class="github-section" style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-radius: 12px; overflow: hidden; height: 100%; display: flex; flex-direction: column;">
             <!-- Header Section -->
-            <div style="background: linear-gradient(135deg, #238636 0%, #2ea043 100%); padding: 20px; text-align: center; position: relative; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #238636 0%, #2ea043 100%); padding: 20px; text-align: center; position: relative; overflow: hidden; flex-shrink: 0;">
               <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
               <div style="color: white; font-size: 18px; font-weight: 600; margin-bottom: 4px;">🚀 GitHub Dashboard</div>
               <div style="color: rgba(255,255,255,0.8); font-size: 12px;">@felipemacedo1 • Computer Science Student & Full-Cycle Developer</div>
@@ -572,7 +585,7 @@ class MobileBIOS {
             </div>
 
             <!-- Enhanced Stats Cards -->
-            <div class="scrollable" style="padding: 16px; background: #0d1117;">
+            <div class="github-content-scroll" style="flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; background: #0d1117;">
               <div class="github-stats-grid horizontal-scroll" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
                 <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d; position: relative; overflow: hidden;">
                   <div style="position: absolute; top: -20px; right: -20px; width: 40px; height: 40px; background: radial-gradient(circle, #238636, transparent); opacity: 0.3; border-radius: 50%;"></div>
@@ -604,7 +617,7 @@ class MobileBIOS {
               </div>
 
               <!-- Enhanced Contribution Graph -->
-              <div class="github-contrib-container scrollable" style="background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+              <div class="github-contrib-container" style="background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
                 <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 12px;">
                   <div style="color: #c9d1d9; font-size: 14px; font-weight: 600;">📊 Contribution Activity</div>
                   <button onclick="window.open('../examples/pages/contribution-enhanced.html', '_blank')" 
@@ -637,7 +650,7 @@ class MobileBIOS {
                   </button>
                 </div>
                 
-                <div id="mobile-contrib-widget" style="margin-bottom: 8px; min-height: 120px; background: #010409; border: 1px solid #0d1117; border-radius: 6px; padding: 8px;"></div>
+                <div id="mobile-contrib-widget" style="margin-bottom: 8px; min-height: 120px; background: #010409; border: 1px solid #0d1117; border-radius: 6px; padding: 8px; overflow: hidden;"></div>
                 <div style="font-size: 10px; color: #7d8590; text-align: center; margin-top: 8px;">
                   <span id="period-info">Atividade dos últimos 365 dias</span> • <span style="color: #0e4429;">●</span> Menos <span style="color: #006d32;">■</span><span style="color: #26a641;">■</span><span style="color: #39d353;">■</span> Mais
                 </div>
@@ -734,7 +747,7 @@ class MobileBIOS {
               </div>
 
               <!-- Featured Repositories -->
-              <div class="github-repos-list scrollable" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+              <div class="github-repos-list" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
                 <div style="color: #f0f6fc; font-size: 14px; font-weight: 600; margin-bottom: 12px;">🌟 Featured Projects</div>
                 <div style="space-y: 12px;">
                   <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 14px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #30363d; position: relative; overflow: hidden;">
@@ -786,9 +799,9 @@ class MobileBIOS {
               </div>
 
               <!-- Recent Activity -->
-              <div class="scrollable" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px;">
+              <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px;">
                 <div style="color: #f0f6fc; font-size: 14px; font-weight: 600; margin-bottom: 12px;">⚡ Recent Activity</div>
-                <div class="scrollable" style="space-y: 8px;">
+                <div style="space-y: 8px;">
                   <div style="display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #21262d;">
                     <div style="width: 16px; height: 16px; background: #238636; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                       <div style="width: 6px; height: 6px; background: white; border-radius: 50%;"></div>
@@ -1559,6 +1572,186 @@ class MobileBIOS {
   getBuildNumber() {
     const buildNum = Math.floor(Math.random() * 1000) + 2000;
     return `#${buildNum}`;
+  }
+
+  optimizeGitHubScroll() {
+    // Specific optimization for GitHub section scrolling
+    const githubContent = document.querySelector('.github-content-scroll');
+    if (githubContent) {
+      // Ensure proper scroll behavior
+      githubContent.style.overflowY = 'auto';
+      githubContent.style.webkitOverflowScrolling = 'touch';
+      githubContent.style.overscrollBehavior = 'contain';
+
+      // Add momentum scrolling for iOS
+      githubContent.style.webkitOverflowScrolling = 'touch';
+
+      // Prevent rubber band effect
+      githubContent.addEventListener('scroll', (e) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.target;
+
+        // Prevent overscroll at boundaries
+        if (scrollTop <= 0) {
+          e.target.scrollTop = 1;
+        } else if (scrollTop + clientHeight >= scrollHeight) {
+          e.target.scrollTop = scrollHeight - clientHeight - 1;
+        }
+      }, { passive: true });
+    }
+
+    // Optimize contribution widget container
+    const contribWidget = document.getElementById('mobile-contrib-widget');
+    if (contribWidget) {
+      contribWidget.style.overflow = 'hidden';
+      contribWidget.style.touchAction = 'pan-y';
+    }
+  }
+
+  addPullToRefresh() {
+    const detailContent = document.querySelector('.detail-content');
+    if (!detailContent) return;
+
+    let startY = 0;
+    let pullDistance = 0;
+    const maxPull = 80;
+
+    detailContent.addEventListener('touchstart', (e) => {
+      if (detailContent.scrollTop === 0) {
+        startY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    detailContent.addEventListener('touchmove', (e) => {
+      if (detailContent.scrollTop === 0 && startY > 0) {
+        pullDistance = Math.min(e.touches[0].clientY - startY, maxPull);
+
+        if (pullDistance > 0) {
+          detailContent.style.transform = `translateY(${pullDistance * 0.5}px)`;
+          detailContent.style.opacity = 1 - (pullDistance / maxPull) * 0.2;
+        }
+      }
+    }, { passive: true });
+
+    detailContent.addEventListener('touchend', () => {
+      if (pullDistance > 50) {
+        // Trigger refresh
+        this.refreshCurrentView();
+      }
+
+      // Reset transform
+      detailContent.style.transform = '';
+      detailContent.style.opacity = '';
+      startY = 0;
+      pullDistance = 0;
+    }, { passive: true });
+  }
+
+  refreshCurrentView() {
+    // Add refresh animation
+    const detailContent = document.querySelector('.detail-content');
+    if (detailContent) {
+      detailContent.style.opacity = '0.7';
+      setTimeout(() => {
+        detailContent.style.opacity = '1';
+        // Could reload content here if needed
+      }, 500);
+    }
+  }
+
+  addScrollIndicators() {
+    // Add scroll indicators to scrollable containers
+    const scrollableElements = document.querySelectorAll('.github-content-scroll, .detail-content');
+
+    scrollableElements.forEach(element => {
+      // Remove existing indicator
+      const existingIndicator = element.querySelector('.scroll-indicator');
+      if (existingIndicator) existingIndicator.remove();
+
+      // Add new indicator
+      const indicator = document.createElement('div');
+      indicator.className = 'scroll-indicator';
+      indicator.style.cssText = `
+        position: absolute;
+        right: 2px;
+        width: 4px;
+        height: 30px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 10;
+      `;
+
+      element.style.position = 'relative';
+      element.appendChild(indicator);
+
+      // Update indicator on scroll
+      element.addEventListener('scroll', () => {
+        const { scrollTop, scrollHeight, clientHeight } = element;
+        const scrollPercent = scrollTop / (scrollHeight - clientHeight);
+        const indicatorHeight = 30;
+        const maxTop = clientHeight - indicatorHeight;
+
+        indicator.style.top = `${scrollPercent * maxTop}px`;
+        indicator.style.opacity = scrollHeight > clientHeight ? '0.7' : '0';
+      }, { passive: true });
+    });
+  }
+
+  addHapticFeedback() {
+    // Add haptic feedback for interactions
+    const interactiveElements = document.querySelectorAll('.menu-item, .nav-item, .back-btn');
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('touchstart', () => {
+        if (navigator.vibrate) {
+          navigator.vibrate(10); // Short vibration
+        }
+      }, { passive: true });
+    });
+  }
+
+  addLoadingStates() {
+    // Show loading state when switching views
+    const originalShowDetailView = this.showDetailView.bind(this);
+
+    this.showDetailView = function(action) {
+      const detailContent = document.getElementById('detailContent');
+
+      // Show loading shimmer
+      detailContent.innerHTML = `
+        <div class="loading-shimmer" style="height: 200px; border-radius: 8px; margin-bottom: 16px; background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+        <div class="loading-shimmer" style="height: 100px; border-radius: 8px; margin-bottom: 16px; background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+        <div class="loading-shimmer" style="height: 150px; border-radius: 8px; background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+      `;
+
+      // Add shimmer animation if not exists
+      if (!document.getElementById('shimmer-styles')) {
+        const shimmerStyles = document.createElement('style');
+        shimmerStyles.id = 'shimmer-styles';
+        shimmerStyles.textContent = `
+          @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+          }
+        `;
+        document.head.appendChild(shimmerStyles);
+      }
+
+      // Show detail view immediately with loading
+      const detailView = document.getElementById('detailView');
+      const detailTitle = document.getElementById('detailTitle');
+
+      detailTitle.textContent = this.getActionTitle(action);
+      detailView.style.display = 'flex';
+      detailView.classList.add('slide-in');
+      this.isDetailViewOpen = true;
+
+      // Load actual content after short delay
+      setTimeout(() => {
+        originalShowDetailView(action);
+      }, 300);
+    };
   }
 }
 

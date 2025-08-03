@@ -162,6 +162,10 @@ export class TerminalPortfolio {
     }
     this.historyIndex = -1;
 
+    // Track command for analytics and onboarding
+    if (window.analytics) window.analytics.trackCommand(command);
+    if (window.onboarding) window.onboarding.trackCommand(command);
+
     this.commandProcessor.processCommand(this.terminal.input.value);
     this.terminal.input.value = "";
     this.terminal.updateCursor();
