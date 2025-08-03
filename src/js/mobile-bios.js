@@ -258,6 +258,12 @@ class MobileBIOS {
     });
   }
 
+  sanitizeLogInput(input) {
+    // Prevent log injection by removing control characters and newlines
+    if (typeof input !== 'string') return String(input);
+    return input.replace(/[\r\n\t\x00-\x1f\x7f-\x9f]/g, '');
+  }
+
   getActionTitle(action) {
     const titles = {
       about: ' About Me',
@@ -1132,7 +1138,7 @@ class MobileBIOS {
         });
         
         await widget.init();
-        console.log(`Contribution widget initialized for period: ${period}`);
+        console.log('Contribution widget initialized for period:', this.sanitizeLogInput(period));
         
         // Store widget reference for period changes
         this.currentWidget = widget;
@@ -1313,11 +1319,11 @@ class MobileBIOS {
         try {
           response = await fetch(`${basePath}${filename}`);
           if (response.ok) {
-            console.log(`Successfully loaded analytics from: ${basePath}${filename}`);
+            console.log('Successfully loaded analytics from:', this.sanitizeLogInput(`${basePath}${filename}`));
             break;
           }
         } catch (error) {
-          console.log(`Failed to load from: ${basePath}${filename}`, error.message);
+          console.log('Failed to load from:', this.sanitizeLogInput(`${basePath}${filename}`), this.sanitizeLogInput(error.message));
           continue;
         }
       }
@@ -1329,7 +1335,7 @@ class MobileBIOS {
       const data = await response.json();
       const dailyMetrics = data.daily_metrics || {};
       
-      console.log(`Analytics data loaded for ${period}:`, { 
+      console.log('Analytics data loaded for period:', this.sanitizeLogInput(period), { 
         totalDays: Object.keys(dailyMetrics).length,
         dateRange: `${Math.min(...Object.keys(dailyMetrics))} to ${Math.max(...Object.keys(dailyMetrics))}`
       });
@@ -1377,11 +1383,11 @@ class MobileBIOS {
         currentStreak: Math.max(currentStreak, 1)
       };
       
-      console.log(`Calculated stats for ${period}:`, stats);
+      console.log('Calculated stats for period:', this.sanitizeLogInput(period), stats);
       return stats;
       
     } catch (error) {
-      console.error(`Error loading real GitHub stats for ${period}:`, error);
+      console.error('Error loading real GitHub stats for period:', this.sanitizeLogInput(period), this.sanitizeLogInput(error.message));
       // Fallback values with realistic numbers based on period
       const fallbackValues = {
         'rolling': { totalCommits: 847, activeDays: 156, bestDay: 35, currentStreak: 8 },
@@ -1492,13 +1498,13 @@ class MobileBIOS {
       
       if (response.ok) {
         const release = await response.json();
-        console.log('Fetched version from GitHub:', release.tag_name);
+        console.log('Fetched version from GitHub:', this.sanitizeLogInput(release.tag_name));
         return release.tag_name || 'v2025.1.0';
       } else {
-        console.log('GitHub API responded with:', response.status);
+        console.log('GitHub API responded with:', this.sanitizeLogInput(String(response.status)));
       }
     } catch (error) {
-      console.log('Could not fetch version from GitHub:', error.message);
+      console.log('Could not fetch version from GitHub:', this.sanitizeLogInput(error.message));
     }
     
     // Try to fetch from package.json as fallback
