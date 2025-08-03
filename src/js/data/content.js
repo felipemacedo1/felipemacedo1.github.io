@@ -92,24 +92,24 @@ export const CONTENT = {
 </div>
 
 <div class="contact-item">
-<span class="contact-label">💼 LinkedIn:</span> <a href="https://linkedin.com/in/felipemacedo1" target="_blank" class="project-link">linkedin.com/in/felipemacedo1</a>
+<span class="contact-label">💼 LinkedIn:</span> <a href="https://linkedin.com/in/felipemacedo1" target="_blank" rel="noopener noreferrer" class="project-link">linkedin.com/in/felipemacedo1</a>
 <span class="output-text">   └─ Networking profissional • Atualizações de carreira</span>
 </div>
 
 <div class="contact-item">
-<span class="contact-label">🐙 GitHub:</span> <a href="https://github.com/felipemacedo1" target="_blank" class="project-link">github.com/felipemacedo1</a>
+<span class="contact-label">🐙 GitHub:</span> <a href="https://github.com/felipemacedo1" target="_blank" rel="noopener noreferrer" class="project-link">github.com/felipemacedo1</a>
 <span class="output-text">   └─ Código aberto • Contribuições • Projetos pessoais</span>
 </div>
 
 <div class="contact-item">
-<span class="contact-label">📱 WhatsApp:</span> <a href="https://wa.me/5511997534105" target="_blank" class="project-link">+55 (11) 99753-4105</a>
+<span class="contact-label">📱 WhatsApp:</span> <a href="https://wa.me/5511997534105" target="_blank" rel="noopener noreferrer" class="project-link">+55 (11) 99753-4105</a>
 <span class="output-text">   └─ Contato direto • Projetos • Consultoria</span>
 </div>
 
 <span class="highlight">🏢 Organizações:</span>
 
 <div class="contact-item">
-<span class="contact-label">🌐 Growthfolio:</span> <a href="https://github.com/orgs/growthfolio" target="_blank" class="project-link">github.com/orgs/growthfolio</a>
+<span class="contact-label">🌐 Growthfolio:</span> <a href="https://github.com/orgs/growthfolio" target="_blank" rel="noopener noreferrer" class="project-link">github.com/orgs/growthfolio</a>
 <span class="output-text">   └─ Projetos open source • Bibliotecas • Microserviços</span>
 </div>
 

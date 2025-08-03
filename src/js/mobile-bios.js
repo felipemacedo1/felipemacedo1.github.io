@@ -706,25 +706,25 @@ class MobileBIOS {
               <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
                 <div style="color: #f0f6fc; font-size: 14px; font-weight: 600; margin-bottom: 12px;">🔗 Quick Actions</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                  <a href="https://github.com/felipemacedo1" target="_blank" 
+                  <a href="https://github.com/felipemacedo1" target="_blank" rel="noopener noreferrer"
                      style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); color: #f0f6fc; padding: 12px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 11px; border: 1px solid #30363d; transition: all 0.2s;"
                      onmouseover="this.style.background='linear-gradient(135deg, #30363d 0%, #40464d 100%)'; this.style.borderColor='#238636'"
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
                     👤 View Profile
                   </a>
-                  <a href="https://github.com/felipemacedo1?tab=repositories" target="_blank"
+                  <a href="https://github.com/felipemacedo1?tab=repositories" target="_blank" rel="noopener noreferrer"
                      style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); color: #f0f6fc; padding: 12px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 11px; border: 1px solid #30363d; transition: all 0.2s;"
                      onmouseover="this.style.background='linear-gradient(135deg, #30363d 0%, #40464d 100%)'; this.style.borderColor='#1f6feb'"
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
                     📚 Repositories
                   </a>
-                  <a href="https://github.com/orgs/growthfolio" target="_blank"
+                  <a href="https://github.com/orgs/growthfolio" target="_blank" rel="noopener noreferrer"
                      style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); color: #f0f6fc; padding: 12px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 11px; border: 1px solid #30363d; transition: all 0.2s;"
                      onmouseover="this.style.background='linear-gradient(135deg, #30363d 0%, #40464d 100%)'; this.style.borderColor='#7c3aed'"
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
                     🏢 Organization
                   </a>
-                  <a href="https://github.com/felipemacedo1?tab=stars" target="_blank"
+                  <a href="https://github.com/felipemacedo1?tab=stars" target="_blank" rel="noopener noreferrer"
                      style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); color: #f0f6fc; padding: 12px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 11px; border: 1px solid #30363d; transition: all 0.2s;"
                      onmouseover="this.style.background='linear-gradient(135deg, #30363d 0%, #40464d 100%)'; this.style.borderColor='#f85149'"
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
@@ -778,7 +778,7 @@ class MobileBIOS {
                 </div>
                 
                 <div style="text-align: center; margin-top: 12px;">
-                  <a href="https://github.com/felipemacedo1?tab=repositories" target="_blank" 
+                  <a href="https://github.com/felipemacedo1?tab=repositories" target="_blank" rel="noopener noreferrer"
                      style="color: #1f6feb; text-decoration: none; font-size: 11px; font-weight: 500;">
                     Ver todos os 32 repositórios →
                   </a>
