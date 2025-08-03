@@ -10,7 +10,8 @@ export class Terminal {
 
   addToOutput(text) {
     const outputElement = document.createElement("div");
-    outputElement.innerHTML = text;
+    // Sanitize HTML to prevent XSS and code injection
+    outputElement.textContent = text;
     this.output.appendChild(outputElement);
   }
 
