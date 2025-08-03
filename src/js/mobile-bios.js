@@ -95,12 +95,11 @@ class MobileBIOS {
       }
     });
 
-    // Prevent scroll bounce on iOS
-    document.addEventListener('touchmove', (e) => {
-      if (e.target.closest('.bios-menu') === null) {
-        e.preventDefault();
-      }
-    }, { passive: false });
+    // Handle Android back button
+    this.setupAndroidBackButton();
+
+    // Allow scroll in scrollable containers
+    this.setupScrollableContainers();
   }
 
   handleMenuClick(action) {
@@ -152,6 +151,9 @@ class MobileBIOS {
     detailView.classList.add('slide-in');
     this.isDetailViewOpen = true;
 
+    // Push state for back button handling
+    history.pushState({ page: 'detail', action: action }, '', window.location.href);
+
     // Initialize contribution widget for projects and github views
     if (action === 'github') {
       setTimeout(() => {
@@ -159,10 +161,13 @@ class MobileBIOS {
         this.animateCounters();
         this.addGitHubStyles();
         this.setupPeriodSelector();
+        this.setupScrollableContainers(); // Re-setup for new content
       }, 300);
     }
 
+    // Re-setup scrollable containers for new content
     setTimeout(() => {
+      this.setupScrollableContainers();
       detailView.classList.remove('slide-in');
     }, 300);
   }
@@ -179,6 +184,63 @@ class MobileBIOS {
       detailView.style.display = 'none';
       detailView.classList.remove('slide-out');
     }, 300);
+  }
+
+  setupAndroidBackButton() {
+    // Handle browser back button (Android back gesture)
+    window.addEventListener('popstate', (e) => {
+      e.preventDefault();
+      if (this.isDetailViewOpen) {
+        this.hideDetailView();
+        // Push a new state to prevent actual navigation
+        history.pushState({ page: 'main' }, '', window.location.href);
+      }
+    });
+
+    // Push initial state
+    history.pushState({ page: 'main' }, '', window.location.href);
+  }
+
+  setupScrollableContainers() {
+    // Identify scrollable containers
+    const scrollableSelectors = [
+      '.bios-menu',
+      '.detail-content',
+      '#mobile-contrib-widget',
+      '.github-section'
+    ];
+
+    scrollableSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        // Enable smooth scrolling
+        element.style.scrollBehavior = 'smooth';
+        
+        // Prevent parent scroll when this element is scrolling
+        element.addEventListener('touchstart', (e) => {
+          this.startY = e.touches[0].clientY;
+        }, { passive: true });
+
+        element.addEventListener('touchmove', (e) => {
+          const currentY = e.touches[0].clientY;
+          const scrollTop = element.scrollTop;
+          const scrollHeight = element.scrollHeight;
+          const clientHeight = element.clientHeight;
+          
+          // Allow scrolling within the element
+          if (scrollHeight > clientHeight) {
+            // At top and trying to scroll up
+            if (scrollTop === 0 && currentY > this.startY) {
+              e.preventDefault();
+            }
+            // At bottom and trying to scroll down
+            else if (scrollTop + clientHeight >= scrollHeight && currentY < this.startY) {
+              e.preventDefault();
+            }
+          }
+        }, { passive: false });
+      });
+    });
   }
 
   getActionTitle(action) {
@@ -220,7 +282,7 @@ class MobileBIOS {
     switch (action) {
       case 'about':
         return `
-          <div style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
             <h3 style="color: #03DAC6; margin-bottom: 16px;">Felipe Macedo</h3>
             <p style="margin-bottom: 16px;">
               Desenvolvedor Full Stack com especialização em Java, Go e arquitetura de microserviços. 
@@ -241,7 +303,7 @@ class MobileBIOS {
 
       case 'status':
         return `
-          <div style="font-family: 'Roboto', sans-serif; line-height: 1.5;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.5;">
             <!-- Header Status -->
             <div style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); padding: 16px; border-radius: 12px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden;">
               <div style="position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
@@ -378,7 +440,7 @@ class MobileBIOS {
 
       case 'whoami':
         return `
-          <div style="font-family: 'Roboto Mono', monospace; font-size: 14px;">
+          <div class="scrollable" style="font-family: 'Roboto Mono', monospace; font-size: 14px;">
             <div style="background: #000; color: #00ff00; padding: 16px; border-radius: 4px; margin-bottom: 16px;">
               <div>felipe-macedo@portfolio:~$ whoami</div>
               <div>Felipe Macedo</div>
@@ -408,7 +470,7 @@ class MobileBIOS {
 
       case 'skills':
         return `
-          <div style="font-family: 'Roboto', sans-serif;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
             <div style="margin-bottom: 20px;">
               <h4 style="color: #03DAC6; margin-bottom: 12px;">🚀 Backend Technologies</h4>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
@@ -434,7 +496,7 @@ class MobileBIOS {
 
       case 'projects':
         return `
-          <div style="font-family: 'Roboto', sans-serif;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
             <div style="margin-bottom: 16px; padding: 16px; background: #1E1E1E; border-radius: 8px; border-left: 4px solid #4CAF50;">
               <h4 style="color: #4CAF50; margin-bottom: 8px;">🌟 Featured Projects</h4>
               <div style="font-size: 12px; color: #ccc;">
@@ -475,7 +537,7 @@ class MobileBIOS {
 
       case 'github':
         return `
-          <div style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-radius: 12px; overflow: hidden;">
+          <div class="github-section scrollable" style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-radius: 12px; overflow: hidden;">
             <!-- Header Section -->
             <div style="background: linear-gradient(135deg, #238636 0%, #2ea043 100%); padding: 20px; text-align: center; position: relative; overflow: hidden;">
               <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
@@ -489,8 +551,8 @@ class MobileBIOS {
             </div>
 
             <!-- Enhanced Stats Cards -->
-            <div style="padding: 16px; background: #0d1117;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+            <div class="scrollable" style="padding: 16px; background: #0d1117;">
+              <div class="github-stats-grid horizontal-scroll" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
                 <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d; position: relative; overflow: hidden;">
                   <div style="position: absolute; top: -20px; right: -20px; width: 40px; height: 40px; background: radial-gradient(circle, #238636, transparent); opacity: 0.3; border-radius: 50%;"></div>
                   <div style="color: #7c3aed; font-size: 24px; font-weight: 700; margin-bottom: 4px;" id="commits-count">1,247</div>
@@ -521,7 +583,7 @@ class MobileBIOS {
               </div>
 
               <!-- Enhanced Contribution Graph -->
-              <div style="background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+              <div class="github-contrib-container scrollable" style="background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
                 <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 12px;">
                   <div style="color: #c9d1d9; font-size: 14px; font-weight: 600;">📊 Contribution Activity</div>
                   <button onclick="window.open('../examples/pages/contribution-enhanced.html', '_blank')" 
@@ -651,7 +713,7 @@ class MobileBIOS {
               </div>
 
               <!-- Featured Repositories -->
-              <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+              <div class="github-repos-list scrollable" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
                 <div style="color: #f0f6fc; font-size: 14px; font-weight: 600; margin-bottom: 12px;">🌟 Featured Projects</div>
                 <div style="space-y: 12px;">
                   <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 14px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #30363d; position: relative; overflow: hidden;">
@@ -703,9 +765,9 @@ class MobileBIOS {
               </div>
 
               <!-- Recent Activity -->
-              <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px;">
+              <div class="scrollable" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px;">
                 <div style="color: #f0f6fc; font-size: 14px; font-weight: 600; margin-bottom: 12px;">⚡ Recent Activity</div>
-                <div style="space-y: 8px;">
+                <div class="scrollable" style="space-y: 8px;">
                   <div style="display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #21262d;">
                     <div style="width: 16px; height: 16px; background: #238636; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                       <div style="width: 6px; height: 6px; background: white; border-radius: 50%;"></div>
@@ -743,7 +805,7 @@ class MobileBIOS {
 
       case 'contact':
         return `
-          <div style="font-family: 'Roboto', sans-serif;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
             <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
               <h4 style="color: #03DAC6; margin-bottom: 16px;">📞 Get In Touch</h4>
               
@@ -776,7 +838,7 @@ class MobileBIOS {
 
       case 'settings':
         return `
-          <div style="font-family: 'Roboto', sans-serif;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
             <div style="margin-bottom: 16px;">
               <h4 style="color: #03DAC6; margin-bottom: 12px;">⚙️ Interface Settings</h4>
               
@@ -811,7 +873,7 @@ class MobileBIOS {
 
       case 'experience':
         return `
-          <div style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
             <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
               <h3 style="color: #03DAC6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
                 💼 Experiência Profissional
@@ -873,7 +935,7 @@ class MobileBIOS {
 
       case 'certifications':
         return `
-          <div style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
+          <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
             <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
               <h3 style="color: #03DAC6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
                 🏆 Certificações & Qualificações
