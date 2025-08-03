@@ -26,8 +26,13 @@ class ContributionCommands {
 
     // Initialize widget
     setTimeout(() => {
-      const widgetContainer = document.getElementById(widgetId);
-      if (widgetContainer) {
+      try {
+        const widgetContainer = document.getElementById(widgetId);
+        if (!widgetContainer) {
+          console.error('Widget container not found:', widgetId);
+          return;
+        }
+        
         const widget = new UnifiedContributionWidget(widgetContainer, {
           ...options,
           size: 'compact',
@@ -35,6 +40,8 @@ class ContributionCommands {
           mode: 'terminal'
         });
         widget.init();
+      } catch (error) {
+        console.error('Error initializing contribution widget:', error.message);
       }
     }, 100);
 
@@ -68,7 +75,13 @@ class ContributionCommands {
       
       return await response.json();
     } catch (error) {
-      console.error('Error loading contribution data:', error);
+      if (error.name === 'TypeError') {
+        console.error('Network error loading contribution data:', error.message);
+      } else if (error.message.includes('HTTP')) {
+        console.error('HTTP error loading contribution data:', error.message);
+      } else {
+        console.error('Unexpected error loading contribution data:', error.message);
+      }
       return null;
     }
   }
