@@ -125,6 +125,8 @@ export class TerminalPortfolio {
 
   createClock() {
     const clock = document.getElementById("terminal-clock");
+    if (!clock) return;
+    
     const updateClock = () => {
       const now = new Date();
       const time = now.toLocaleTimeString("pt-BR", {
@@ -135,7 +137,8 @@ export class TerminalPortfolio {
       clock.textContent = `🕒 ${time}`;
     };
     updateClock();
-    setInterval(updateClock, 1000);
+    // Optimize: update every 5 seconds instead of every second
+    setInterval(updateClock, 5000);
   }
 
   async startInitialSequence() {
