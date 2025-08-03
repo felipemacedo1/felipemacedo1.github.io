@@ -44,11 +44,12 @@ body {
   font-family: var(--font-primary);
   background: var(--background);
   color: var(--on-background);
-  overflow: hidden;
+  overflow: auto;
   user-select: none;
   -webkit-user-select: none;
   height: 100vh;
   width: 100vw;
+  -webkit-overflow-scrolling: touch;
 }
 
 .bios-container {
@@ -185,8 +186,11 @@ body {
   flex: 1;
   padding: var(--spacing-md);
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--surface);
+  max-height: calc(100vh - 200px);
 }
 
 .menu-section {
@@ -348,8 +352,11 @@ body {
   flex: 1;
   padding: var(--spacing-md);
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   font-family: var(--font-mono);
   line-height: 1.5;
+  max-height: calc(100vh - 56px);
 }
 
 /* ===== ANIMATIONS ===== */
@@ -434,4 +441,59 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-variant);
+}
+
+/* ===== GITHUB SECTION SCROLLING ===== */
+.github-section {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 100%;
+}
+
+.github-contrib-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 300px;
+  padding: 8px;
+}
+
+.github-stats-grid {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.github-repos-list {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 400px;
+}
+
+/* ===== CONTRIBUTION WIDGET SCROLLING ===== */
+#mobile-contrib-widget {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 200px;
+  border-radius: 6px;
+}
+
+/* ===== IMPROVED TOUCH SCROLLING ===== */
+.scrollable {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.horizontal-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* ===== PREVENT BOUNCE ON MAIN CONTAINER ===== */
+.bios-container {
+  overscroll-behavior: none;
+}
+
+.detail-view {
+  overscroll-behavior: none;
 }
