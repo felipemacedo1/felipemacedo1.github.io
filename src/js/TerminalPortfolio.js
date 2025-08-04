@@ -125,6 +125,8 @@ export class TerminalPortfolio {
 
   createClock() {
     const clock = document.getElementById("terminal-clock");
+    if (!clock) return;
+    
     const updateClock = () => {
       const now = new Date();
       const time = now.toLocaleTimeString("pt-BR", {
@@ -135,7 +137,8 @@ export class TerminalPortfolio {
       clock.textContent = `🕒 ${time}`;
     };
     updateClock();
-    setInterval(updateClock, 1000);
+    // Optimize: update every 5 seconds instead of every second
+    setInterval(updateClock, 5000);
   }
 
   async startInitialSequence() {
@@ -158,6 +161,10 @@ export class TerminalPortfolio {
       Storage.saveHistory(this.commandHistory);
     }
     this.historyIndex = -1;
+
+    // Track command for analytics and onboarding
+    if (window.analytics) window.analytics.trackCommand(command);
+    if (window.onboarding) window.onboarding.trackCommand(command);
 
     this.commandProcessor.processCommand(this.terminal.input.value);
     this.terminal.input.value = "";

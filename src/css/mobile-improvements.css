@@ -1,0 +1,224 @@
+/* Mobile UX/UI Improvements for BIOS Interface */
+
+/* Enhanced Touch Feedback */
+.menu-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(3, 218, 198, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.menu-item:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* Loading States */
+.menu-item.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.menu-item.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(3, 218, 198, 0.2), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Success/Error Feedback */
+.feedback-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+}
+
+.feedback-toast.success {
+  background: var(--bios-green);
+}
+
+.feedback-toast.error {
+  background: var(--bios-red);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Improved Scrolling Indicators */
+.scroll-indicator {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 40px;
+  background: rgba(3, 218, 198, 0.3);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.scrollable:hover .scroll-indicator,
+.scrollable:focus .scroll-indicator {
+  opacity: 1;
+}
+
+/* Enhanced Status Bar */
+.status-bar {
+  backdrop-filter: blur(10px);
+  background: rgba(30, 30, 30, 0.9);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: pulse 2s infinite;
+}
+
+/* Gesture Hints */
+.gesture-hint {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--bios-light-gray);
+  opacity: 0.7;
+  animation: fadeInOut 3s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* Improved Detail View Transitions */
+.detail-view.enhanced {
+  backdrop-filter: blur(5px);
+}
+
+.detail-content {
+  scroll-behavior: smooth;
+}
+
+.detail-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.detail-content::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
+}
+
+/* Quick Actions */
+.quick-actions {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+}
+
+.quick-action-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--on-primary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(3, 218, 198, 0.3);
+  transition: all 0.3s ease;
+}
+
+.quick-action-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(3, 218, 198, 0.4);
+}
+
+/* Accessibility Improvements */
+.high-contrast {
+  --primary: #00FF00;
+  --background: #000000;
+  --surface: #111111;
+  --on-background: #FFFFFF;
+}
+
+.large-text {
+  font-size: 1.2em;
+}
+
+.large-text .menu-item .label {
+  font-size: 16px;
+}
+
+.large-text .nav-label {
+  font-size: 12px;
+}
+
+/* Focus Indicators */
+.menu-item:focus,
+.nav-item:focus,
+.back-btn:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,6 +1,8 @@
 // Main entry point
 import { TerminalPortfolio } from './TerminalPortfolio.js';
 import { DeviceDetector } from './utils/DeviceDetector.js';
+import { Onboarding } from './features/onboarding.js';
+import { Analytics } from './features/analytics.js';
 
 // Check if should redirect to mobile version
 function checkMobileRedirect() {
@@ -84,6 +86,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   window.terminal = new TerminalPortfolio();
+  window.analytics = new Analytics();
+  window.onboarding = new Onboarding(window.terminal);
+  
+  // Initialize features
+  window.onboarding.init();
   
   // Expose mobile functions globally
   window.typeChar = typeChar;

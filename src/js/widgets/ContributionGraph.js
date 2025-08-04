@@ -134,10 +134,11 @@ class ContributionGraph {
   }
 
   static getLevel(commits) {
-    if (commits === 0) return 0;
-    if (commits <= 2) return 1;
-    if (commits <= 5) return 2;
-    if (commits <= 10) return 3;
+    // Optimized level determination using array lookup
+    const thresholds = [0, 2, 5, 10];
+    for (let i = 0; i < thresholds.length; i++) {
+      if (commits <= thresholds[i]) return i;
+    }
     return 4;
   }
 
@@ -160,12 +161,17 @@ class ContributionGraph {
     const chars = [' ', '░', '▒', '▓', '█'];
     let ascii = `Contribution Graph - ${period === 'rolling' ? 'Últimos 365 dias' : period}\n\n`;
     
-    // Group by weeks
+    // Optimized: combine data processing in single loop
     const weeks = [];
     let currentWeek = [];
+    let totalCommits = 0;
+    let activeDays = 0;
     
     dates.forEach(date => {
       const commits = dailyMetrics[date] || 0;
+      totalCommits += commits;
+      if (commits > 0) activeDays++;
+      
       const level = this.getLevel(commits);
       currentWeek.push(chars[level]);
       
@@ -189,9 +195,6 @@ class ContributionGraph {
     }
 
     ascii += `\nLegenda: ${chars.join(' ')} (menos → mais)\n`;
-    
-    const totalCommits = Object.values(dailyMetrics).reduce((sum, count) => sum + count, 0);
-    const activeDays = Object.values(dailyMetrics).filter(count => count > 0).length;
     ascii += `Total: ${totalCommits} commits em ${activeDays} dias ativos`;
     
     return ascii;
