@@ -63,7 +63,7 @@ export class AdditionalCommands {
 </div>
 
 <span class="warning">🎯 Foco atual:</span> Arquitetura de microserviços e performance optimization`;
-    this.terminal.addToOutput(skillsText);
+    this.terminal.addToOutput(skillsText, 'system');
   }
 
   showExperience() {
@@ -108,7 +108,7 @@ export class AdditionalCommands {
 </div>
 
 <span class="success">📈 Crescimento contínuo:</span> 3+ anos de experiência hands-on em desenvolvimento`;
-    this.terminal.addToOutput(experienceText);
+    this.terminal.addToOutput(experienceText, 'system');
   }
 
   showEducation() {
@@ -154,7 +154,7 @@ planejamento estratégico de tecnologia
 </div>
 
 <span class="success">🏆 Status:</span> Sempre estudando - aprendizado contínuo é essencial!`;
-    this.terminal.addToOutput(educationText);
+    this.terminal.addToOutput(educationText, 'system');
   }
 
   showCertifications() {
@@ -222,7 +222,7 @@ planejamento estratégico de tecnologia
 • Oracle Java SE 17 Developer (em preparação)
 
 <span class="success">🎯 Meta:</span> Certificações são ferramentas, experiência prática é o que conta!`;
-    this.terminal.addToOutput(certificationsText);
+    this.terminal.addToOutput(certificationsText, 'system');
   }
 
   downloadResume() {
@@ -258,7 +258,7 @@ planejamento estratégico de tecnologia
 <span class="output-text">• Informações de contato atualizadas</span>
 
 <span class="warning">💡 Dica:</span> Para recrutadores e oportunidades profissionais, prefiro contato via LinkedIn.`;
-    this.terminal.addToOutput(resumeText);
+    this.terminal.addToOutput(resumeText, 'system');
   }
 
   showStatus() {
@@ -302,7 +302,7 @@ planejamento estratégico de tecnologia
 <span class="output-text">🌄 Fins de semana: 9h - 17h (projetos especiais)</span>
 
 <span class="success">💬 Entre em contato:</span> Sempre aberto para conversar sobre oportunidades interessantes!`;
-    this.terminal.addToOutput(statusText);
+    this.terminal.addToOutput(statusText, 'system');
   }
 
   sudoCommand() {
@@ -324,7 +324,7 @@ planejamento estratégico de tecnologia
     ║  🔐 Acesso root negado... por ora 😉  ║
     ╚══════════════════════════════════════╝
 </span>`;
-    this.terminal.addToOutput(sudoText);
+    this.terminal.addToOutput(sudoText, 'system');
   }
 
   coffeeCommand() {
@@ -370,7 +370,7 @@ planejamento estratégico de tecnologia
 <span class="output-text">• Tipo preferido: Espresso forte ☕💪</span>
 
 <span class="success">💡 Fun fact:</span> Este terminal foi desenvolvido após várias xícaras de café! ☕✨`;
-    this.terminal.addToOutput(coffeeText);
+    this.terminal.addToOutput(coffeeText, 'system');
   }
 
   hackerMode() {
@@ -412,7 +412,7 @@ planejamento estratégico de tecnologia
 <span class="error">WARNING: This is just for fun! 😄</span>
 <span class="output-text">Digite 'theme dark' para voltar ao normal.</span>`;
 
-    this.terminal.addToOutput(hackerText);
+    this.terminal.addToOutput(hackerText, 'system');
 
     // Remove hacker mode after 10 seconds
     setTimeout(() => {
@@ -453,7 +453,7 @@ planejamento estratégico de tecnologia
 <span class="output-text">You've been exploring too long.</span>
 <span class="output-text">Type 'exit' if you can... 😈</span>`;
 
-    this.terminal.addToOutput(matrixText);
+    this.terminal.addToOutput(matrixText, 'system');
   }
 
   konamiCode() {
@@ -480,7 +480,7 @@ planejamento estratégico de tecnologia
 
 <span class="success">🎊 Parabéns! Você encontrou o easter egg clássico!</span>`;
 
-    this.terminal.addToOutput(konamiText);
+    this.terminal.addToOutput(konamiText, 'system');
   }
 
   glitchEffect() {
@@ -512,7 +512,7 @@ planejamento estratégico de tecnologia
 <span class="highlight">🔧 HOTFIX APPLIED:</span>
 <span class="output-text">Glitch transformed into feature ✨</span>`;
 
-    this.terminal.addToOutput(glitchText);
+    this.terminal.addToOutput(glitchText, 'system');
 
     // Remove glitch effect after 5 seconds
     setTimeout(() => {
@@ -552,7 +552,7 @@ planejamento estratégico de tecnologia
 <span class="output-text">• Inspiração: Retro computing vibes</span>
 <span class="output-text">• Feito com: Muito café e dedicação ☕</span>`;
 
-    this.terminal.addToOutput(asciiText);
+    this.terminal.addToOutput(asciiText, 'system');
   }
 
   showGrowthfolio() {
@@ -611,7 +611,7 @@ Conjunto de microserviços reutilizáveis
 <span class="output-text">Democratizar o acesso a ferramentas de qualidade e acelerar</span>
 <span class="output-text">o crescimento profissional de desenvolvedores em todo o mundo.</span>`;
 
-    this.terminal.addToOutput(growthfolioText);
+    this.terminal.addToOutput(growthfolioText, 'system');
   }
 
   showEasterEggs() {
@@ -676,6 +676,6 @@ Conjunto de microserviços reutilizáveis
 <span class="output-text">Há alguns comandos escondidos que não estão na lista do 'help'...</span>
 <span class="output-text">Continue explorando! 🕵️‍♂️</span>`;
 
-    this.terminal.addToOutput(easterEggsText);
+    this.terminal.addToOutput(easterEggsText, 'system');
   }
 }

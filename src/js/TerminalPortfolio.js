@@ -232,7 +232,7 @@ export class TerminalPortfolio {
 
 <span class="output-text">Digite o número da opção ou o comando correspondente.</span>
 <span class="warning">💡 Dica: Digite '<span class="success">help</span>' para ver todos os comandos disponíveis!</span>`;
-    this.terminal.addToOutput(menuText);
+    this.terminal.addToOutput(menuText, 'system');
   }
 
   showProjects() {
@@ -244,7 +244,7 @@ export class TerminalPortfolio {
 </span>
 
 <div class="project-item">
-<span class="project-title">� Terminal Portfolio</span>
+<span class="project-title">📱 Terminal Portfolio</span>
 <span class="project-description">
 Portfólio interativo dual com interface terminal para desktop e BIOS Android para mobile.
 • <strong>Frontend:</strong> HTML5, CSS3, JavaScript ES6+ vanilla
@@ -323,7 +323,7 @@ Pipeline de microserviços com RabbitMQ para processamento transacional.
 <span class="output-text">🔄 Projetos em desenvolvimento ativo</span>
 <span class="output-text">📊 Demonstração de diferentes tecnologias</span>
 <span class="output-text">🔒 Aplicação de padrões de segurança</span>`;
-    this.terminal.addToOutput(projectsText);
+    this.terminal.addToOutput(projectsText, 'system');
   }
 
   // Expose methods for global access
