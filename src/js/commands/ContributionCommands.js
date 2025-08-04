@@ -22,7 +22,7 @@ class ContributionCommands {
   </div>
 </div>`;
 
-    this.terminal.addToOutput(output);
+    this.terminal.addToOutput(output, 'system');
 
     // Initialize widget
     setTimeout(() => {
@@ -141,11 +141,11 @@ class ContributionCommands {
   <p class="command-tip">💡 Use <code>contributions --enhanced</code> para análise completa</p>
 </div>`;
 
-      this.terminal.addOutput(output);
+      this.terminal.addToOutput(output, 'system');
       return true;
       
     } catch (error) {
-      this.terminal.addOutput(`<span class="error">Erro ao carregar estatísticas: ${error.message}</span>`);
+      this.terminal.addToOutput(`<span class="error">Erro ao carregar estatísticas: ${error.message}</span>`, 'system');
       return false;
     }
   }

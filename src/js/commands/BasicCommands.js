@@ -10,14 +10,14 @@ export class BasicCommands {
 
   getCommands() {
     return {
-      help: () => this.terminal.addToOutput(CONTENT.help),
+      help: () => this.terminal.addToOutput(CONTENT.help, 'system'),
       clear: () => this.terminal.clearTerminal(),
-      about: () => this.terminal.addToOutput(CONTENT.about),
-      sobre: () => this.terminal.addToOutput(CONTENT.about),
-      1: () => this.terminal.addToOutput(CONTENT.about),
-      contact: () => this.terminal.addToOutput(CONTENT.contact),
-      contato: () => this.terminal.addToOutput(CONTENT.contact),
-      3: () => this.terminal.addToOutput(CONTENT.contact),
+      about: () => this.terminal.addToOutput(CONTENT.about, 'system'),
+      sobre: () => this.terminal.addToOutput(CONTENT.about, 'system'),
+      1: () => this.terminal.addToOutput(CONTENT.about, 'system'),
+      contact: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
+      contato: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
+      3: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
       date: () => this.showDate(),
       pwd: () => this.showPath(),
       ls: () => this.listFiles(),
@@ -41,12 +41,12 @@ export class BasicCommands {
       minute: "2-digit",
       second: "2-digit",
     });
-    this.terminal.addToOutput(`<span class="output-text">📅 ${dateStr}</span>`);
+    this.terminal.addToOutput(`<span class="output-text">📅 ${dateStr}</span>`, 'system');
   }
 
   showPath() {
     this.terminal.addToOutput(
-      '<span class="output-text">📁 /home/felipe/portfolio</span>'
+      '<span class="output-text">📁 /home/felipe/portfolio</span>', 'system'
     );
   }
 
@@ -55,7 +55,7 @@ export class BasicCommands {
 <span class="output-text">📁 Arquivos no diretório atual:</span>
 <span class="success">📄 about.txt</span>      <span class="success">📝 projects.md</span>     <span class="success">📋 contact.json</span>
 <span class="success">📄 resume.pdf</span>     <span class="success">⚙️ skills.yml</span>      <span class="success">💻 portfolio.js</span>`;
-    this.terminal.addToOutput(files);
+    this.terminal.addToOutput(files, 'system');
   }
 
   listFilesDetailed() {
@@ -67,7 +67,7 @@ export class BasicCommands {
 <span class="success">-rw-r--r--</span> 1 felipe felipe  4096 Jul 29 10:33 <span class="success">📄 resume.pdf</span>
 <span class="success">-rw-r--r--</span> 1 felipe felipe   256 Jul 29 10:34 <span class="success">⚙️ skills.yml</span>
 <span class="success">-rwxr-xr-x</span> 1 felipe felipe  8192 Jul 29 10:35 <span class="success">💻 portfolio.js</span>`;
-    this.terminal.addToOutput(detailedFiles);
+    this.terminal.addToOutput(detailedFiles, 'system');
   }
 
   whoami() {
@@ -86,6 +86,6 @@ export class BasicCommands {
 <span class="warning">💬 Stack preferido:</span> Go pra performance. Java pra manter vivo.
 
 <span class="info">💡 Dica:</span> Digite <code>contributions</code> para ver minha atividade no GitHub`;
-    this.terminal.addToOutput(introText);
+    this.terminal.addToOutput(introText, 'system');
   }
 }

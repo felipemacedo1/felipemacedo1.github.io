@@ -32,7 +32,7 @@ export class ThemeManager {
     this.terminal.addToOutput(
       `<span class="success">🎨 Tema alterado para: ${
         themes[theme] || theme
-      }</span>`
+      }</span>`, 'system'
     );
 
     document.body.style.transition = "all 0.3s ease";

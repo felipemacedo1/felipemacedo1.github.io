@@ -20,7 +20,7 @@ export class CommandProcessor {
     if (command === "") return;
 
     this.terminal.addToOutput(
-      `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${input}</span>`
+      `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${input}</span>`, 'system'
     );
 
     this.executeCommand(command);
@@ -37,10 +37,10 @@ export class CommandProcessor {
     } else {
       this.terminal.showInvalidCommandFeedback();
       this.terminal.addToOutput(
-        `<span class="error">❌ bash: ${command}: comando não encontrado</span>`
+        `<span class="error">❌ bash: ${command}: comando não encontrado</span>`, 'system'
       );
       this.terminal.addToOutput(
-        `<span class="output-text">💡 Digite '<span class='success'>help</span>' para ver os comandos disponíveis.</span>`
+        `<span class="output-text">💡 Digite '<span class='success'>help</span>' para ver os comandos disponíveis.</span>`, 'system'
       );
     }
   }
