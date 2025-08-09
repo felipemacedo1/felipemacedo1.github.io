@@ -11,35 +11,124 @@ class ContributionCommands {
   async showContributions(args = []) {
     const options = this.parseArgs(args);
     const widgetId = `contrib-widget-${Date.now()}`;
+    const controlsId = `contrib-controls-${Date.now()}`;
+    const expandedId = `contrib-expanded-${Date.now()}`;
     
     const output = `
-<div class="command-section">
+<div class="command-section contribution-terminal-section">
   <h3>📊 Contribution Graph</h3>
-  <div id="${widgetId}"></div>
-  <div class="command-links">
-    <a href="examples/pages/contribution-graph.html" target="_blank">📈 Ver gráfico completo</a>
-    <a href="examples/pages/contribution-enhanced.html" target="_blank">✨ Versão avançada</a>
+  <div class="contrib-terminal-controls">
+    <div id="${controlsId}" class="terminal-period-selector"></div>
+    <div class="terminal-actions">
+      <button class="terminal-btn" onclick="this.closest('.contribution-terminal-section').querySelector('.contrib-expanded-view').classList.toggle('active')">
+        📈 Expandir
+      </button>
+      <button class="terminal-btn" onclick="this.exportContributions('${widgetId}')">
+        💾 Exportar
+      </button>
+    </div>
   </div>
+  <div id="${widgetId}" class="contrib-compact-view"></div>
+  <div id="${expandedId}" class="contrib-expanded-view">
+    <div class="expanded-content"></div>
+  </div>
+  <style>
+    .contribution-terminal-section {
+      margin: 16px 0;
+      border: 1px solid #00ff00;
+      border-radius: 6px;
+      padding: 16px;
+      background: #001100;
+    }
+    .contrib-terminal-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .terminal-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .terminal-btn {
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: monospace;
+      transition: all 0.2s;
+    }
+    .terminal-btn:hover {
+      background: #00cc00;
+      transform: scale(1.05);
+    }
+    .contrib-expanded-view {
+      display: none;
+      margin-top: 16px;
+      border-top: 1px solid #00ff00;
+      padding-top: 16px;
+    }
+    .contrib-expanded-view.active {
+      display: block;
+    }
+    .contrib-compact-view {
+      min-height: 80px;
+    }
+  </style>
 </div>`;
 
     this.terminal.addToOutput(output, 'system');
 
-    // Initialize widget
-    setTimeout(() => {
+    // Add export function to window
+    if (!window.exportContributions) {
+      window.exportContributions = (widgetId) => {
+        this.exportContributionData(widgetId);
+      };
+    }
+
+    // Initialize compact widget
+    setTimeout(async () => {
       try {
         const widgetContainer = document.getElementById(widgetId);
+        const controlsContainer = document.getElementById(controlsId);
+        const expandedContainer = document.querySelector(`#${expandedId} .expanded-content`);
+        
         if (!widgetContainer) {
           console.error('Widget container not found:', widgetId);
           return;
         }
         
+        // Create compact widget
         const widget = new UnifiedContributionWidget(widgetContainer, {
           ...options,
           size: 'compact',
           theme: 'terminal',
-          mode: 'terminal'
+          mode: 'terminal',
+          showStats: true,
+          showControls: false,
+          showTooltips: true
         });
-        widget.init();
+        await widget.init();
+
+        // Create period selector
+        if (controlsContainer) {
+          this.createTerminalPeriodSelector(controlsContainer, async (period) => {
+            await widget.setPeriod(period);
+            if (this.expandedWidget) {
+              await this.expandedWidget.setPeriod(period);
+            }
+          });
+        }
+
+        // Store widgets for later use
+        this.compactWidget = widget;
+        this.expandedContainer = expandedContainer;
+
       } catch (error) {
         console.error('Error initializing contribution widget:', error.message);
       }
@@ -196,6 +285,123 @@ class ContributionCommands {
     });
 
     return options;
+  }
+
+  createTerminalPeriodSelector(container, onPeriodChange) {
+    const currentYear = new Date().getFullYear();
+    const periods = [
+      { value: 'rolling', label: '365d' },
+      { value: currentYear, label: currentYear.toString() },
+      { value: currentYear - 1, label: (currentYear - 1).toString() },
+      { value: currentYear - 2, label: (currentYear - 2).toString() }
+    ];
+
+    const html = `
+      <div class="terminal-period-buttons">
+        ${periods.map(period => `
+          <button class="period-btn ${period.value === 'rolling' ? 'active' : ''}" 
+                  data-period="${period.value}">
+            ${period.label}
+          </button>
+        `).join('')}
+      </div>
+      <style>
+        .terminal-period-buttons {
+          display: flex;
+          gap: 4px;
+        }
+        .period-btn {
+          background: #001100;
+          color: #00ff00;
+          border: 1px solid #00ff00;
+          padding: 4px 8px;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 11px;
+          font-family: monospace;
+          transition: all 0.2s;
+        }
+        .period-btn:hover {
+          background: #002200;
+        }
+        .period-btn.active {
+          background: #00ff00;
+          color: #000;
+        }
+      </style>
+    `;
+
+    container.innerHTML = html;
+
+    // Attach event listeners
+    container.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active state
+        container.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Call callback
+        const period = btn.dataset.period === 'rolling' ? 'rolling' : parseInt(btn.dataset.period);
+        onPeriodChange(period);
+      });
+    });
+  }
+
+  async expandedView() {
+    if (!this.expandedContainer || !this.compactWidget) return;
+
+    try {
+      if (!this.expandedWidget) {
+        const { default: ModularContributionWidget } = await import('../widgets/ModularContributionWidget.js');
+        
+        this.expandedWidget = new ModularContributionWidget(this.expandedContainer, {
+          author: this.compactWidget.options.author,
+          period: this.compactWidget.options.period,
+          theme: 'terminal',
+          size: 'large',
+          showStats: true,
+          showControls: false,
+          showTooltips: true,
+          showLegend: true
+        });
+        
+        await this.expandedWidget.init();
+      }
+    } catch (error) {
+      console.error('Error creating expanded view:', error);
+    }
+  }
+
+  exportContributionData(widgetId) {
+    try {
+      const widget = this.compactWidget;
+      if (!widget || !widget.modularWidget || !widget.modularWidget.data) {
+        console.error('No data available for export');
+        return;
+      }
+
+      const exportData = {
+        author: widget.options.author,
+        period: widget.options.period,
+        exported_at: new Date().toISOString(),
+        exported_from: 'terminal',
+        daily_metrics: widget.modularWidget.data.daily_metrics
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `contributions-terminal-${widget.options.author}-${widget.options.period}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      // Show success message in terminal
+      this.terminal.addToOutput('✅ Dados exportados com sucesso!', 'success');
+    } catch (error) {
+      console.error('Export error:', error);
+      this.terminal.addToOutput('❌ Erro ao exportar dados: ' + error.message, 'error');
+    }
   }
 }
 

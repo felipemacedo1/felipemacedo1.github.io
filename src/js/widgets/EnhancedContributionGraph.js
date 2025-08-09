@@ -1,6 +1,18 @@
 /**
  * EnhancedContributionGraph - Full-featured contribution graph
- * Includes stats, tooltips, themes, streaks, and export functionality
+ * 
+ * ⚠️  DEPRECATED: Este arquivo foi componentizado em módulos menores para melhor reutilização.
+ * 
+ * Novos componentes modulares:
+ * - ContributionStatsCard.js - Para estatísticas
+ * - ContributionGridRenderer.js - Para renderização do grid
+ * - ContributionControls.js - Para controles de período/tema
+ * - ModularContributionWidget.js - Widget unificado usando os componentes
+ * 
+ * Use ModularContributionWidget ao invés deste arquivo.
+ * Este arquivo será removido em uma versão futura.
+ * 
+ * @deprecated Use ModularContributionWidget em src/js/widgets/ModularContributionWidget.js
  */
 class EnhancedContributionGraph {
   constructor(container, options = {}) {

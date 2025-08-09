@@ -618,41 +618,53 @@ class MobileBIOS {
 
               <!-- Enhanced Contribution Graph -->
               <div class="github-contrib-container" style="background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 12px;">
-                  <div style="color: #c9d1d9; font-size: 14px; font-weight: 600;">📊 Contribution Activity</div>
-                  <button onclick="window.open('../examples/pages/contribution-enhanced.html', '_blank')" 
-                          style="background: #238636; border: none; color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">
-                    🚀 Full View
-                  </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <div style="color: #c9d1d9; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                    📊 Contribution Activity
+                    <span style="background: #238636; color: white; padding: 2px 6px; border-radius: 3px; font-size: 9px; font-weight: 500;">
+                      LIVE
+                    </span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <button onclick="document.getElementById('mobile-contrib-widget').classList.toggle('expanded')" 
+                            style="background: #238636; border: none; color: white; padding: 6px 12px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px;">
+                      � Stats
+                    </button>
+                  </div>
                 </div>
                 
-                <!-- Period Selector -->
-                <div style="display: flex; justify-content: center; gap: 4px; margin-bottom: 12px; padding: 4px; background: #161b22; border-radius: 6px;">
-                  <button class="period-btn active" data-period="rolling" 
-                          style="background: #238636; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s;">
-                    Last year
-                  </button>
-                  <button class="period-btn" data-period="2025" 
-                          style="background: transparent; color: #c9d1d9; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s;">
-                    2025
-                  </button>
-                  <button class="period-btn" data-period="2024" 
-                          style="background: transparent; color: #c9d1d9; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s;">
-                    2024
-                  </button>
-                  <button class="period-btn" data-period="2023" 
-                          style="background: transparent; color: #c9d1d9; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s;">
-                    2023
-                  </button>
-                  <button class="period-btn" data-period="2022" 
-                          style="background: transparent; color: #c9d1d9; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s;">
-                    2022
-                  </button>
+                <div id="mobile-contrib-widget" style="margin-bottom: 12px; min-height: 120px; background: #010409; border: 1px solid #0d1117; border-radius: 6px; padding: 12px; overflow: hidden; position: relative;">
+                  <div class="loading-state" style="display: flex; align-items: center; justify-content: center; height: 100px; color: #7d8590; font-size: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <div style="width: 12px; height: 12px; border: 2px solid #238636; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                      Loading contributions...
+                    </div>
+                  </div>
+                  <div class="expanded-stats" style="display: none; background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 12px; margin-top: 8px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                      <div style="text-align: center; padding: 8px; background: #0d1117; border-radius: 4px;">
+                        <div style="color: #39d353; font-size: 18px; font-weight: 700;" id="current-streak-mobile">0</div>
+                        <div style="color: #7d8590; font-size: 9px;">Current Streak</div>
+                      </div>
+                      <div style="text-align: center; padding: 8px; background: #0d1117; border-radius: 4px;">
+                        <div style="color: #1f6feb; font-size: 18px; font-weight: 700;" id="longest-streak-mobile">0</div>
+                        <div style="color: #7d8590; font-size: 9px;">Best Streak</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
-                <div id="mobile-contrib-widget" style="margin-bottom: 8px; min-height: 120px; background: #010409; border: 1px solid #0d1117; border-radius: 6px; padding: 8px; overflow: hidden;"></div>
-                <div style="font-size: 10px; color: #7d8590; text-align: center; margin-top: 8px;">
-                  <span id="period-info">Atividade dos últimos 365 dias</span> • <span style="color: #0e4429;">●</span> Menos <span style="color: #006d32;">■</span><span style="color: #26a641;">■</span><span style="color: #39d353;">■</span> Mais
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #7d8590;">
+                  <div>
+                    <span id="period-info">Last 365 days</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 4px;">
+                    Less <span style="color: #0e4429; width: 8px; height: 8px; display: inline-block; background: currentColor; border-radius: 1px;"></span>
+                    <span style="color: #006d32; width: 8px; height: 8px; display: inline-block; background: currentColor; border-radius: 1px;"></span>
+                    <span style="color: #26a641; width: 8px; height: 8px; display: inline-block; background: currentColor; border-radius: 1px;"></span>
+                    <span style="color: #39d353; width: 8px; height: 8px; display: inline-block; background: currentColor; border-radius: 1px;"></span>
+                    More
+                  </div>
                 </div>
                 
                 <!-- Real-time stats from analytics -->
@@ -670,6 +682,21 @@ class MobileBIOS {
                     <div style="color: #7d8590; font-size: 9px;">Best Day</div>
                   </div>
                 </div>
+                
+                <style>
+                  @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                  }
+                  #mobile-contrib-widget.expanded .expanded-stats {
+                    display: block !important;
+                  }
+                  #mobile-contrib-widget:hover {
+                    background: #0a0f14;
+                    border-color: #238636;
+                    transition: all 0.3s ease;
+                  }
+                </style>
               </div>
 
               <!-- Language Stats -->
@@ -1136,8 +1163,15 @@ class MobileBIOS {
       const container = document.getElementById('mobile-contrib-widget');
       
       if (container) {
-        // Clear previous widget
-        container.innerHTML = '';
+        // Show loading state
+        const loadingState = container.querySelector('.loading-state');
+        if (loadingState) loadingState.style.display = 'flex';
+        
+        // Clear previous widget content but keep structure
+        const existingWidget = container.querySelector('.modular-contribution-widget');
+        if (existingWidget) {
+          existingWidget.remove();
+        }
         
         const widget = new UnifiedContributionWidget(container, {
           author: 'felipemacedo1',
@@ -1146,12 +1180,20 @@ class MobileBIOS {
           theme: 'github',
           mode: 'mobile',
           showStats: false,
-          showLegend: true,
+          showControls: false,
+          showLegend: false,
           showTooltips: true
         });
         
         await widget.init();
-        console.log('Contribution widget initialized for period:', this.sanitizeLogInput(period));
+        
+        // Hide loading state
+        if (loadingState) loadingState.style.display = 'none';
+        
+        // Update stats in expanded section and main stats
+        this.updateContributionStats(widget);
+        
+        console.log('Mobile contribution widget initialized for period:', this.sanitizeLogInput(period));
         
         // Store widget reference for period changes
         this.currentWidget = widget;
@@ -1161,12 +1203,76 @@ class MobileBIOS {
       // Show fallback message
       const container = document.getElementById('mobile-contrib-widget');
       if (container) {
-        container.innerHTML = `
-          <div style="display: flex; align-items: center; justify-content: center; height: 100px; color: #7d8590; font-size: 12px;">
-            📊 Carregando gráfico de contribuições...
-          </div>
-        `;
+        const loadingState = container.querySelector('.loading-state');
+        if (loadingState) {
+          loadingState.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; color: #f85149;">
+              ⚠️ Error loading contributions
+            </div>
+          `;
+        }
       }
+    }
+  }
+
+  updateContributionStats(widget) {
+    try {
+      if (!widget.modularWidget || !widget.modularWidget.data) return;
+
+      const dailyMetrics = widget.modularWidget.data.daily_metrics || {};
+      const dates = Object.keys(dailyMetrics).sort();
+      const commits = Object.values(dailyMetrics);
+      const totalCommits = commits.reduce((sum, count) => sum + count, 0);
+      const activeDays = commits.filter(count => count > 0).length;
+
+      // Calculate streaks
+      let currentStreak = 0;
+      let longestStreak = 0;
+      let tempStreak = 0;
+
+      // Current streak (from most recent backwards)
+      for (let i = dates.length - 1; i >= 0; i--) {
+        if (dailyMetrics[dates[i]] > 0) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+
+      // Longest streak
+      dates.forEach(date => {
+        if (dailyMetrics[date] > 0) {
+          tempStreak++;
+          longestStreak = Math.max(longestStreak, tempStreak);
+        } else {
+          tempStreak = 0;
+        }
+      });
+
+      // Find best day
+      const bestDay = dates.reduce((best, date) => {
+        const commits = dailyMetrics[date];
+        return commits > best.commits ? { commits, date } : best;
+      }, { commits: 0, date: '' });
+
+      // Update main stats
+      const totalCommitsEl = document.getElementById('total-commits-real');
+      const activeDaysEl = document.getElementById('active-days-real');
+      const bestDayEl = document.getElementById('best-day-real');
+
+      if (totalCommitsEl) totalCommitsEl.textContent = totalCommits.toLocaleString();
+      if (activeDaysEl) activeDaysEl.textContent = activeDays;
+      if (bestDayEl) bestDayEl.textContent = bestDay.commits;
+
+      // Update expanded stats
+      const currentStreakEl = document.getElementById('current-streak-mobile');
+      const longestStreakEl = document.getElementById('longest-streak-mobile');
+
+      if (currentStreakEl) currentStreakEl.textContent = currentStreak;
+      if (longestStreakEl) longestStreakEl.textContent = longestStreak;
+
+    } catch (error) {
+      console.error('Error updating contribution stats:', error);
     }
   }
 
