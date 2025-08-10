@@ -15,25 +15,42 @@ export class CommandProcessor {
     });
   }
 
-  processCommand(input) {
-    const command = input.trim().toLowerCase();
-    if (command === "") return;
+  async processCommand(input) {
+    const trimmedInput = input.trim();
+    if (trimmedInput === "") return;
 
     this.terminal.addToOutput(
       `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${input}</span>`, 'system'
     );
 
-    this.executeCommand(command);
+    await this.executeCommand(trimmedInput);
     this.terminal.scrollToBottom();
   }
 
-  executeCommand(command) {
+  async executeCommand(input) {
+    // Parse command and arguments
+    const parts = input.split(/\s+/);
+    const command = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
     if (typeof trackCommand === "function") {
       trackCommand(command);
     }
 
     if (this.commands.has(command)) {
-      this.commands.get(command)();
+      const handler = this.commands.get(command);
+      try {
+        // Support both sync and async command handlers
+        const result = handler(args);
+        if (result && typeof result.then === 'function') {
+          await result;
+        }
+      } catch (error) {
+        console.error(`Error executing command '${command}':`, error);
+        this.terminal.addToOutput(
+          `<span class="error">❌ Erro ao executar comando: ${error.message}</span>`, 'system'
+        );
+      }
     } else {
       this.terminal.showInvalidCommandFeedback();
       this.terminal.addToOutput(
@@ -45,9 +62,22 @@ export class CommandProcessor {
     }
   }
 
-  async executeCommandSilent(command) {
+  async executeCommandSilent(input) {
+    // Parse command and arguments for silent execution too
+    const parts = input.split(/\s+/);
+    const command = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
     if (this.commands.has(command)) {
-      this.commands.get(command)();
+      try {
+        const handler = this.commands.get(command);
+        const result = handler(args);
+        if (result && typeof result.then === 'function') {
+          await result;
+        }
+      } catch (error) {
+        console.error(`Error executing silent command '${command}':`, error);
+      }
     }
     this.terminal.scrollToBottom();
   }

@@ -255,7 +255,10 @@ export class AutoComplete {
       clear: 'Limpa a tela do terminal',
       menu: 'Menu principal do portfolio',
       skills: 'Tecnologias e níveis de conhecimento',
-      whoami: 'Apresentação rápida'
+      whoami: 'Apresentação rápida',
+      contributions: 'Gráfico interativo de contribuições GitHub',
+      demo: 'Demonstração das funcionalidades',
+      start: 'Tour guiado para iniciantes'
     };
     
     return descriptions[command] || 'Comando disponível';

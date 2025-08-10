@@ -5,7 +5,10 @@ import { BasicCommands } from './commands/BasicCommands.js';
 import { AdditionalCommands } from './commands/AdditionalCommands.js';
 import { ThemeManager } from './features/ThemeManager.js';
 import { AutoComplete } from './features/AutoComplete.js';
+import { Onboarding } from './features/onboarding.js';
+import { UXEnhancementSystem } from './features/UXEnhancementSystem.js';
 import { Storage } from './utils/Storage.js';
+import { CONTENT } from './data/content.js';
 
 export class TerminalPortfolio {
   constructor() {
@@ -13,6 +16,8 @@ export class TerminalPortfolio {
     this.commandProcessor = new CommandProcessor(this.terminal);
     this.themeManager = new ThemeManager(this.terminal);
     this.autoComplete = new AutoComplete(this.terminal, this.commandProcessor);
+    this.onboarding = new Onboarding(this.terminal);
+    this.uxSystem = new UXEnhancementSystem(this.terminal);
     
     this.commandHistory = Storage.loadHistory();
     this.historyIndex = -1;
@@ -29,6 +34,7 @@ export class TerminalPortfolio {
     this.themeManager.applyTheme();
     this.startInitialSequence();
     this.fetchVersion();
+    this.onboarding.init();
   }
 
   registerCommands() {
@@ -47,7 +53,7 @@ export class TerminalPortfolio {
   }
 
   setupEventListeners() {
-    this.terminal.input.addEventListener("keydown", (e) => {
+    this.terminal.input.addEventListener("keydown", async (e) => {
       if (this.terminal.isTyping) return;
 
       switch (e.key) {
@@ -59,7 +65,7 @@ export class TerminalPortfolio {
           } else {
             // Esconder sugestões e processar comando normalmente
             this.autoComplete.hideSuggestions();
-            this.processCommand();
+            await this.processCommand();
           }
           break;
         case "ArrowUp":
@@ -87,6 +93,10 @@ export class TerminalPortfolio {
     this.terminal.input.addEventListener("input", () => {
       this.terminal.updateCursor();
       this.autoComplete.showSuggestions(this.terminal.input.value);
+    });
+
+    this.terminal.input.addEventListener("focus", () => {
+      this.terminal.updateCursor();
     });
 
     this.terminal.input.addEventListener("blur", () => {
@@ -145,28 +155,43 @@ export class TerminalPortfolio {
     this.terminal.input.disabled = true;
     await this.terminal.sleep(500);
 
-    await this.terminal.typeCommand("menu");
-    await this.commandProcessor.executeCommandSilent("menu");
+    // Sempre começar com help (sem digitar, apenas executar)
+    await this.commandProcessor.executeCommandSilent("help");
 
     this.terminal.input.disabled = false;
     this.terminal.input.focus();
+    
+    // Garantir que o cursor está na posição correta após a inicialização
+    this.terminal.updateCursor();
   }
 
-  processCommand() {
-    const command = this.terminal.input.value.trim().toLowerCase();
-    if (command === "") return;
+  async processCommand() {
+    const command = this.terminal.input.value.trim();
+    const commandLower = command.toLowerCase();
+    if (commandLower === "") return;
 
+    // Track command in history
     if (command !== this.commandHistory[this.commandHistory.length - 1]) {
       this.commandHistory.push(command);
       Storage.saveHistory(this.commandHistory);
     }
     this.historyIndex = -1;
 
-    // Track command for analytics and onboarding
-    if (window.analytics) window.analytics.trackCommand(command);
-    if (window.onboarding) window.onboarding.trackCommand(command);
+    // Extract main command for tracking (remove args)
+    const mainCommand = commandLower.split(' ')[0];
 
-    this.commandProcessor.processCommand(this.terminal.input.value);
+    // Track command for analytics and enhanced UX
+    if (window.analytics) window.analytics.trackCommand(mainCommand);
+    if (this.onboarding) this.onboarding.trackCommand(mainCommand);
+    if (this.uxSystem) this.uxSystem.trackCommandDiscovery(mainCommand);
+
+    await this.commandProcessor.processCommand(command);
+    
+    // Enhanced UX feedback
+    if (this.uxSystem) {
+      this.uxSystem.enhanceCommandFeedback(mainCommand, true);
+    }
+
     this.terminal.input.value = "";
     this.terminal.updateCursor();
   }

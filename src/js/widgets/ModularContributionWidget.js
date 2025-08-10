@@ -40,35 +40,78 @@ class ModularContributionWidget {
         ? `activity-rolling-365d-${this.options.author}.json`
         : `activity-${this.options.period}-${this.options.author}.json`;
       
+      console.log('📡 Loading contribution data:', filename);
+      
       // Try different base paths
       const basePaths = ['analytics/', '../../analytics/', '../analytics/', '/analytics/'];
       let response;
+      let lastError;
       
       for (const basePath of basePaths) {
         try {
-          response = await fetch(`${basePath}${filename}`);
-          if (response.ok) break;
+          const url = `${basePath}${filename}`;
+          console.log('🔍 Trying path:', url);
+          response = await fetch(url);
+          if (response.ok) {
+            console.log('✅ Data loaded successfully from:', url);
+            break;
+          }
         } catch (error) {
+          lastError = error;
+          console.log('❌ Failed to load from:', `${basePath}${filename}`, error.message);
           continue;
         }
       }
       
-      if (!response || !response.ok) throw new Error(`HTTP ${response?.status}`);
+      if (!response || !response.ok) {
+        throw lastError || new Error(`HTTP ${response?.status || 'Network Error'}`);
+      }
       
       this.data = await response.json();
+      console.log('📊 Contribution data loaded:', {
+        totalDays: Object.keys(this.data.daily_metrics || {}).length,
+        totalCommits: Object.values(this.data.daily_metrics || {}).reduce((sum, count) => sum + count, 0)
+      });
+      
     } catch (error) {
-      console.error('Error loading contribution data:', error);
+      console.error('❌ Error loading contribution data:', error);
       this.data = null;
+      throw error; // Re-throw to handle in parent
     }
   }
 
   render() {
     if (!this.data) {
-      this.container.innerHTML = '<div class="error">Erro ao carregar dados de contribuições</div>';
+      this.container.innerHTML = `
+        <div class="error" style="
+          color: #f85149; 
+          text-align: center; 
+          padding: 20px; 
+          border: 1px solid #f85149; 
+          border-radius: 4px; 
+          background: rgba(248, 81, 73, 0.1);
+        ">
+          ⚠️ Erro ao carregar dados de contribuições
+        </div>`;
       return;
     }
 
     const dailyMetrics = this.data.daily_metrics || {};
+    
+    if (Object.keys(dailyMetrics).length === 0) {
+      this.container.innerHTML = `
+        <div class="error" style="
+          color: #f85149; 
+          text-align: center; 
+          padding: 20px; 
+          border: 1px solid #f85149; 
+          border-radius: 4px; 
+          background: rgba(248, 81, 73, 0.1);
+        ">
+          ⚠️ Nenhum dado de contribuições encontrado
+        </div>`;
+      return;
+    }
     
     // Create containers for each component
     this.container.innerHTML = `
@@ -79,41 +122,64 @@ class ModularContributionWidget {
       </div>
     `;
 
-    // Initialize and render components
-    if (this.options.showControls) {
-      const controlsContainer = this.container.querySelector('#controls-container');
-      this.controls = new ContributionControls(controlsContainer, {
-        theme: this.options.theme,
-        period: this.options.period,
-        author: this.options.author,
-        compact: this.options.size === 'compact',
-        showThemeSelector: true,
-        showExport: true,
-        showPeriodSelector: true
-      });
-      this.controls.render();
+    try {
+      // Initialize and render components with error handling
+      if (this.options.showControls) {
+        const controlsContainer = this.container.querySelector('#controls-container');
+        if (controlsContainer) {
+          this.controls = new ContributionControls(controlsContainer, {
+            theme: this.options.theme,
+            period: this.options.period,
+            author: this.options.author,
+            compact: this.options.size === 'compact',
+            showThemeSelector: true,
+            showExport: true,
+            showPeriodSelector: true
+          });
+          this.controls.render();
+        }
+      }
+
+      if (this.options.showStats) {
+        const statsContainer = this.container.querySelector('#stats-container');
+        if (statsContainer) {
+          this.statsCard = new ContributionStatsCard(statsContainer, {
+            theme: this.options.theme,
+            compact: this.options.size === 'compact',
+            showTrend: true
+          });
+          this.statsCard.render(dailyMetrics);
+        }
+      }
+
+      const gridContainer = this.container.querySelector('#grid-container');
+      if (gridContainer) {
+        this.gridRenderer = new ContributionGridRenderer(gridContainer, {
+          theme: this.options.theme,
+          size: this.options.size,
+          showTooltips: this.options.showTooltips,
+          showLegend: this.options.showLegend
+        });
+        this.gridRenderer.render(dailyMetrics);
+      }
+
+      this.addStyles();
+      console.log('✅ ModularContributionWidget rendered successfully');
+      
+    } catch (error) {
+      console.error('❌ Error rendering ModularContributionWidget components:', error);
+      this.container.innerHTML = `
+        <div class="error" style="
+          color: #f85149; 
+          text-align: center; 
+          padding: 20px; 
+          border: 1px solid #f85149; 
+          border-radius: 4px; 
+          background: rgba(248, 81, 73, 0.1);
+        ">
+          ❌ Erro ao renderizar componentes: ${error.message}
+        </div>`;
     }
-
-    if (this.options.showStats) {
-      const statsContainer = this.container.querySelector('#stats-container');
-      this.statsCard = new ContributionStatsCard(statsContainer, {
-        theme: this.options.theme,
-        compact: this.options.size === 'compact',
-        showTrend: true
-      });
-      this.statsCard.render(dailyMetrics);
-    }
-
-    const gridContainer = this.container.querySelector('#grid-container');
-    this.gridRenderer = new ContributionGridRenderer(gridContainer, {
-      theme: this.options.theme,
-      size: this.options.size,
-      showTooltips: this.options.showTooltips,
-      showLegend: this.options.showLegend
-    });
-    this.gridRenderer.render(dailyMetrics);
-
-    this.addStyles();
   }
 
   attachEventListeners() {
