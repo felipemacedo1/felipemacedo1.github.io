@@ -6,13 +6,7 @@ import { Analytics } from './features/analytics.js';
 
 // Check if should redirect to mobile version
 function checkMobileRedirect() {
-  const deviceInfo = DeviceDetector.getDeviceInfo();
-  
-  // Don't redirect if user specifically wants desktop version
-  const urlParams = new URLSearchParams(window.location.search);
-  const forceDesktop = urlParams.get('desktop') === 'true';
-  
-  if (deviceInfo.isMobile && !forceDesktop) {
+  if (DeviceDetector.shouldRedirectToMobile()) {
     // Add a small delay to show loading, then redirect
     setTimeout(() => {
       window.location.href = './mobile.html';
