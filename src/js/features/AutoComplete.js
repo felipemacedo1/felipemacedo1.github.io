@@ -126,11 +126,21 @@ export class AutoComplete {
         white-space: nowrap;
       `;
       
-      suggestionItem.innerHTML = `
-        <span style="margin-right: 8px; opacity: 0.7; font-size: 10px;">▶</span>
-        <span style="flex: 1;">${highlighted}</span>
-        <span style="margin-left: 8px; font-size: 9px; opacity: 0.5;">↵</span>
-      `;
+      const iconSpan = document.createElement('span');
+      iconSpan.style.cssText = 'margin-right: 8px; opacity: 0.7; font-size: 10px;';
+      iconSpan.textContent = '▶';
+      
+      const textSpan = document.createElement('span');
+      textSpan.style.cssText = 'flex: 1;';
+      textSpan.innerHTML = highlighted;
+      
+      const enterSpan = document.createElement('span');
+      enterSpan.style.cssText = 'margin-left: 8px; font-size: 9px; opacity: 0.5;';
+      enterSpan.textContent = '↵';
+      
+      suggestionItem.appendChild(iconSpan);
+      suggestionItem.appendChild(textSpan);
+      suggestionItem.appendChild(enterSpan);
       
       // Add event listeners safely
       suggestionItem.addEventListener('mouseenter', () => suggestionItem.classList.add('hover'));

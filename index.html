@@ -3,15 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Device detection handled by main.js -->
-    <title>Felipe Macedo - Terminal Portfolio</title>
+    <!-- Enterprise Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-PLACEHOLDER_NONCE' 'strict-dynamic'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Application Metadata -->
+    <title>Felipe Macedo - Enterprise Terminal Portfolio</title>
     <meta
       name="description"
-      content="Portfólio interativo de Felipe Macedo - Desenvolvedor Full Stack especializado em Java, Go e Spring Boot. Terminal retrô com comandos, projetos e informações profissionais."
+      content="Enterprise-grade Terminal Portfolio showcasing advanced web technologies, security implementations, and performance optimization."
     />
     <meta
       name="keywords"
-      content="Felipe Macedo, desenvolvedor, Java, Go, Spring Boot, portfolio, terminal, fullstack, backend, microserviços, APIs"
+      content="Felipe Macedo, desenvolvedor, Java, Go, Spring Boot, portfolio, terminal, fullstack, backend, microserviços, APIs, enterprise, security, performance"
     />
     <meta name="author" content="Felipe Macedo" />
     <meta name="robots" content="index, follow" />
@@ -21,16 +29,21 @@
     <meta http-equiv="Expires" content="Thu, 31 Dec 2025 23:59:59 GMT" />
     <meta name="format-detection" content="telephone=no" />
 
+    <!-- Enterprise Performance Optimization -->
+    <link rel="modulepreload" href="src/js/main.js">
+    <link rel="preload" href="src/css/main.css" as="style">
+    <link rel="dns-prefetch" href="https://api.github.com">
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta
       property="og:url"
       content="https://felipemacedo1.github.io/static-port/"
     />
-    <meta property="og:title" content="Felipe Macedo - Terminal Portfolio" />
+    <meta property="og:title" content="Felipe Macedo - Enterprise Terminal Portfolio" />
     <meta
       property="og:description"
-      content="Desenvolvedor Full Stack especializado em Java, Go e soluções backend escaláveis. Portfolio interativo em formato de terminal retrô."
+      content="Enterprise-grade Terminal Portfolio demonstrating advanced web technologies, security implementations, and performance optimization."
     />
     <meta property="og:site_name" content="Felipe Macedo Portfolio" />
     <meta property="og:locale" content="pt_BR" />
@@ -43,11 +56,11 @@
     />
     <meta
       property="twitter:title"
-      content="Felipe Macedo - Terminal Portfolio"
+      content="Felipe Macedo - Enterprise Terminal Portfolio"
     />
     <meta
       property="twitter:description"
-      content="Desenvolvedor Full Stack especializado em Java, Go e soluções backend escaláveis"
+      content="Enterprise-grade Terminal Portfolio with advanced web technologies"
     />
     <link
       rel="icon"
@@ -64,8 +77,8 @@
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "Felipe Macedo",
-        "jobTitle": "Desenvolvedor Full Stack",
-        "description": "Desenvolvedor especializado em Java, Go, Spring Boot e arquitetura de microserviços",
+        "jobTitle": "Senior Full Stack Developer",
+        "description": "Enterprise software engineer specializing in Java, Go, Spring Boot, microservices architecture, and advanced web technologies",
         "url": "https://felipemacedo1.github.io/static-port/",
         "sameAs": [
           "https://linkedin.com/in/felipemacedo1",
@@ -77,77 +90,118 @@
           "Go",
           "Spring Boot",
           "Microserviços",
+          "Enterprise Architecture",
+          "Security Implementation",
+          "Performance Optimization",
           "APIs REST",
           "PostgreSQL",
           "Redis",
-          "Docker"
+          "Docker",
+          "Web Security",
+          "CSP Implementation"
         ]
       }
     </script>
 
-    <!-- Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-XXXXXXXXXX");
-
-      // Função para rastrear comandos
-      function trackCommand(command) {
-        gtag("event", "terminal_command", {
-          command_name: command,
-          page_title: "Portfolio Terminal",
+    <!-- Enterprise Analytics -->
+    <script nonce="PLACEHOLDER_NONCE">
+      // Performance monitoring initialization
+      window.performanceObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        entries.forEach((entry) => {
+          if (typeof trackPerformance === 'function') {
+            trackPerformance(entry.name, entry.duration, entry.entryType);
+          }
         });
+      });
+      
+      // Track Core Web Vitals
+      function trackCoreWebVitals() {
+        // Will be enhanced by PerformanceMonitor.js
+        if ('PerformanceObserver' in window) {
+          try {
+            window.performanceObserver.observe({ entryTypes: ['navigation', 'paint', 'largest-contentful-paint'] });
+          } catch (e) {
+            console.warn('Performance Observer not fully supported');
+          }
+        }
       }
+      
+      trackCoreWebVitals();
     </script>
 
+    <!-- Optimized Stylesheets -->
     <link rel="stylesheet" href="src/css/main.css">
     <link rel="stylesheet" href="src/css/contribution-widgets.css">
     <link rel="stylesheet" href="src/css/enhancements.css">
     <link rel="stylesheet" href="src/css/ux-enhancements.css">
+    <style nonce="PLACEHOLDER_NONCE">
+      @keyframes enterprise-progress {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+      #enterprise-loading .progress-fill {
+        animation: enterprise-progress 1.6s ease forwards;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="terminal-container">
+    <!-- Enterprise Security Notice -->
+    <noscript>
+      <div style="background: #ff4444; color: #fff; padding: 1rem; text-align: center;">
+        This enterprise application requires JavaScript to be enabled for security and performance features.
+      </div>
+    </noscript>
+
+    <!-- Enterprise Loading Screen -->
+    <div id="enterprise-loading" style="
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: #000; color: #00ff00; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; z-index: 9999;
+      font-family: 'Courier New', monospace;
+    ">
+      <div class="loading-animation">
+        <div>🏢 ENTERPRISE TERMINAL v2.0</div>
+        <div style="margin-top: 20px; font-size: 14px;">
+          <div>[ ✓ ] Initializing Security Layer...</div>
+          <div>[ ✓ ] Loading Performance Monitor...</div>
+          <div>[ ✓ ] Starting Rate Limiter...</div>
+          <div>[ ⏳ ] Preparing Enterprise Features...</div>
+        </div>
+        <div style="margin-top: 30px;">
+          <div class="progress-bar" style="width: 300px; height: 4px; background: #333; border-radius: 2px; overflow: hidden;">
+            <div class="progress-fill" style="width: 0%; height: 100%; background: #00ff00; transition: width 2s ease;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal Interface -->
+    <div class="terminal-container" role="application" aria-label="Enterprise Terminal Portfolio">
       <div class="terminal-header">
         <div class="terminal-buttons">
-          <span class="btn close"></span>
-          <span class="btn minimize"></span>
-          <span class="btn maximize"></span>
+          <span class="btn close" role="button" aria-label="Close terminal"></span>
+          <span class="btn minimize" role="button" aria-label="Minimize terminal"></span>
+          <span class="btn maximize" role="button" aria-label="Maximize terminal"></span>
         </div>
-        <div
-          class="terminal-title"
-          role="banner"
-          style="
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: auto;
-            text-align: center;
-            width: fit-content;
-            font-family: monospace;
-            font-size: 1rem;
-            font-weight: 500;
-          "
-        >
-          felipe-macedo@portfolio:~ -zsh
+        <div class="terminal-title" role="banner">
+          felipe-macedo@enterprise-portfolio:~ -zsh [SECURE]
         </div>
         <div id="terminal-clock" aria-live="polite"></div>
+        <div id="enterprise-status" class="enterprise-indicators">
+          <span id="security-status" title="Security: Active">🔒</span>
+          <span id="performance-status" title="Performance: Monitoring">📊</span>
+          <span id="accessibility-status" title="A11Y: WCAG AAA">♿</span>
+        </div>
       </div>
       <div class="terminal-body" id="terminal" role="main" aria-live="polite">
         <div class="output" id="output" aria-label="Terminal output"></div>
         <div id="terminal-help" class="sr-only">
-          Digite 'help' para ver comandos disponíveis. Use setas para navegar no
-          histórico.
+          Enterprise Terminal Portfolio. Digite 'help' para comandos disponíveis. Use setas para navegar no histórico. ESC para cancelar operações.
         </div>
         <div class="input-line" id="inputLine">
-          <span class="prompt">felipe-macedo@portfolio:~$ </span>
+          <span class="prompt">felipe-macedo@enterprise-portfolio:~$ </span>
           <input
             type="text"
             id="commandInput"
@@ -156,34 +210,37 @@
             aria-label="Terminal command input"
             aria-describedby="terminal-help"
             role="textbox"
+            aria-expanded="false"
           />
           <span class="cursor" id="cursor">█</span>
         </div>
       </div>
     </div>
 
-    <div class="mobile-keyboard" id="mobileKeyboard">
+    <!-- Enhanced Mobile Interface -->
+    <div class="mobile-keyboard" id="mobileKeyboard" role="toolbar" aria-label="Mobile command shortcuts">
       <div class="keyboard-row">
-        <button onclick="typeChar('1')">1</button>
-        <button onclick="typeChar('2')">2</button>
-        <button onclick="typeChar('3')">3</button>
-        <button onclick="typeCommand('help')" class="wide">help</button>
-        <button onclick="typeCommand('clear')" class="wide">clear</button>
+        <button data-char="1" aria-label="Type 1">1</button>
+        <button data-char="2" aria-label="Type 2">2</button>
+        <button data-char="3" aria-label="Type 3">3</button>
+        <button data-command="help" class="wide" aria-label="Execute help command">help</button>
+        <button data-command="clear" class="wide" aria-label="Execute clear command">clear</button>
       </div>
       <div class="keyboard-row">
-        <button onclick="typeCommand('menu')">menu</button>
-        <button onclick="typeCommand('about')">about</button>
-        <button onclick="typeCommand('skills')">skills</button>
-        <button onclick="typeCommand('status')">status</button>
+        <button data-command="menu" aria-label="Execute menu command">menu</button>
+        <button data-command="about" aria-label="Execute about command">about</button>
+        <button data-command="skills" aria-label="Execute skills command">skills</button>
+        <button data-command="status" aria-label="Execute status command">status</button>
       </div>
       <div class="keyboard-row">
-        <button onclick="typeCommand('projects')">projects</button>
-        <button onclick="typeCommand('contact')">contact</button>
-        <button onclick="typeCommand('whoami')">whoami</button>
-        <button onclick="typeCommand('theme matrix')">matrix</button>
+        <button data-command="projects" aria-label="Execute projects command">projects</button>
+        <button data-command="contact" aria-label="Execute contact command">contact</button>
+        <button data-command="whoami" aria-label="Execute whoami command">whoami</button>
+        <button data-command="enterprise" aria-label="Show enterprise features">enterprise</button>
       </div>
     </div>
 
-    <script type="module" src="src/js/main.js"></script>
+    <!-- Enterprise Module Loader -->
+    <script type="module" nonce="PLACEHOLDER_NONCE" src="src/js/main.js"></script>
   </body>
 </html>

@@ -217,10 +217,7 @@ class EnterpriseApp {
     // Setup global functions for mobile keyboard
     window.typeChar = this.typeChar.bind(this);
     window.typeCommand = this.typeCommand.bind(this);
-
-    // Attach mobile keyboard listeners (CSP-safe)
-    this.attachMobileKeyboardHandlers();
-
+    
     // Remove loading screen
     this.removeLoadingScreen();
     
@@ -230,27 +227,7 @@ class EnterpriseApp {
     console.log('✅ Application started successfully');
   }
 
-  attachMobileKeyboardHandlers() {
-    const container = document.getElementById('mobileKeyboard');
-    if (!container) return;
-
-    // Delegate clicks to avoid multiple listeners
-    container.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-
-      const ch = btn.getAttribute('data-char');
-      const cmd = btn.getAttribute('data-command');
-      if (ch) {
-        this.typeChar(ch);
-      } else if (cmd) {
-        this.typeCommand(cmd);
-      }
-    }, { passive: true });
-  }
-
   async initializeFallbackMode() {
-    if (this.initialized) return;
     console.warn('⚠️ Initializing fallback mode...');
     
     // Basic terminal without enterprise features
@@ -263,38 +240,12 @@ class EnterpriseApp {
       window.typeCommand = this.typeCommand.bind(this);
       
       this.removeLoadingScreen();
-      this.initialized = true;
       console.log('✅ Fallback mode active');
       
     } catch (error) {
       console.error('❌ Fallback mode failed:', error);
       this.showErrorScreen();
     }
-  }
-
-  showErrorScreen() {
-    document.body.innerHTML = `
-      <div style="
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: #000; color: #ff4444; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; font-family: monospace;
-        text-align: center; padding: 20px; box-sizing: border-box;
-      ">
-        <h1>❌ Enterprise System Error</h1>
-        <p>Unable to initialize terminal portfolio.</p>
-        <p>Please refresh the page or contact support.</p>
-        <button id="reload-app" style="
-          margin-top: 20px; padding: 10px 20px; background: #333;
-          color: #fff; border: 1px solid #666; cursor: pointer;
-          font-family: monospace;
-        ">
-          🔄 Reload Application
-        </button>
-      </div>
-    `;
-
-    const btn = document.getElementById('reload-app');
-    if (btn) btn.addEventListener('click', () => location.reload());
   }
 
   shouldRedirectToMobile() {
@@ -354,6 +305,72 @@ class EnterpriseApp {
           }
         }, 500);
       }, 800);
+    }
+  }
+
+  showErrorScreen() {
+    document.body.innerHTML = `
+      <div style="
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: #000; color: #ff4444; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; font-family: monospace;
+        text-align: center; padding: 20px; box-sizing: border-box;
+      ">
+        <h1>❌ Enterprise System Error</h1>
+        <p>Unable to initialize terminal portfolio.</p>
+        <p>Please refresh the page or contact support.</p>
+        <button onclick="location.reload()" style="
+          margin-top: 20px; padding: 10px 20px; background: #333;
+          color: #fff; border: 1px solid #666; cursor: pointer;
+          font-family: monospace;
+        ">
+          🔄 Reload Application
+        </button>
+      </div>
+    `;
+  }
+
+  setupEnterpriseEventListeners() {
+    // Global error handling
+    window.addEventListener('error', (event) => {
+      console.error('🚨 Global error:', event.error);
+      if (window.analytics) {
+        window.analytics.trackEvent('error', {
+          message: event.message,
+          filename: event.filename,
+          lineno: event.lineno
+        });
+      }
+    });
+
+    // Unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('🚨 Unhandled promise rejection:', event.reason);
+      if (window.analytics) {
+        window.analytics.trackEvent('promise_rejection', {
+          reason: event.reason?.toString()
+        });
+      }
+    });
+
+    // Performance monitoring
+    if ('PerformanceObserver' in window) {
+      try {
+        const observer = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            if (window.performanceMonitor) {
+              window.performanceMonitor.recordMetric(entry.name, entry.duration, {
+                entryType: entry.entryType
+              });
+            }
+          });
+        });
+        
+        observer.observe({ entryTypes: ['navigation', 'paint', 'largest-contentful-paint'] });
+      } catch (error) {
+        console.warn('Performance Observer setup failed:', error);
+      }
     }
   }
 
@@ -426,42 +443,10 @@ class EnterpriseApp {
 // Initialize Enterprise Application
 const enterpriseApp = new EnterpriseApp();
 
-async function bootstrap() {
-  try {
-    await enterpriseApp.initialize();
-  } catch (e) {
-    console.error('Bootstrap initialize failed:', e);
-    try {
-      await enterpriseApp.initializeFallbackMode();
-    } catch (e2) {
-      console.error('Fallback initialize failed:', e2);
-    }
-  }
-}
-
-// Start immediately if DOM is already parsed, otherwise wait for DOMContentLoaded
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
-} else {
-  // Document already loaded/parsing done
-  bootstrap();
-}
-
-// Safety net: if after 5s not initialized, try again (handles rare timing/CSP issues)
-setTimeout(() => {
-  if (!enterpriseApp.initialized) {
-    console.warn('Initialization taking too long, attempting bootstrap again...');
-    bootstrap();
-  }
-}, 5000);
-
-// Hard fallback after 8s
-setTimeout(() => {
-  if (!enterpriseApp.initialized) {
-    console.warn('Initialization still not complete, engaging fallback mode.');
-    enterpriseApp.initializeFallbackMode();
-  }
-}, 8000);
+// DOM Content Loaded Event
+document.addEventListener("DOMContentLoaded", async () => {
+  await enterpriseApp.initialize();
+});
 
 // Expose for debugging and mobile functions
 window.enterpriseApp = enterpriseApp;

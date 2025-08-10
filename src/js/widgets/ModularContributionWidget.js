@@ -241,6 +241,12 @@ class ModularContributionWidget {
   exportData() {
     if (!this.data) return;
     
+    // Authorization check - only allow export for authorized authors
+    if (!this.isAuthorizedForExport()) {
+      console.warn('Export not authorized for this author');
+      return;
+    }
+    
     const exportData = {
       author: this.options.author,
       period: this.options.period,
@@ -255,6 +261,12 @@ class ModularContributionWidget {
     a.download = `contribution-data-${this.options.author}-${this.options.period}.json`;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  isAuthorizedForExport() {
+    // Only allow export for the portfolio owner
+    const authorizedAuthors = ['felipemacedo1'];
+    return authorizedAuthors.includes(this.options.author);
   }
 
   // Public methods for external control

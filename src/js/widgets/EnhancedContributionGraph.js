@@ -364,11 +364,22 @@ class EnhancedContributionGraph {
     
     const tooltip = document.createElement('div');
     tooltip.className = 'contribution-tooltip';
-    tooltip.innerHTML = `
-      <div class="tooltip-date">${new Date(date).toLocaleDateString('pt-BR')}</div>
-      <div class="tooltip-commits">${commits} commits</div>
-      <div class="tooltip-level">Nível ${level}/4</div>
-    `;
+    
+    const dateDiv = document.createElement('div');
+    dateDiv.className = 'tooltip-date';
+    dateDiv.textContent = new Date(date).toLocaleDateString('pt-BR');
+    
+    const commitsDiv = document.createElement('div');
+    commitsDiv.className = 'tooltip-commits';
+    commitsDiv.textContent = `${commits} commits`;
+    
+    const levelDiv = document.createElement('div');
+    levelDiv.className = 'tooltip-level';
+    levelDiv.textContent = `Nível ${level}/4`;
+    
+    tooltip.appendChild(dateDiv);
+    tooltip.appendChild(commitsDiv);
+    tooltip.appendChild(levelDiv);
     
     document.body.appendChild(tooltip);
     

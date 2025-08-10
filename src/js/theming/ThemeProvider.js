@@ -128,6 +128,78 @@ export class ThemeProvider {
       }
     });
 
+    // Hacker theme (red terminal)
+    this.registerTheme('hacker', {
+      colors: {
+        primary: '#ff0040',
+        secondary: '#cc0033',
+        background: '#0a0a0a',
+        surface: '#1a1a1a',
+        text: '#ff0040',
+        textSecondary: '#ff6680',
+        accent: '#ff4080',
+        warning: '#ff8000',
+        error: '#ff0040',
+        success: '#ff0040',
+        border: '#ff0040'
+      },
+      typography: {
+        fontFamily: '"Courier New", "Monaco", "Menlo", monospace',
+        fontSize: '14px',
+        lineHeight: '1.4',
+        fontWeight: '400'
+      },
+      spacing: {
+        xs: '4px',
+        sm: '8px',
+        md: '16px',
+        lg: '24px',
+        xl: '32px'
+      },
+      effects: {
+        borderRadius: '0px',
+        boxShadow: '0 0 20px rgba(255, 0, 64, 0.4)',
+        transition: 'all 0.2s ease',
+        blur: '2px'
+      }
+    });
+
+    // Retro theme (amber/orange)
+    this.registerTheme('retro', {
+      colors: {
+        primary: '#ffaa00',
+        secondary: '#cc8800',
+        background: '#1a1200',
+        surface: '#2a1f00',
+        text: '#ffaa00',
+        textSecondary: '#cc8800',
+        accent: '#ffd700',
+        warning: '#ff8000',
+        error: '#ff4400',
+        success: '#88aa00',
+        border: '#555500'
+      },
+      typography: {
+        fontFamily: '"Courier New", "Monaco", "Menlo", monospace',
+        fontSize: '14px',
+        lineHeight: '1.4',
+        fontWeight: '400'
+      },
+      spacing: {
+        xs: '4px',
+        sm: '8px',
+        md: '16px',
+        lg: '24px',
+        xl: '32px'
+      },
+      effects: {
+        borderRadius: '0px',
+        boxShadow: '0 0 15px rgba(255, 170, 0, 0.3)',
+        transition: 'all 0.2s ease',
+        blur: '1px'
+      }
+    });
+
     // High contrast theme (accessibility)
     this.registerTheme('contrast', {
       colors: {
@@ -210,8 +282,17 @@ export class ThemeProvider {
     // Update root style
     this.rootStyle.textContent = `:root { ${cssVariables} }`;
 
+    // Ensure body has theme class for CSS that relies on .theme-*
+    this.updateBodyThemeClass(theme.name);
+
     // Apply theme-specific styles
     this.applyThemeStyles(theme);
+  }
+
+  updateBodyThemeClass(themeName) {
+    const toRemove = Array.from(document.body.classList).filter(c => c.startsWith('theme-'));
+    toRemove.forEach(c => document.body.classList.remove(c));
+    document.body.classList.add(`theme-${themeName}`);
   }
 
   async applyThemeWithTransition(theme, previousTheme) {
@@ -273,6 +354,34 @@ export class ThemeProvider {
     Object.entries(theme.effects).forEach(([key, value]) => {
       variables.push(`--effect-${this.kebabCase(key)}: ${value}`);
     });
+
+    // Compatibility aliases (legacy variable names)
+    variables.push(
+      `--primary-color: var(--color-primary)`,
+      `--secondary-color: var(--color-secondary)`,
+      `--background-color: var(--color-background)`,
+      `--surface-color: var(--color-surface)`,
+      `--text-color: var(--color-text)`,
+      `--text-secondary: var(--color-text-secondary)`,
+      `--accent-color: var(--color-accent)`,
+      `--warning-color: var(--color-warning)`,
+      `--error-color: var(--color-error)`,
+      `--success-color: var(--color-success)`,
+      `--border-color: var(--color-border)`
+    );
+
+    // Terminal-specific aliases used across components
+    variables.push(
+      `--terminal-success: var(--color-success)`,
+      `--terminal-error: var(--color-error)`,
+      `--terminal-warning: var(--color-warning)`,
+      `--terminal-accent: var(--color-accent)`,
+      `--terminal-text: var(--color-text)`,
+      `--terminal-muted: var(--color-text-secondary)`,
+      `--terminal-border: var(--color-border)`,
+      `--terminal-bg: var(--color-background)`,
+      `--terminal-surface: var(--color-surface)`
+    );
 
     return variables.join(';\n  ') + ';';
   }
@@ -370,6 +479,37 @@ export class ThemeProvider {
       });
     }
 
+    if (theme.name === 'hacker') {
+      rules.push({
+        selector: '.cursor',
+        styles: {
+          'animation': 'hacker-pulse 0.8s infinite',
+          'text-shadow': '0 0 15px var(--color-primary)'
+        }
+      });
+      rules.push({
+        selector: '.prompt',
+        styles: {
+          'text-shadow': '0 0 5px var(--color-primary)'
+        }
+      });
+    }
+
+    if (theme.name === 'retro') {
+      rules.push({
+        selector: '.cursor',
+        styles: {
+          'animation': 'retro-glow 1.5s ease-in-out infinite alternate'
+        }
+      });
+      rules.push({
+        selector: '.terminal-container',
+        styles: {
+          'text-shadow': '0 0 3px var(--color-primary)'
+        }
+      });
+    }
+
     if (theme.name === 'contrast') {
       rules.push({
         selector: '*:focus',
@@ -396,6 +536,51 @@ export class ThemeProvider {
         @keyframes matrix-blink {
           0%, 50% { opacity: 1; }
           51%, 100% { opacity: 0; }
+        }
+      `;
+      try {
+        styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+      } catch (error) {
+        console.warn('Failed to insert keyframes:', error);
+      }
+    }
+
+    if (theme.name === 'hacker') {
+      const keyframes = `
+        @keyframes hacker-pulse {
+          0% { 
+            opacity: 1; 
+            text-shadow: 0 0 15px var(--color-primary);
+          }
+          50% { 
+            opacity: 0.7; 
+            text-shadow: 0 0 25px var(--color-primary), 0 0 35px var(--color-primary);
+          }
+          100% { 
+            opacity: 1; 
+            text-shadow: 0 0 15px var(--color-primary);
+          }
+        }
+      `;
+      try {
+        styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+      } catch (error) {
+        console.warn('Failed to insert keyframes:', error);
+      }
+    }
+
+    if (theme.name === 'retro') {
+      const keyframes = `
+        @keyframes retro-glow {
+          from { 
+            text-shadow: 0 0 3px var(--color-primary);
+          }
+          to { 
+            text-shadow: 
+              0 0 3px var(--color-primary),
+              0 0 6px var(--color-primary),
+              0 0 9px var(--color-primary);
+          }
         }
       `;
       try {

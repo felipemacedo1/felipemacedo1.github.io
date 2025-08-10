@@ -1,0 +1,314 @@
+/* Enterprise Commands Styling */
+
+/* Enterprise Features Display */
+.enterprise-feature {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  padding: 8px 0;
+  border-left: 2px solid var(--color-primary);
+  padding-left: 12px;
+}
+
+.feature-icon {
+  font-size: 1.2em;
+  margin-right: 8px;
+  width: 24px;
+}
+
+.feature-name {
+  font-weight: bold;
+  color: var(--color-primary);
+  min-width: 140px;
+  margin-right: 12px;
+}
+
+.feature-status {
+  color: var(--color-text-secondary);
+  font-size: 0.9em;
+}
+
+/* Status Items */
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  padding: 4px 0;
+}
+
+.status-label {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.status-value {
+  color: var(--color-text);
+}
+
+/* Module Status */
+.module-status, .module-item {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  padding: 6px 0;
+}
+
+.module-icon {
+  margin-right: 8px;
+  font-size: 1.1em;
+}
+
+.module-name {
+  color: var(--color-primary);
+  font-weight: 500;
+  min-width: 160px;
+  margin-right: 12px;
+}
+
+.module-health {
+  color: var(--color-text-secondary);
+  font-size: 0.9em;
+}
+
+/* Performance Metrics */
+.vital-metric, .custom-metric {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  padding: 4px 0;
+}
+
+.vital-name, .metric-name {
+  color: var(--color-warning);
+  font-weight: 500;
+  min-width: 60px;
+  margin-right: 12px;
+}
+
+.vital-value, .metric-value {
+  color: var(--color-text);
+  margin-right: 8px;
+}
+
+.vital-status {
+  font-size: 1.1em;
+}
+
+/* Security Status */
+.security-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.security-feature {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.security-status {
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+/* Rate Limiting Stats */
+.rate-limit-stats {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  padding: 4px 0;
+}
+
+.stat-label {
+  color: var(--color-secondary);
+}
+
+.stat-value {
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+/* Live Metrics */
+.live-metrics {
+  background: rgba(0, 255, 0, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 12px;
+  margin: 10px 0;
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+}
+
+.metric-label {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* Health Check */
+.health-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+.health-category {
+  color: var(--color-primary);
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.health-score {
+  color: var(--color-text);
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* Check Items */
+.check-item, .feature-item {
+  display: block;
+  margin: 4px 0;
+  padding: 2px 0;
+  color: var(--color-text);
+}
+
+.check-item::before {
+  content: '  ';
+  margin-right: 4px;
+}
+
+/* Debug Information */
+.debug-item {
+  display: flex;
+  margin: 6px 0;
+  padding: 4px 0;
+}
+
+.debug-label {
+  color: var(--color-primary);
+  font-weight: 500;
+  min-width: 120px;
+  margin-right: 12px;
+}
+
+.debug-value {
+  color: var(--color-text);
+  word-break: break-all;
+}
+
+/* Enterprise Status Indicators Animation */
+.enterprise-indicators span {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+/* Responsive Design for Enterprise Elements */
+@media (max-width: 768px) {
+  .enterprise-feature,
+  .status-item,
+  .security-item,
+  .health-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .feature-name,
+  .status-label,
+  .security-feature,
+  .health-category {
+    margin-bottom: 4px;
+  }
+  
+  .debug-item {
+    flex-direction: column;
+  }
+  
+  .debug-label {
+    min-width: auto;
+    margin-bottom: 4px;
+  }
+}
+
+/* High Contrast Theme Support for Enterprise Elements */
+@media (prefers-contrast: high) {
+  .enterprise-feature {
+    border-left-color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .live-metrics {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #ffffff;
+  }
+}
+
+/* Performance Optimization */
+.live-metrics,
+.enterprise-feature,
+.module-item,
+.health-item {
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+.enterprise-banner {
+  border-left: 2px solid var(--color-primary);
+}
+
+.enterprise-banner .title {
+  color: var(--color-primary);
+}
+
+.enterprise-banner .subtitle {
+  color: var(--color-text-secondary);
+}
+
+.enterprise-section h3 {
+  color: var(--color-primary);
+}
+
+.enterprise-section p {
+  color: var(--color-text);
+}
+
+.enterprise-indicator {
+  color: var(--color-primary);
+}
+
+.muted {
+  color: var(--color-text-secondary);
+}
+
+.warning {
+  color: var(--color-warning);
+}
+
+.info {
+  color: var(--color-secondary);
+}
+
+.divider {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.strong {
+  color: var(--color-primary);
+}
+
+.value {
+  color: var(--color-text);
+}

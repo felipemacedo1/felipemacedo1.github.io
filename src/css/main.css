@@ -1,4 +1,4 @@
-/* ===== MAIN CSS FILE ===== */
+/* ===== MAIN CSS FILE - ENTERPRISE EDITION ===== */
 /* Import all CSS modules in correct order */
 
 @import url('variables.css');
@@ -10,3 +10,194 @@
 @import url('themes.css');
 @import url('commands.css');
 @import url('mobile.css');
+
+/* ===== ENTERPRISE FEATURES ===== */
+
+/* Enterprise Loading Screen */
+#enterprise-loading {
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+}
+
+#enterprise-loading .loading-animation > div {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+#enterprise-loading .progress-bar {
+  margin-top: 30px;
+}
+
+#enterprise-loading .progress-fill {
+  transition: width 2s ease;
+}
+
+/* Enterprise Status Indicators */
+.enterprise-indicators {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.enterprise-indicators span {
+  cursor: help;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.enterprise-indicators span:hover {
+  opacity: 1;
+}
+
+/* Terminal Title Update */
+.terminal-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  width: fit-content;
+  font-family: monospace;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-primary, #00ff00);
+}
+
+/* Enhanced Mobile Keyboard */
+.mobile-keyboard button {
+  transition: all 0.2s ease;
+  border: 1px solid var(--color-border, #333);
+  background: var(--color-surface, #111);
+  color: var(--color-text, #00ff00);
+}
+
+.mobile-keyboard button:hover {
+  background: var(--color-primary, #00ff00);
+  color: var(--color-background, #000);
+  transform: translateY(-1px);
+}
+
+.mobile-keyboard button:active {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Screen Reader Enhancements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus Management */
+*:focus {
+  outline: 2px solid var(--color-primary, #00ff00);
+  outline-offset: 2px;
+}
+
+/* Skip Links */
+.skip-links {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  z-index: 10000;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--background-color, #000);
+  color: var(--primary-color, #00ff00);
+  padding: 8px;
+  text-decoration: none;
+  border: 1px solid var(--primary-color, #00ff00);
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* High Contrast Theme Support */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #ffffff;
+    --background-color: #000000;
+    --text-color: #ffffff;
+    --border-color: #ffffff;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  #enterprise-loading .progress-fill {
+    transition: none;
+  }
+}
+
+/* Performance Optimization */
+.terminal-container {
+  will-change: scroll-position;
+  transform: translateZ(0);
+}
+
+/* Security Visual Indicators */
+[data-security-level="high"] {
+  border-left: 3px solid #00ff00;
+}
+
+[data-security-level="medium"] {
+  border-left: 3px solid #ffa500;
+}
+
+[data-security-level="low"] {
+  border-left: 3px solid #ff4444;
+}
+
+/* Enterprise Theme Variables */
+:root {
+  --enterprise-green: #00ff00;
+  --enterprise-blue: #0099ff;
+  --enterprise-orange: #ff6b35;
+  --enterprise-red: #ff4444;
+  --enterprise-purple: #9f4fff;
+  
+  --security-green: #22c55e;
+  --warning-orange: #f59e0b;
+  --error-red: #ef4444;
+  --info-blue: #3b82f6;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Performance Hints */
+img, video {
+  content-visibility: auto;
+}
+
+.terminal-body {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}

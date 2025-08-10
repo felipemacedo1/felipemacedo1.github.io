@@ -72,7 +72,26 @@ export class ContextualHelp {
   }
 
   loadProgress() {
-    return JSON.parse(localStorage.getItem('terminal-progress') || '{"discoveredCommands": []}');
+    try {
+      const data = localStorage.getItem('terminal-progress');
+      if (!data) return { discoveredCommands: [] };
+      
+      const parsed = JSON.parse(data);
+      
+      // Validate structure and sanitize
+      if (typeof parsed !== 'object' || !Array.isArray(parsed.discoveredCommands)) {
+        return { discoveredCommands: [] };
+      }
+      
+      // Sanitize commands array - only allow strings
+      const sanitizedCommands = parsed.discoveredCommands.filter(cmd => 
+        typeof cmd === 'string' && /^[a-zA-Z0-9_-]+$/.test(cmd)
+      );
+      
+      return { discoveredCommands: sanitizedCommands };
+    } catch {
+      return { discoveredCommands: [] };
+    }
   }
 
   saveProgress() {

@@ -134,8 +134,13 @@ class ContributionControls {
     const exportBtn = this.container.querySelector('#export-btn');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => {
-        if (this.callbacks.onExport) {
-          this.callbacks.onExport();
+        // Authorization check before export
+        if (this.isAuthorizedToExport()) {
+          if (this.callbacks.onExport) {
+            this.callbacks.onExport();
+          }
+        } else {
+          console.warn('Export not authorized for current user');
         }
       });
     }
@@ -146,6 +151,12 @@ class ContributionControls {
     if (controls) {
       controls.className = controls.className.replace(/theme-\w+/, `theme-${this.options.theme}`);
     }
+  }
+
+  // Authorization check for export functionality
+  isAuthorizedToExport() {
+    // Only allow export for the configured author
+    return this.options.author === 'felipemacedo1';
   }
 
   // Method to set callbacks

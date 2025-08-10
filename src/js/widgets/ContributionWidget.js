@@ -101,35 +101,62 @@ class ContributionWidget {
   }
 
   renderGraph(dailyMetrics, dates) {
+    const { startDate, endDate, weeksNeeded } = this.calculateDateRange(dates);
+    
+    const graphContainer = document.createElement('div');
+    graphContainer.className = 'widget-graph';
+    
+    for (let week = 0; week < weeksNeeded; week++) {
+      const weekElement = this.createWeekElement(week, startDate, endDate, dailyMetrics);
+      if (weekElement) {
+        graphContainer.appendChild(weekElement);
+      }
+    }
+    
+    return graphContainer.outerHTML;
+  }
+
+  calculateDateRange(dates) {
     const startDate = new Date(dates[0]);
     const endDate = new Date(dates[dates.length - 1]);
     const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
     const weeksNeeded = Math.ceil(totalDays / 7);
-
-    let html = '<div class="widget-graph">';
     
-    for (let week = 0; week < weeksNeeded; week++) {
-      html += '<div class="week">';
-      
-      for (let day = 0; day < 7; day++) {
-        const dayIndex = week * 7 + day;
-        const currentDate = new Date(startDate);
-        currentDate.setDate(startDate.getDate() + dayIndex);
-        
-        if (currentDate > endDate) break;
-        
-        const dateStr = currentDate.toISOString().split('T')[0];
-        const commits = dailyMetrics[dateStr] || 0;
-        const level = this.getLevel(commits);
-        
-        html += `<div class="cell level-${level}" title="${dateStr}: ${commits} commits"></div>`;
+    return { startDate, endDate, weeksNeeded };
+  }
+
+  createWeekElement(week, startDate, endDate, dailyMetrics) {
+    const weekElement = document.createElement('div');
+    weekElement.className = 'week';
+    
+    for (let day = 0; day < 7; day++) {
+      const cellElement = this.createCellElement(week, day, startDate, endDate, dailyMetrics);
+      if (cellElement) {
+        weekElement.appendChild(cellElement);
+      } else {
+        break;
       }
-      
-      html += '</div>';
     }
     
-    html += '</div>';
-    return html;
+    return weekElement.children.length > 0 ? weekElement : null;
+  }
+
+  createCellElement(week, day, startDate, endDate, dailyMetrics) {
+    const dayIndex = week * 7 + day;
+    const currentDate = new Date(startDate);
+    currentDate.setDate(startDate.getDate() + dayIndex);
+    
+    if (currentDate > endDate) return null;
+    
+    const dateStr = currentDate.toISOString().split('T')[0];
+    const commits = dailyMetrics[dateStr] || 0;
+    const level = this.getLevel(commits);
+    
+    const cellElement = document.createElement('div');
+    cellElement.className = `cell level-${level}`;
+    cellElement.title = `${dateStr}: ${commits} commits`;
+    
+    return cellElement;
   }
 
   calculateStreak(dailyMetrics) {

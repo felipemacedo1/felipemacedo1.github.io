@@ -147,9 +147,9 @@ class MobileBIOS {
     const detailContent = document.getElementById('detailContent');
 
     detailTitle.textContent = this.getActionTitle(action);
-    // Sanitize content before setting innerHTML
-    const sanitizedContent = this.sanitizeHTML(this.getActionContent(action));
-    detailContent.innerHTML = sanitizedContent;
+    // Use safe DOM manipulation instead of innerHTML
+    const content = this.getActionContent(action);
+    this.safeSetContent(detailContent, content);
 
     detailView.style.display = 'flex';
     detailView.classList.add('slide-in');
@@ -1542,7 +1542,29 @@ class MobileBIOS {
         throw new Error(`Could not load analytics data for period: ${period}`);
       }
       
-      const data = await response.json();
+      const rawData = await response.text();
+      let data;
+      try {
+        // Validate JSON string before parsing
+        if (typeof rawData !== 'string' || rawData.length > 1000000) {
+          throw new Error('Invalid data format');
+        }
+        
+        data = JSON.parse(rawData);
+        
+        // Validate parsed data structure
+        if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+          throw new Error('Invalid data format');
+        }
+        
+        // Validate required properties
+        if (!data.daily_metrics || typeof data.daily_metrics !== 'object') {
+          throw new Error('Missing or invalid daily_metrics');
+        }
+        
+      } catch (parseError) {
+        throw new Error('Invalid JSON data');
+      }
       const dailyMetrics = data.daily_metrics || {};
       
       console.log('Analytics data loaded for period:', this.sanitizeLogInput(period), { 

@@ -1,5 +1,13 @@
 # 💻 Terminal Portfolio
 
+> Para rodar localmente com CSP e módulos ES, use um servidor HTTP:
+>
+> - Python: `python3 -m http.server 8080`
+> - Node: `npx serve -l 8080`
+> - Docker/nginx: qualquer servidor estático
+>
+> Abra: http://localhost:8080/
+
 <div align="center">
 
 [![Version](https://img.shields.io/badge/Version-2.1.0-blue?style=for-the-badge)]()

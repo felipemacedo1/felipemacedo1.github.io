@@ -3,6 +3,7 @@ import { Terminal } from './core/Terminal.js';
 import { CommandProcessor } from './core/CommandProcessor.js';
 import { BasicCommands } from './commands/BasicCommands.js';
 import { AdditionalCommands } from './commands/AdditionalCommands.js';
+import { EnterpriseCommands } from './commands/EnterpriseCommands.js';
 import { ThemeManager } from './features/ThemeManager.js';
 import { AutoComplete } from './features/AutoComplete.js';
 import { Onboarding } from './features/onboarding.js';
@@ -40,10 +41,12 @@ export class TerminalPortfolio {
   registerCommands() {
     const basicCommands = new BasicCommands(this.terminal);
     const additionalCommands = new AdditionalCommands(this.terminal);
+    const enterpriseCommands = new EnterpriseCommands(this.terminal);
     
     this.commandProcessor.registerCommands({
       ...basicCommands.getCommands(),
       ...additionalCommands.getCommands(),
+      ...enterpriseCommands.getCommands(),
       ...this.themeManager.getCommands(),
       menu: () => this.showMenu(),
       projects: () => this.showProjects(),
@@ -222,11 +225,20 @@ export class TerminalPortfolio {
 
   async fetchVersion() {
     try {
+      // Check rate limiting before making API call
+      if (window.rateLimiter && !window.rateLimiter.isAllowed('github-api').allowed) {
+        this.version = "v1.0.1";
+        return;
+      }
+
       const repo = "felipemacedo1/felipemacedo1.github.io";
       const apiUrl = `https://api.github.com/repos/${repo}/releases/latest`;
 
       const response = await fetch(apiUrl, {
-        headers: { Accept: "application/vnd.github.v3+json" },
+        headers: { 
+          Accept: "application/vnd.github.v3+json",
+          'User-Agent': 'Terminal-Portfolio/1.0'
+        },
       });
 
       if (response.ok) {

@@ -23,6 +23,11 @@ class ContributionCommands {
     }
   }
 
+  sanitizeLogInput(input) {
+    if (typeof input !== 'string') return String(input);
+    return input.replace(/[\r\n\t\x00-\x1f\x7f-\x9f]/g, '').substring(0, 200);
+  }
+
   async showContributions(args = []) {
     try {
       const options = this.parseArgs(args);
@@ -243,7 +248,7 @@ class ContributionCommands {
             <div class="error-content">
               <h4>Failed to load contributions</h4>
               <p>${error.message}</p>
-              <button onclick="location.reload()" class="retry-button">
+              <button class="retry-button" data-action="retry-reload">
                 🔄 Retry
               </button>
             </div>
@@ -293,6 +298,9 @@ class ContributionCommands {
             opacity: 0.8;
           }
           </style>`;
+
+        const retryBtn = containerElement.querySelector('[data-action="retry-reload"]');
+        if (retryBtn) retryBtn.addEventListener('click', () => location.reload());
       }
       
       // Show detailed error in terminal output
