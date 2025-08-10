@@ -147,8 +147,9 @@ class MobileBIOS {
     const detailContent = document.getElementById('detailContent');
 
     detailTitle.textContent = this.getActionTitle(action);
-    // Use innerHTML but content is controlled (not user input)
-    detailContent.innerHTML = this.getActionContent(action);
+    // Sanitize content before setting innerHTML
+    const sanitizedContent = this.sanitizeHTML(this.getActionContent(action));
+    detailContent.innerHTML = sanitizedContent;
 
     detailView.style.display = 'flex';
     detailView.classList.add('slide-in');
@@ -269,6 +270,28 @@ class MobileBIOS {
       };
       return escapeMap[match];
     });
+  }
+
+  sanitizeHTML(html) {
+    // Create a temporary div to parse HTML safely
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    
+    // Remove script tags and event handlers
+    const scripts = temp.querySelectorAll('script');
+    scripts.forEach(script => script.remove());
+    
+    // Remove dangerous attributes
+    const allElements = temp.querySelectorAll('*');
+    allElements.forEach(el => {
+      Array.from(el.attributes).forEach(attr => {
+        if (attr.name.startsWith('on') || attr.name === 'javascript:') {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    
+    return temp.innerHTML;
   }
 
   sanitizeLogInput(input) {

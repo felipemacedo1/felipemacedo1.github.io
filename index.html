@@ -3,18 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Mobile redirect script (must be first) -->
-    <script>
-      (function() {
-        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        var isSmallScreen = window.innerWidth <= 768;
-        var forceDesktop = window.location.search.includes('desktop=true');
-        
-        if ((isMobile || isSmallScreen) && !forceDesktop && window.location.pathname.indexOf('mobile.html') === -1) {
-          window.location.href = './mobile.html';
-        }
-      })();
-    </script>
+    <!-- Device detection handled by main.js -->
     <title>Felipe Macedo - Terminal Portfolio</title>
     <meta
       name="description"
