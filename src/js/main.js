@@ -7,6 +7,9 @@ import { CSPManager } from './security/CSPManager.js';
 import { RateLimiter } from './core/RateLimiter.js';
 import { ResourcePreloader } from './core/ResourcePreloader.js';
 import { PerformanceMonitor } from './core/PerformanceMonitor.js';
+import { GestureRecognizer } from './features/GestureRecognizer.js';
+import { AccessibilityEngine } from './a11y/AccessibilityEngine.js';
+import { ThemeProvider } from './theming/ThemeProvider.js';
 
 // Check if should redirect to mobile version
 function checkMobileRedirect() {
@@ -88,6 +91,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.rateLimiter = new RateLimiter();
   window.resourcePreloader = new ResourcePreloader();
   window.performanceMonitor = new PerformanceMonitor();
+  
+  // Initialize advanced UX features
+  window.themeProvider = new ThemeProvider();
+  window.accessibilityEngine = new AccessibilityEngine();
+  window.gestureRecognizer = new GestureRecognizer(document.body);
   
   // Register service worker
   if ('serviceWorker' in navigator) {
