@@ -85,9 +85,7 @@ export class TerminalPortfolio {
           break;
         case "Tab":
           e.preventDefault();
-          if (!this.autoComplete.autoComplete(this.terminal.input.value)) {
-            // Se não conseguiu completar, não fazer nada
-          }
+          this.autoComplete.autoComplete(this.terminal.input.value);
           break;
       }
     });

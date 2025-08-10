@@ -28,17 +28,28 @@ export class ContextualHelp {
   showTooltip(message, duration = 3000) {
     const tooltip = document.createElement('div');
     tooltip.className = 'help-tooltip';
-    tooltip.innerHTML = `
-      <div class="tooltip-content">
-        ${message}
-        <button class="tooltip-close">×</button>
-      </div>
-    `;
+    
+    const tooltipContent = document.createElement('div');
+    tooltipContent.className = 'tooltip-content';
+    
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = message; // Use textContent to prevent XSS
+    
+    const closeButton = document.createElement('button');
+    closeButton.className = 'tooltip-close';
+    closeButton.textContent = '×';
+    closeButton.addEventListener('click', () => tooltip.remove());
+    
+    tooltipContent.appendChild(messageSpan);
+    tooltipContent.appendChild(closeButton);
+    tooltip.appendChild(tooltipContent);
     
     document.body.appendChild(tooltip);
     
     setTimeout(() => {
-      tooltip.remove();
+      if (tooltip.parentNode) {
+        tooltip.remove();
+      }
     }, duration);
   }
 

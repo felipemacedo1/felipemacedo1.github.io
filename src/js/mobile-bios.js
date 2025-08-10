@@ -215,15 +215,27 @@ class MobileBIOS {
     // Remove event listeners to prevent memory leaks
     if (this.popstateHandler) {
       window.removeEventListener('popstate', this.popstateHandler);
+      this.popstateHandler = null;
     }
     
     // Clear intervals
     if (this.clockInterval) {
       clearInterval(this.clockInterval);
+      this.clockInterval = null;
     }
     if (this.batteryInterval) {
       clearInterval(this.batteryInterval);
+      this.batteryInterval = null;
     }
+    
+    // Clear widget references
+    if (this.currentWidget) {
+      this.currentWidget = null;
+    }
+    
+    // Remove any remaining tooltips
+    const tooltips = document.querySelectorAll('.contribution-tooltip');
+    tooltips.forEach(tooltip => tooltip.remove());
   }
 
   setupScrollableContainers() {
@@ -295,15 +307,20 @@ class MobileBIOS {
     const temp = document.createElement('div');
     temp.innerHTML = html;
     
-    // Remove script tags and event handlers
-    const scripts = temp.querySelectorAll('script');
-    scripts.forEach(script => script.remove());
+    // Remove dangerous elements
+    const dangerousElements = temp.querySelectorAll('script, iframe, object, embed, form, input, textarea, select, button[onclick], a[href^="javascript:"], a[href^="data:"], a[href^="vbscript:"]');
+    dangerousElements.forEach(el => el.remove());
     
     // Remove dangerous attributes
     const allElements = temp.querySelectorAll('*');
     allElements.forEach(el => {
       Array.from(el.attributes).forEach(attr => {
-        if (attr.name.startsWith('on') || attr.name === 'javascript:') {
+        if (attr.name.startsWith('on') || 
+            attr.name === 'javascript:' || 
+            attr.name === 'data:' || 
+            attr.name === 'vbscript:' ||
+            attr.name === 'srcdoc' ||
+            attr.name === 'formaction') {
           el.removeAttribute(attr.name);
         }
       });
@@ -1879,13 +1896,18 @@ class MobileBIOS {
   }
 
   addHapticFeedback() {
-    // Add haptic feedback for interactions
+    // Add haptic feedback for interactions with error handling
     const interactiveElements = document.querySelectorAll('.menu-item, .nav-item, .back-btn');
 
     interactiveElements.forEach(element => {
       element.addEventListener('touchstart', () => {
-        if (navigator.vibrate) {
-          navigator.vibrate(10); // Short vibration
+        try {
+          if (navigator.vibrate && typeof navigator.vibrate === 'function') {
+            navigator.vibrate(10); // Short vibration
+          }
+        } catch (error) {
+          // Silently fail if vibration is not supported
+          console.debug('Vibration not supported:', this.sanitizeLogInput(error.message));
         }
       }, { passive: true });
     });

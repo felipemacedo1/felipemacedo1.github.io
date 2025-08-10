@@ -15,7 +15,8 @@ export class Terminal {
     const outputElement = document.createElement("div");
     
     if (type === 'system' || type === 'achievement') {
-      outputElement.innerHTML = text; // Allow HTML for system messages
+      // Sanitize even system messages to prevent XSS
+      outputElement.innerHTML = this.sanitizeHTML(text);
     } else {
       outputElement.textContent = text; // Sanitize user content
     }
@@ -26,6 +27,31 @@ export class Terminal {
     
     this.output.appendChild(outputElement);
     this.scrollToBottom();
+  }
+
+  sanitizeHTML(html) {
+    // Create a temporary div to parse HTML safely
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    
+    // Remove script tags and dangerous elements
+    const scripts = temp.querySelectorAll('script, iframe, object, embed');
+    scripts.forEach(script => script.remove());
+    
+    // Remove dangerous attributes
+    const allElements = temp.querySelectorAll('*');
+    allElements.forEach(el => {
+      Array.from(el.attributes).forEach(attr => {
+        if (attr.name.startsWith('on') || 
+            attr.name === 'javascript:' || 
+            attr.name === 'data:' || 
+            attr.name === 'vbscript:') {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    
+    return temp.innerHTML;
   }
 
   clearTerminal() {

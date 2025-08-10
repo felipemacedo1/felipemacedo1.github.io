@@ -31,7 +31,7 @@ class ContributionCommands {
       // Clear previous widget if exists
       this.cleanup();
       
-      console.log('🚀 Starting terminal contribution command with options:', options);
+      console.log('🚀 Starting terminal contribution command with options:', this.sanitizeLogInput(JSON.stringify(options)));
       
       // Create interface with loading state
       const output = this.createContributionHTML(widgetId, options);
@@ -344,6 +344,12 @@ class ContributionCommands {
     return options;
   }
 
+  sanitizeLogInput(input) {
+    // Prevent log injection by removing control characters and newlines
+    if (typeof input !== 'string') return String(input);
+    return input.replace(/[\r\n\t\x00-\x1f\x7f-\x9f]/g, '');
+  }
+
   cleanup() {
     if (this.currentWidget) {
       try {
@@ -351,7 +357,7 @@ class ContributionCommands {
           this.currentWidget.destroy();
         }
       } catch (error) {
-        console.warn('Error cleaning up widget:', error);
+        console.warn('Error cleaning up widget:', this.sanitizeLogInput(error.message));
       }
     }
     

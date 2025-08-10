@@ -102,36 +102,49 @@ export class AutoComplete {
       document.getElementById("inputLine").appendChild(suggestionBox);
     }
 
-    suggestionBox.innerHTML = this.suggestions
-      .map((cmd, index) => {
-        const highlighted = this._highlightMatch(cmd, currentInput);
-        const isActive = index === this.suggestionIndex;
-        
-        return `<div class="suggestion-item ${
-          isActive ? "active" : ""
-        }" 
-        data-command="${cmd}"
-        onmouseenter="this.classList.add('hover')"
-        onmouseleave="this.classList.remove('hover')"
-        onclick="window.terminal?.selectSuggestion?.('${cmd}') || window.mobileBIOS?.selectSuggestion?.('${cmd}')"
-        style="
-          padding: 8px 12px;
-          color: ${isActive ? '#00ffff' : '#00ff00'};
-          background: ${isActive ? 'rgba(0, 255, 0, 0.1)' : 'transparent'};
-          cursor: pointer;
-          border-radius: 3px;
-          transition: all 0.15s ease;
-          display: flex;
-          align-items: center;
-          border-left: 3px solid ${isActive ? '#00ffff' : 'transparent'};
-          white-space: nowrap;
-        ">
-          <span style="margin-right: 8px; opacity: 0.7; font-size: 10px;">▶</span>
-          <span style="flex: 1;">${highlighted}</span>
-          <span style="margin-left: 8px; font-size: 9px; opacity: 0.5;">↵</span>
-        </div>`;
-      })
-      .join("");
+    // Clear previous content safely
+    suggestionBox.innerHTML = '';
+    
+    this.suggestions.forEach((cmd, index) => {
+      const highlighted = this._highlightMatch(cmd, currentInput);
+      const isActive = index === this.suggestionIndex;
+      
+      const suggestionItem = document.createElement('div');
+      suggestionItem.className = `suggestion-item ${isActive ? 'active' : ''}`;
+      suggestionItem.dataset.command = cmd;
+      
+      suggestionItem.style.cssText = `
+        padding: 8px 12px;
+        color: ${isActive ? '#00ffff' : '#00ff00'};
+        background: ${isActive ? 'rgba(0, 255, 0, 0.1)' : 'transparent'};
+        cursor: pointer;
+        border-radius: 3px;
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        border-left: 3px solid ${isActive ? '#00ffff' : 'transparent'};
+        white-space: nowrap;
+      `;
+      
+      suggestionItem.innerHTML = `
+        <span style="margin-right: 8px; opacity: 0.7; font-size: 10px;">▶</span>
+        <span style="flex: 1;">${highlighted}</span>
+        <span style="margin-left: 8px; font-size: 9px; opacity: 0.5;">↵</span>
+      `;
+      
+      // Add event listeners safely
+      suggestionItem.addEventListener('mouseenter', () => suggestionItem.classList.add('hover'));
+      suggestionItem.addEventListener('mouseleave', () => suggestionItem.classList.remove('hover'));
+      suggestionItem.addEventListener('click', () => {
+        if (window.terminal?.selectSuggestion) {
+          window.terminal.selectSuggestion(cmd);
+        } else if (window.mobileBIOS?.selectSuggestion) {
+          window.mobileBIOS.selectSuggestion(cmd);
+        }
+      });
+      
+      suggestionBox.appendChild(suggestionItem);
+    });
 
     // Não auto-selecionar sugestões para evitar seleção acidental
   }
@@ -229,8 +242,20 @@ export class AutoComplete {
       this.hideSuggestions();
       return true;
     } else if (exactMatches.length > 1) {
-      // Não imprimir nada, apenas mostrar sugestões
-      this.showSuggestions(currentInput);
+      // Mostrar opções disponíveis com melhor formatação
+      this.terminal.addToOutput(
+        `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${this._sanitizeHTML(currentInput)}</span>`
+      );
+      
+      const formattedMatches = exactMatches
+        .slice(0, 8) // Limitar a 8 opções
+        .map(cmd => `<span class="success">${this._sanitizeHTML(cmd)}</span>`)
+        .join(', ');
+      
+      this.terminal.addToOutput(
+        `<span class="output-text">💡 ${exactMatches.length} opções disponíveis: ${formattedMatches}${exactMatches.length > 8 ? '...' : ''}</span>`
+      );
+      this.terminal.scrollToBottom();
       return true;
     }
 
