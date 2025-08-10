@@ -72,7 +72,7 @@
     />
 
     <!-- Structured Data -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="PLACEHOLDER_NONCE">
       {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -101,33 +101,6 @@
           "CSP Implementation"
         ]
       }
-    </script>
-
-    <!-- Enterprise Analytics -->
-    <script nonce="PLACEHOLDER_NONCE">
-      // Performance monitoring initialization
-      window.performanceObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        entries.forEach((entry) => {
-          if (typeof trackPerformance === 'function') {
-            trackPerformance(entry.name, entry.duration, entry.entryType);
-          }
-        });
-      });
-      
-      // Track Core Web Vitals
-      function trackCoreWebVitals() {
-        // Will be enhanced by PerformanceMonitor.js
-        if ('PerformanceObserver' in window) {
-          try {
-            window.performanceObserver.observe({ entryTypes: ['navigation', 'paint', 'largest-contentful-paint'] });
-          } catch (e) {
-            console.warn('Performance Observer not fully supported');
-          }
-        }
-      }
-      
-      trackCoreWebVitals();
     </script>
 
     <!-- Optimized Stylesheets -->

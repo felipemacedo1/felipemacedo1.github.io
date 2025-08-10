@@ -22,19 +22,19 @@ class ContributionGridRenderer {
     containerDiv.className = `contribution-grid-container theme-${this.options.theme} size-${this.options.size}`;
     
     if (typeof gridElement === 'string') {
-      containerDiv.textContent = gridElement; // For error messages
+      containerDiv.innerHTML = gridElement; // allow markup like legend/error
     } else {
       containerDiv.appendChild(gridElement);
     }
     
     if (this.options.showLegend) {
-      containerDiv.appendChild(this.createLegend());
+      containerDiv.insertAdjacentHTML('beforeend', this.createLegend());
     }
     
     this.container.innerHTML = '';
     this.container.appendChild(containerDiv);
-
-    this.addStyles();
+    
+    // Styles are now provided by src/css/contribution-widgets.css
     
     if (this.options.showTooltips) {
       this.attachTooltips();
@@ -80,7 +80,7 @@ class ContributionGridRenderer {
     return html;
   }
 
-  renderLegend() {
+  createLegend() {
     return `
       <div class="legend">
         <span class="legend-label">Menos</span>
@@ -154,198 +154,6 @@ class ContributionGridRenderer {
       this.currentTooltip.remove();
       this.currentTooltip = null;
     }
-  }
-
-  addStyles() {
-    if (document.getElementById('contribution-grid-styles')) return;
-    
-    const style = document.createElement('style');
-    style.id = 'contribution-grid-styles';
-    style.textContent = `
-      .contribution-grid-container {
-        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-        padding: 12px;
-        border-radius: 6px;
-      }
-      
-      .theme-github {
-        background: #0d1117;
-        color: #e6edf3;
-        border: 1px solid #30363d;
-      }
-      
-      .theme-terminal {
-        background: #000;
-        color: #00ff00;
-        border: 1px solid #00ff00;
-      }
-      
-      .theme-bios {
-        background: #1a1a1a;
-        color: #03DAC6;
-        border: 1px solid #03DAC6;
-      }
-      
-      .contribution-grid {
-        display: flex;
-        gap: 3px;
-        overflow-x: auto;
-        margin-bottom: 12px;
-        justify-content: center;
-      }
-      
-      .week {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-      }
-      
-      /* Cell sizes based on container size */
-      .size-compact .cell {
-        width: 8px;
-        height: 8px;
-      }
-      
-      .size-normal .cell {
-        width: 11px;
-        height: 11px;
-      }
-      
-      .size-large .cell {
-        width: 14px;
-        height: 14px;
-      }
-      
-      .cell {
-        border-radius: 2px;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      
-      .cell:hover {
-        transform: scale(1.2);
-        z-index: 10;
-        position: relative;
-      }
-      
-      /* GitHub theme colors */
-      .theme-github .level-0 { background: #161b22; }
-      .theme-github .level-1 { background: #0e4429; }
-      .theme-github .level-2 { background: #006d32; }
-      .theme-github .level-3 { background: #26a641; }
-      .theme-github .level-4 { background: #39d353; }
-      
-      /* Terminal theme colors */
-      .theme-terminal .level-0 { background: #001100; }
-      .theme-terminal .level-1 { background: #003300; }
-      .theme-terminal .level-2 { background: #005500; }
-      .theme-terminal .level-3 { background: #007700; }
-      .theme-terminal .level-4 { background: #00ff00; }
-      
-      /* BIOS theme colors */
-      .theme-bios .level-0 { background: #0a1a1a; }
-      .theme-bios .level-1 { background: #0d2d2a; }
-      .theme-bios .level-2 { background: #1a4a44; }
-      .theme-bios .level-3 { background: #26665e; }
-      .theme-bios .level-4 { background: #03DAC6; }
-      
-      .legend {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-size: 12px;
-        opacity: 0.7;
-      }
-      
-      .legend-cells {
-        display: flex;
-        gap: 2px;
-      }
-      
-      .legend-cell {
-        border-radius: 2px;
-      }
-      
-      .size-compact .legend-cell {
-        width: 8px;
-        height: 8px;
-      }
-      
-      .size-normal .legend-cell {
-        width: 11px;
-        height: 11px;
-      }
-      
-      .size-large .legend-cell {
-        width: 14px;
-        height: 14px;
-      }
-      
-      .contribution-tooltip {
-        position: absolute;
-        z-index: 1000;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        pointer-events: none;
-        transform: translateX(-50%);
-        background: #1c2128;
-        border: 1px solid #30363d;
-        color: #e6edf3;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      }
-      
-      .tooltip-date {
-        font-weight: bold;
-        margin-bottom: 2px;
-      }
-      
-      .tooltip-commits {
-        color: #26a641;
-      }
-      
-      .tooltip-level {
-        font-size: 11px;
-        opacity: 0.7;
-      }
-      
-      .error {
-        color: #f85149;
-        text-align: center;
-        padding: 20px;
-        font-size: 14px;
-      }
-      
-      @media (max-width: 768px) {
-        .contribution-grid-container {
-          padding: 8px;
-        }
-        
-        .contribution-grid {
-          gap: 2px;
-        }
-        
-        .week {
-          gap: 2px;
-        }
-        
-        /* Force compact on mobile */
-        .size-normal .cell,
-        .size-large .cell {
-          width: 8px;
-          height: 8px;
-        }
-        
-        .size-normal .legend-cell,
-        .size-large .legend-cell {
-          width: 8px;
-          height: 8px;
-        }
-      }
-    `;
-    
-    document.head.appendChild(style);
   }
 }
 

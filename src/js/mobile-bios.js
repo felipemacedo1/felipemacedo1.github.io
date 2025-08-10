@@ -329,6 +329,31 @@ class MobileBIOS {
     return temp.innerHTML;
   }
 
+  // Safely set content into a container, sanitizing strings and DOM nodes
+  safeSetContent(container, content) {
+    if (!container) return;
+    try {
+      if (typeof content === 'string') {
+        container.innerHTML = this.sanitizeHTML(content);
+      } else if (content instanceof Element) {
+        const temp = document.createElement('div');
+        temp.appendChild(content.cloneNode(true));
+        container.innerHTML = this.sanitizeHTML(temp.innerHTML);
+      } else if (content instanceof DocumentFragment) {
+        const temp = document.createElement('div');
+        temp.appendChild(content.cloneNode(true));
+        container.innerHTML = this.sanitizeHTML(temp.innerHTML);
+      } else if (content != null) {
+        container.textContent = String(content);
+      } else {
+        container.textContent = '';
+      }
+    } catch (e) {
+      console.warn('safeSetContent error:', e);
+      container.textContent = '';
+    }
+  }
+
   sanitizeLogInput(input) {
     // Prevent log injection by removing control characters and newlines
     if (typeof input !== 'string') return String(input);
@@ -1052,7 +1077,7 @@ class MobileBIOS {
             </div>
 
             <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
-              <div style="color: #f85149; font-size: 12px; font-weight: 600; margin-bottom: 8px;">📈 Crescimento Contínuo</div>
+              <div style="color: #f85149; font-size: 12px; font-weight: 600, margin-bottom: 8px;">📈 Crescimento Contínuo</div>
               <div style="color: #7d8590; font-size: 11px;">
                 3+ anos de experiência hands-on em desenvolvimento, sempre focado em aprender novas tecnologias e melhorar processos.
               </div>
@@ -1155,7 +1180,7 @@ class MobileBIOS {
 
             <!-- In Progress -->
             <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
-              <div style="color: #FF9800; font-size: 12px; font-weight: 600; margin-bottom: 8px;">📚 Em Progresso</div>
+              <div style="color: #FF9800; font-size: 12px; font-weight: 600, margin-bottom: 8px;">📈 Crescimento Contínuo</div>
               <div style="color: #7d8590; font-size: 11px;">
                 • AWS Solutions Architect Associate (planejado para 2025)<br>
                 • Oracle Java SE 17 Developer (em preparação)
@@ -1586,7 +1611,7 @@ class MobileBIOS {
       for (const date of dates) {
         if (dailyMetrics[date] > 0 && checkingStreak) {
           currentStreak++;
-        } else if (dailyMetrics[date] === 0 && checkingStreak) {
+        } else {
           checkingStreak = false;
         }
       }

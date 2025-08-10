@@ -26,50 +26,64 @@ export class PerformanceMonitor {
   setupPerformanceObservers() {
     // Core Web Vitals
     if ('PerformanceObserver' in window) {
+      const supported = Array.isArray(PerformanceObserver.supportedEntryTypes)
+        ? PerformanceObserver.supportedEntryTypes
+        : [];
+
       // Largest Contentful Paint
-      this.createObserver('largest-contentful-paint', (entries) => {
-        const lcp = entries[entries.length - 1];
-        this.recordMetric('lcp', lcp.startTime, {
-          element: lcp.element?.tagName,
-          url: lcp.url
+      if (supported.includes('largest-contentful-paint')) {
+        this.createObserver('largest-contentful-paint', (entries) => {
+          const lcp = entries[entries.length - 1];
+          this.recordMetric('lcp', lcp.startTime, {
+            element: lcp.element?.tagName,
+            url: lcp.url
+          });
         });
-      });
+      }
 
       // First Input Delay
-      this.createObserver('first-input', (entries) => {
-        const fid = entries[0];
-        this.recordMetric('fid', fid.processingStart - fid.startTime, {
-          eventType: fid.name
+      if (supported.includes('first-input')) {
+        this.createObserver('first-input', (entries) => {
+          const fid = entries[0];
+          this.recordMetric('fid', fid.processingStart - fid.startTime, {
+            eventType: fid.name
+          });
         });
-      });
+      }
 
       // Cumulative Layout Shift
-      this.createObserver('layout-shift', (entries) => {
-        let clsValue = 0;
-        entries.forEach(entry => {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value;
+      if (supported.includes('layout-shift')) {
+        this.createObserver('layout-shift', (entries) => {
+          let clsValue = 0;
+          entries.forEach(entry => {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+            }
+          });
+          if (clsValue > 0) {
+            this.recordMetric('cls', clsValue);
           }
         });
-        if (clsValue > 0) {
-          this.recordMetric('cls', clsValue);
-        }
-      });
+      }
 
       // Navigation timing
-      this.createObserver('navigation', (entries) => {
-        const nav = entries[0];
-        this.recordMetric('ttfb', nav.responseStart - nav.requestStart);
-        this.recordMetric('domContentLoaded', nav.domContentLoadedEventEnd - nav.domContentLoadedEventStart);
-        this.recordMetric('loadComplete', nav.loadEventEnd - nav.loadEventStart);
-      });
+      if (supported.includes('navigation')) {
+        this.createObserver('navigation', (entries) => {
+          const nav = entries[0];
+          this.recordMetric('ttfb', nav.responseStart - nav.requestStart);
+          this.recordMetric('domContentLoaded', nav.domContentLoadedEventEnd - nav.domContentLoadedEventStart);
+          this.recordMetric('loadComplete', nav.loadEventEnd - nav.loadEventStart);
+        });
+      }
 
       // Resource timing
-      this.createObserver('resource', (entries) => {
-        entries.forEach(entry => {
-          this.recordResourceMetric(entry);
+      if (supported.includes('resource')) {
+        this.createObserver('resource', (entries) => {
+          entries.forEach(entry => {
+            this.recordResourceMetric(entry);
+          });
         });
-      });
+      }
     }
 
     // First Contentful Paint (fallback)
@@ -85,6 +99,12 @@ export class PerformanceMonitor {
 
   createObserver(type, callback) {
     try {
+      // Skip unknown/unsupported entry types to avoid console warnings
+      const supported = Array.isArray(PerformanceObserver.supportedEntryTypes)
+        ? PerformanceObserver.supportedEntryTypes
+        : [];
+      if (!supported.includes(type)) return;
+
       const observer = new PerformanceObserver((list) => {
         callback(list.getEntries());
       });

@@ -454,6 +454,23 @@ export class ResourcePreloader {
     }
   }
 
+  // Added: track resource load outcomes to avoid missing method errors
+  updateResourceSuccess() {
+    if (!this.resourceLoadStats) {
+      this.resourceLoadStats = { success: 0, failure: 0, lastUpdate: Date.now() };
+    }
+    this.resourceLoadStats.success += 1;
+    this.resourceLoadStats.lastUpdate = Date.now();
+  }
+
+  updateResourceFailure() {
+    if (!this.resourceLoadStats) {
+      this.resourceLoadStats = { success: 0, failure: 0, lastUpdate: Date.now() };
+    }
+    this.resourceLoadStats.failure += 1;
+    this.resourceLoadStats.lastUpdate = Date.now();
+  }
+
   getStats() {
     return {
       historySize: this.clickHistory.length,
@@ -465,7 +482,9 @@ export class ResourcePreloader {
       topResources: Array.from(this.resourceWeights.entries())
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
-        .map(([url, weight]) => ({ url, weight: weight.toFixed(3) }))
+        .map(([url, weight]) => ({ url, weight: weight.toFixed(3) })),
+      // Added stats
+      resourceLoadStats: this.resourceLoadStats || { success: 0, failure: 0 }
     };
   }
 }

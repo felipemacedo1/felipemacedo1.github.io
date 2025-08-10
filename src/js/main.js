@@ -230,6 +230,13 @@ class EnterpriseApp {
     console.log('✅ Application started successfully');
   }
 
+  // Added: no-op to avoid runtime error; can be extended later
+  setupEnterpriseEventListeners() {
+    // Example placeholders for future enterprise-wide listeners
+    // window.addEventListener('online', () => console.log('↔️ Network online'));
+    // window.addEventListener('offline', () => console.log('🚫 Network offline'));
+  }
+
   attachMobileKeyboardHandlers() {
     const container = document.getElementById('mobileKeyboard');
     if (!container) return;
