@@ -1,4 +1,4 @@
-// Core Terminal functionality
+// Core Terminal functionality - Enterprise Edition
 export class Terminal {
   constructor() {
     this.output = document.getElementById("output");
@@ -7,11 +7,27 @@ export class Terminal {
     this.isTyping = false;
     this.typewriterSpeed = 50;
     
+    // Enterprise features
+    this.rateLimiter = window.rateLimiter;
+    this.performanceMonitor = window.performanceMonitor;
+    
     // Inicializar cursor na posição correta
     this.updateCursor();
   }
 
   addToOutput(text, type = 'normal') {
+    // Rate limiting check
+    if (this.rateLimiter) {
+      const rateLimitResult = this.rateLimiter.isAllowed('terminal-output', 1);
+      if (!rateLimitResult.allowed) {
+        console.warn('Output rate limited:', rateLimitResult.reason);
+        return;
+      }
+    }
+
+    // Performance timing
+    const timing = this.performanceMonitor?.startTiming('terminal-output');
+    
     const outputElement = document.createElement("div");
     
     if (type === 'system' || type === 'achievement') {
@@ -27,6 +43,9 @@ export class Terminal {
     
     this.output.appendChild(outputElement);
     this.scrollToBottom();
+    
+    // End performance timing
+    timing?.end();
   }
 
   sanitizeHTML(html) {

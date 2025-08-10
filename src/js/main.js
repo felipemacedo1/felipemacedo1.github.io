@@ -1,8 +1,12 @@
-// Main entry point
+// Main entry point - Enterprise Edition
 import { TerminalPortfolio } from './TerminalPortfolio.js';
 import { DeviceDetector } from './utils/DeviceDetector.js';
 import { Onboarding } from './features/onboarding.js';
 import { Analytics } from './features/analytics.js';
+import { CSPManager } from './security/CSPManager.js';
+import { RateLimiter } from './core/RateLimiter.js';
+import { ResourcePreloader } from './core/ResourcePreloader.js';
+import { PerformanceMonitor } from './core/PerformanceMonitor.js';
 
 // Check if should redirect to mobile version
 function checkMobileRedirect() {
@@ -72,16 +76,31 @@ function createLoadingScreen() {
   }, 1500);
 }
 
-// Initialize application
-document.addEventListener("DOMContentLoaded", () => {
+// Initialize enterprise application
+document.addEventListener("DOMContentLoaded", async () => {
   // Check if should redirect to mobile
   if (checkMobileRedirect()) {
     return; // Stop initialization if redirecting
   }
   
+  // Initialize enterprise security and performance
+  window.cspManager = new CSPManager();
+  window.rateLimiter = new RateLimiter();
+  window.resourcePreloader = new ResourcePreloader();
+  window.performanceMonitor = new PerformanceMonitor();
+  
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    try {
+      await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registered successfully');
+    } catch (error) {
+      console.warn('Service Worker registration failed:', error);
+    }
+  }
+  
   window.terminal = new TerminalPortfolio();
   window.analytics = new Analytics();
-  // Onboarding é inicializado pelo TerminalPortfolio, não duplicar aqui
   
   // Expose mobile functions globally
   window.typeChar = typeChar;
