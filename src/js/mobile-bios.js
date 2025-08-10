@@ -20,10 +20,10 @@ class MobileBIOS {
     this.addLoadingStates();
     
     // Update clock every second
-    setInterval(() => this.updateClock(), 1000);
+    this.clockInterval = setInterval(() => this.updateClock(), 1000);
     
     // Update battery every 30 seconds
-    setInterval(() => this.updateBattery(), 30000);
+    this.batteryInterval = setInterval(() => this.updateBattery(), 30000);
   }
 
   startBootSequence() {
@@ -194,18 +194,36 @@ class MobileBIOS {
   }
 
   setupAndroidBackButton() {
-    // Handle browser back button (Android back gesture)
-    window.addEventListener('popstate', (e) => {
+    // Store reference to remove later if needed
+    this.popstateHandler = (e) => {
       e.preventDefault();
       if (this.isDetailViewOpen) {
         this.hideDetailView();
         // Push a new state to prevent actual navigation
         history.pushState({ page: 'main' }, '', window.location.href);
       }
-    });
+    };
+    
+    // Handle browser back button (Android back gesture)
+    window.addEventListener('popstate', this.popstateHandler);
 
     // Push initial state
     history.pushState({ page: 'main' }, '', window.location.href);
+  }
+
+  cleanup() {
+    // Remove event listeners to prevent memory leaks
+    if (this.popstateHandler) {
+      window.removeEventListener('popstate', this.popstateHandler);
+    }
+    
+    // Clear intervals
+    if (this.clockInterval) {
+      clearInterval(this.clockInterval);
+    }
+    if (this.batteryInterval) {
+      clearInterval(this.batteryInterval);
+    }
   }
 
   setupScrollableContainers() {
@@ -1920,4 +1938,11 @@ class MobileBIOS {
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   window.mobileBIOS = new MobileBIOS();
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  if (window.mobileBIOS && typeof window.mobileBIOS.cleanup === 'function') {
+    window.mobileBIOS.cleanup();
+  }
 });
