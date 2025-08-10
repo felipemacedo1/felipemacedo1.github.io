@@ -1,33 +1,76 @@
 // Basic terminal commands
 import { CONTENT } from '../data/content.js';
 import ContributionCommands from './ContributionCommands.js';
+import { DiscoveryCommands } from './DiscoveryCommands.js';
 
 export class BasicCommands {
   constructor(terminal) {
     this.terminal = terminal;
     this.contributionCommands = new ContributionCommands(terminal);
+    this.discoveryCommands = new DiscoveryCommands(terminal);
   }
 
   getCommands() {
     return {
-      help: () => this.terminal.addToOutput(CONTENT.help, 'system'),
+      // Enhanced help system
+      help: () => this.showEnhancedHelp(),
+      ...this.discoveryCommands.getCommands(),
+      
+      // Core commands
       clear: () => this.terminal.clearTerminal(),
-      about: () => this.terminal.addToOutput(CONTENT.about, 'system'),
-      sobre: () => this.terminal.addToOutput(CONTENT.about, 'system'),
-      1: () => this.terminal.addToOutput(CONTENT.about, 'system'),
+      about: () => this.showAbout(),
+      sobre: () => this.showAbout(),
+      1: () => this.showAbout(),
       contact: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
       contato: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
       3: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
+      
+      // System commands
       date: () => this.showDate(),
       pwd: () => this.showPath(),
       ls: () => this.listFiles(),
       "ls -la": () => this.listFilesDetailed(),
       whoami: () => this.whoami(),
-      contributions: (args) => this.contributionCommands.showContributions(args),
-      contrib: (args) => this.contributionCommands.showContributions(args),
-      activity: (args) => this.contributionCommands.showActivity(args),
-      stats: (args) => this.contributionCommands.showStats(args)
+      
+      // Contribution commands
+      contributions: (args) => this.contributionCommands.showContributions(args)
     };
+  }
+
+  showEnhancedHelp() {
+    // Track help usage and show appropriate version
+    this.discoveryCommands.markAsDiscovered('help');
+    
+    // Check if user is new (less than 3 commands discovered)
+    const discovered = this.discoveryCommands.commandsDiscovered.length;
+    
+    if (discovered < 3) {
+      // Show basic help for new users
+      this.terminal.addToOutput(CONTENT.helpBasic, 'system');
+      this.terminal.addToOutput(`
+<span class="info">🎯 Primeira vez aqui?</span> Digite <span class="cmd">start</span> para um tour guiado!
+<span class="warning">📚 Help completo:</span> <span class="cmd">help --all</span> para ver TODOS os comandos`, 'system');
+    } else {
+      // Show full help for experienced users
+      this.terminal.addToOutput(CONTENT.help, 'system');
+    }
+  }
+
+  showAbout() {
+    this.discoveryCommands.markAsDiscovered('about');
+    this.terminal.addToOutput(CONTENT.about, 'system');
+    
+    // Contextual suggestion for first-time users
+    setTimeout(() => {
+      const discovered = this.discoveryCommands.commandsDiscovered.length;
+      if (discovered < 5) {
+        this.terminal.addToOutput(`
+<span class="success">👍 Ótimo começo!</span> Agora experimente:
+<span class="info">💻 <span class="cmd">whoami</span> - Resumo técnico</span>
+<span class="info">📊 <span class="cmd">contributions</span> - Atividade GitHub</span>
+<span class="info">🎨 <span class="cmd">theme matrix</span> - Mudar visual</span>`, 'system');
+      }
+    }, 1000);
   }
 
   showDate() {
@@ -88,4 +131,5 @@ export class BasicCommands {
 <span class="info">💡 Dica:</span> Digite <code>contributions</code> para ver minha atividade no GitHub`;
     this.terminal.addToOutput(introText, 'system');
   }
+
 }

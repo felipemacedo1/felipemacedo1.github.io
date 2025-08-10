@@ -29,8 +29,6 @@ class UnifiedContributionWidget {
     if (this.isInitialized) return;
     
     try {
-      console.log('🔧 Initializing UnifiedContributionWidget with options:', this.options);
-      
       // Initialize the modular widget with our options
       this.modularWidget = new ModularContributionWidget(this.container, {
         author: this.options.author,
@@ -45,12 +43,9 @@ class UnifiedContributionWidget {
       
       await this.modularWidget.init();
       this.isInitialized = true;
-      console.log('✅ UnifiedContributionWidget initialized successfully');
-      
     } catch (error) {
-      console.error('❌ UnifiedContributionWidget init error:', error);
-      this.renderError(`Erro ao inicializar widget: ${error.message}`);
-      throw error; // Re-throw so parent can handle
+      console.error('UnifiedContributionWidget init error:', error);
+      this.renderError('Erro ao inicializar widget de contribuições');
     }
   }
 

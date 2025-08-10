@@ -87,10 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   window.terminal = new TerminalPortfolio();
   window.analytics = new Analytics();
-  window.onboarding = new Onboarding(window.terminal);
-  
-  // Initialize features
-  window.onboarding.init();
+  // Onboarding é inicializado pelo TerminalPortfolio, não duplicar aqui
   
   // Expose mobile functions globally
   window.typeChar = typeChar;

@@ -1,47 +1,139 @@
 // Static content data
 export const CONTENT = {
   help: `
-<span class="highlight">📚 Comandos disponíveis:</span>
+<span class="highlight">� Terminal Portfolio - Sistema de Ajuda</span>
 
-<span class="success">help</span>           - Mostra esta ajuda
-<span class="success">clear</span>          - Limpa a tela
-<span class="success">menu</span>           - Menu principal
-<span class="success">about</span> | <span class="success">1</span>     - Sobre mim
-<span class="success">projects</span> | <span class="success">2</span>   - Meus projetos
-<span class="success">contact</span> | <span class="success">3</span>    - Informações de contato
+<span class="success">🎯 Para iniciantes:</span>
+<span class="info">help basic</span>      - Comandos essenciais (recomendado)
+<span class="info">demo</span>            - Demonstração interativa das funcionalidades
+<span class="info">start</span>           - Tour guiado para primeira visita
 
-<span class="highlight">🔧 Comandos extras:</span>
-<span class="success">whoami</span>         - Quem sou eu?
-<span class="success">skills</span>         - Tecnologias e níveis
-<span class="success">experience</span>     - Timeline profissional
-<span class="success">education</span>      - Formação acadêmica
-<span class="success">certifications</span> - Certificados e cursos
-<span class="success">resume</span>         - Download do currículo
-<span class="success">status</span>         - Disponibilidade atual
-<span class="success">date</span>           - Data e hora atual
-<span class="success">ls</span>             - Lista arquivos
-<span class="success">pwd</span>            - Diretório atual
-<span class="success">sudo</span>           - Tentar privilégios de admin
-<span class="success">theme dark/light/matrix/hacker/retro/contrast</span> - Mudar tema
-<span class="success">coffee</span> | <span class="success">tdah</span> - Diagnóstico TDAH/cafeína
+<span class="success">📂 Por categoria:</span>
+<span class="info">help info</span>       - Informações pessoais (about, skills, experience...)
+<span class="info">help github</span>     - Comandos relacionados ao GitHub
+<span class="info">help fun</span>        - Easter eggs e comandos divertidos
+<span class="info">help system</span>     - Comandos de sistema (ls, pwd, date...)
+<span class="info">help themes</span>     - Sistema de temas disponíveis
 
-<span class="highlight">📊 GitHub Activity:</span>
-<span class="success">contributions</span>  - Gráfico de contribuições GitHub
-<span class="success">contrib</span>        - Alias para contributions
-<span class="success">activity</span>       - Estatísticas de commits
-<span class="success">stats</span>          - Estatísticas detalhadas
+<span class="success">🔧 Utilitários:</span>
+<span class="info">popular</span>         - Comandos mais populares/úteis
+<span class="info">random</span>          - Comando aleatório interessante
+<span class="info">tips</span>            - Dicas avançadas de uso
 
-<span class="highlight">🎮 Easter eggs:</span>
-<span class="success">h4x0r-mode</span>     - Modo hacker
-<span class="success">matrix</span>         - Entre na Matrix
-<span class="success">konami</span>         - Código Konami
-<span class="success">glitch</span>         - Efeito glitch
-<span class="success">ascii</span>          - Logo ASCII
-<span class="success">growthfolio</span>    - Organização no GitHub
-<span class="success">eastereggs</span>     - Lista de ovos de páscoa
+<span class="success">📊 Sistema:</span>
+<span class="info">help --all</span>      - Lista TODOS os comandos (completa)
+<span class="info">history</span>         - Histórico de comandos da sessão
+<span class="info">clear</span>           - Limpa a tela
 
 <span class="warning">💡 Dica:</span> Use ↑/↓ para navegar no histórico, Tab para autocompletar
-<span class="warning">⌨️ Atalhos:</span> Ctrl+L para limpar, Ctrl+C para interromper`,
+<span class="warning">⌨️ Atalhos:</span> Ctrl+L para limpar, Ctrl+C para interromper
+<span class="success">🎊 Status:</span> ${typeof window !== 'undefined' && localStorage.getItem('commands-discovered') || 0} comandos descobertos!`,
+
+  helpBasic: `
+<span class="highlight">🎯 Comandos Essenciais - Comece Aqui!</span>
+
+<span class="success">about</span> | <span class="success">1</span>       - 👨‍💻 Conheça quem eu sou
+<span class="success">projects</span> | <span class="success">2</span>     - 🚀 Veja meus melhores projetos  
+<span class="success">contact</span> | <span class="success">3</span>      - 📧 Como me encontrar
+<span class="success">whoami</span>          - 💼 Resumo técnico profissional
+<span class="success">contributions</span>   - 📊 Minha atividade no GitHub (IMPERDÍVEL!)
+<span class="success">menu</span>            - 🎯 Menu principal navegável
+
+<span class="highlight">🎨 Personalize sua experiência:</span>
+<span class="success">theme matrix</span>    - 🕶️ Tema Matrix (favorito!)
+<span class="success">theme hacker</span>    - 💀 Modo hacker
+<span class="success">theme dark</span>      - 🌙 Tema escuro clássico
+
+<span class="warning">✨ Próximo passo:</span> Digite <span class="success">demo</span> para ver funcionalidades incríveis!
+<span class="info">💡 Ou explore com</span> <span class="success">popular</span> <span class="info">para comandos mais usados</span>`,
+
+  helpInfo: `
+<span class="highlight">👨‍� Comandos - Informações Pessoais</span>
+
+<span class="success">about</span> | <span class="success">1</span>       - Apresentação completa  
+<span class="success">whoami</span>          - Resumo técnico profissional
+<span class="success">skills</span>          - Tecnologias com barras de progresso
+<span class="success">experience</span>      - Timeline profissional detalhada
+<span class="success">education</span>       - Formação acadêmica
+<span class="success">certifications</span>  - Certificados e cursos
+<span class="success">resume</span>          - Download do currículo (PDF)
+<span class="success">status</span>          - Disponibilidade atual
+
+<span class="warning">💡 Dica:</span> Comece com <span class="success">about</span> para uma visão geral!`,
+
+  helpGithub: `
+<span class="highlight">📊 Comandos - GitHub & Atividade</span>
+
+<span class="success">contributions</span>   - 📈 Gráfico de contribuições GitHub interativo
+<span class="success">growthfolio</span>     - 🌱 Sobre a organização GrowthFolio
+
+<span class="warning">🚀 Destaque:</span> O comando <span class="success">contributions</span> mostra um gráfico interativo real da minha atividade no GitHub!`,
+
+  helpFun: `
+<span class="highlight">🎮 Easter Eggs & Comandos Divertidos</span>
+
+<span class="success">coffee</span> | <span class="success">tdah</span>  - ☕ Diagnóstico TDAH/cafeína
+<span class="success">h4x0r-mode</span>      - 💀 Ativar modo hacker
+<span class="success">matrix</span>          - �️ Entrar na Matrix  
+<span class="success">konami</span>          - 🎮 Código Konami clássico
+<span class="success">glitch</span>          - ⚡ Efeito glitch visual
+<span class="success">ascii</span>           - 🎨 Logo ASCII artístico
+<span class="success">sudo</span>            - 🔐 Tentar acesso root (spoiler: não vai dar)
+<span class="success">eastereggs</span>      - 🥚 Lista completa de easter eggs
+
+<span class="warning">🎊 Dica secreta:</span> Há comandos ocultos não listados aqui... Continue explorando!`,
+
+  helpSystem: `
+<span class="highlight">🔧 Comandos do Sistema</span>
+
+<span class="success">clear</span>           - 🧹 Limpa a tela
+<span class="success">date</span>            - 📅 Data e hora atual
+<span class="success">ls</span>              - 📁 Lista arquivos do "sistema"
+<span class="success">ls -la</span>          - 📋 Lista detalhada de arquivos
+<span class="success">pwd</span>             - 📍 Diretório atual
+<span class="success">history</span>         - 📜 Histórico de comandos da sessão
+
+<span class="warning">💡 Simulação:</span> Estes comandos simulam um ambiente Unix real!`,
+
+  helpThemes: `
+<span class="highlight">� Sistema de Temas</span>
+
+<span class="success">theme dark</span>      - 🌙 Tema escuro (padrão)
+<span class="success">theme light</span>     - ☀️ Tema claro
+<span class="success">theme matrix</span>    - 🕶️ Tema Matrix verde
+<span class="success">theme hacker</span>    - 💀 Tema hacker vermelho
+<span class="success">theme retro</span>     - 📺 Tema retro laranja
+<span class="success">theme contrast</span>  - ⚫ Alto contraste (acessibilidade)
+
+<span class="warning">✨ Experimente:</span> <span class="success">theme matrix</span> para a experiência completa!
+<span class="info">🔄 Troca instantânea:</span> As configurações são salvas automaticamente`,
+
+  helpAll: `
+<span class="highlight">📚 TODOS os Comandos - Lista Completa</span>
+
+<span class="success">📋 Navegação Básica:</span>
+help, clear, menu, about|1, projects|2, contact|3
+
+<span class="success">💼 Informações Pessoais:</span>  
+whoami, skills, experience, education, certifications, resume, status
+
+<span class="success">📊 GitHub Activity:</span>
+contributions, growthfolio
+
+<span class="success">🔧 Sistema:</span>
+date, ls, ls -la, pwd, history, sudo
+
+<span class="success">🎨 Temas:</span>
+theme dark/light/matrix/hacker/retro/contrast
+
+<span class="success">🎮 Easter Eggs:</span>
+coffee|tdah, h4x0r-mode, matrix, konami, glitch, ascii, eastereggs
+
+<span class="success">🚀 Descoberta:</span>
+demo, start, popular, random, tips
+
+<span class="warning">⚠️ Lista extensa:</span> Use <span class="success">help basic</span> para comandos essenciais!
+<span class="warning">💡 Dica:</span> Use ↑/↓ para histórico, Tab para autocompletar`,
 
   about: `
 <span class="ascii-art align-center">

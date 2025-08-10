@@ -6,6 +6,9 @@ export class Terminal {
     this.cursor = document.getElementById("cursor");
     this.isTyping = false;
     this.typewriterSpeed = 50;
+    
+    // Inicializar cursor na posição correta
+    this.updateCursor();
   }
 
   addToOutput(text, type = 'normal') {
@@ -53,13 +56,15 @@ export class Terminal {
   }
 
   updateCursor() {
+    if (!this.input || !this.cursor) return;
+    
     const inputRect = this.input.getBoundingClientRect();
     const containerRect = this.input.parentElement.getBoundingClientRect();
-    const textWidth = this.getTextWidth(this.input.value, this.input);
+    const textWidth = this.getTextWidth(this.input.value || '', this.input);
 
-    this.cursor.style.left = `${
-      textWidth + inputRect.left - containerRect.left
-    }px`;
+    // Calcular posição do cursor após o texto (ou no início se vazio)
+    const leftPosition = textWidth + inputRect.left - containerRect.left;
+    this.cursor.style.left = `${leftPosition}px`;
   }
 
   getTextWidth(text, element) {
