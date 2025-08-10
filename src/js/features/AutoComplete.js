@@ -80,7 +80,7 @@ export class AutoComplete {
       suggestionBox = document.createElement("div");
       suggestionBox.id = "suggestions";
       suggestionBox.style.cssText = `
-        position: relative;
+        position: absolute;
         background: rgba(0, 0, 0, 0.95);
         border: 1px solid #00ff00;
         border-radius: 6px;
@@ -90,7 +90,7 @@ export class AutoComplete {
         margin-bottom: 5px;
         min-width: 200px;
         max-width: 350px;
-        z-index: 9999 !important;
+        z-index: 999999 !important;
         max-height: 200px;
         font-family: 'Courier New', monospace;
         font-size: 12px;
@@ -231,12 +231,12 @@ export class AutoComplete {
     } else if (exactMatches.length > 1) {
       // Mostrar opções disponíveis com melhor formatação
       this.terminal.addToOutput(
-        `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${currentInput}</span>`
+        `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${this._sanitizeHTML(currentInput)}</span>`
       );
       
       const formattedMatches = exactMatches
         .slice(0, 8) // Limitar a 8 opções
-        .map(cmd => `<span class="success">${cmd}</span>`)
+        .map(cmd => `<span class="success">${this._sanitizeHTML(cmd)}</span>`)
         .join(', ');
       
       this.terminal.addToOutput(
