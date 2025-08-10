@@ -80,22 +80,24 @@ export class AutoComplete {
       suggestionBox = document.createElement("div");
       suggestionBox.id = "suggestions";
       suggestionBox.style.cssText = `
-        position: absolute;
+        position: relative;
         background: rgba(0, 0, 0, 0.95);
-        border: 1px solid var(--primary-green);
+        border: 1px solid #00ff00;
         border-radius: 6px;
         padding: 4px 0;
-        bottom: 35px;
+        bottom: 100%;
         left: 0;
+        margin-bottom: 5px;
         min-width: 200px;
         max-width: 350px;
-        z-index: 1001;
+        z-index: 9999 !important;
         max-height: 200px;
-        font-family: inherit;
+        font-family: 'Courier New', monospace;
         font-size: 12px;
         box-shadow: 0 -4px 12px rgba(0, 255, 0, 0.3);
         backdrop-filter: blur(8px);
         animation: slideUp 0.2s ease;
+        overflow-y: auto;
       `;
       document.getElementById("inputLine").appendChild(suggestionBox);
     }
@@ -111,7 +113,7 @@ export class AutoComplete {
         data-command="${cmd}"
         onmouseenter="this.classList.add('hover')"
         onmouseleave="this.classList.remove('hover')"
-        onclick="window.terminal.selectSuggestion('${cmd}')"
+        onclick="window.terminal?.selectSuggestion?.('${cmd}') || window.mobileBIOS?.selectSuggestion?.('${cmd}')"
         style="
           padding: 8px 12px;
           color: ${isActive ? '#00ffff' : '#00ff00'};
@@ -122,10 +124,11 @@ export class AutoComplete {
           display: flex;
           align-items: center;
           border-left: 3px solid ${isActive ? '#00ffff' : 'transparent'};
+          white-space: nowrap;
         ">
-          <span style="margin-right: 8px; opacity: 0.7;">▶</span>
-          <span>${highlighted}</span>
-          <span style="margin-left: auto; font-size: 10px; opacity: 0.5;">↵</span>
+          <span style="margin-right: 8px; opacity: 0.7; font-size: 10px;">▶</span>
+          <span style="flex: 1;">${highlighted}</span>
+          <span style="margin-left: 8px; font-size: 9px; opacity: 0.5;">↵</span>
         </div>`;
       })
       .join("");

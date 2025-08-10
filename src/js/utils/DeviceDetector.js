@@ -21,15 +21,27 @@ export class DeviceDetector {
     const isSmallScreen = window.innerWidth <= 768;
     
     const result = isMobileUA || (isTouchDevice && isSmallScreen);
-    this._updateCache();
+    
+    // Cache result to avoid recalculation
+    if (!this._cache) {
+      this._cache = {
+        isMobile: result,
+        isAndroid: navigator.userAgent.toLowerCase().includes('android'),
+        screenWidth: window.innerWidth,
+        screenHeight: window.innerHeight,
+        userAgent: navigator.userAgent,
+        timestamp: Date.now()
+      };
+    }
+    
     return result;
   }
 
   static isAndroid() {
     if (this._cache) return this._cache.isAndroid;
-    const result = navigator.userAgent.toLowerCase().includes('android');
-    this._updateCache();
-    return result;
+    // Trigger cache creation through isMobile if not cached
+    this.isMobile();
+    return this._cache.isAndroid;
   }
 
   static shouldRedirectToMobile() {
@@ -40,21 +52,9 @@ export class DeviceDetector {
     return this.isMobile() && !forceDesktop && !isOnMobilePage;
   }
 
-  static _updateCache() {
-    if (!this._cache) {
-      this._cache = {
-        isMobile: this.isMobile(),
-        isAndroid: this.isAndroid(),
-        screenWidth: window.innerWidth,
-        screenHeight: window.innerHeight,
-        userAgent: navigator.userAgent,
-        timestamp: Date.now()
-      };
-    }
-  }
-
   static getDeviceInfo() {
-    this._updateCache();
+    // Ensure cache is populated
+    this.isMobile();
     return { ...this._cache };
   }
 
