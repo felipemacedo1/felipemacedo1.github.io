@@ -229,20 +229,8 @@ export class AutoComplete {
       this.hideSuggestions();
       return true;
     } else if (exactMatches.length > 1) {
-      // Mostrar opções disponíveis com melhor formatação
-      this.terminal.addToOutput(
-        `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${this._sanitizeHTML(currentInput)}</span>`
-      );
-      
-      const formattedMatches = exactMatches
-        .slice(0, 8) // Limitar a 8 opções
-        .map(cmd => `<span class="success">${this._sanitizeHTML(cmd)}</span>`)
-        .join(', ');
-      
-      this.terminal.addToOutput(
-        `<span class="output-text">💡 ${exactMatches.length} opções disponíveis: ${formattedMatches}${exactMatches.length > 8 ? '...' : ''}</span>`
-      );
-      this.terminal.scrollToBottom();
+      // Não imprimir nada, apenas mostrar sugestões
+      this.showSuggestions(currentInput);
       return true;
     }
 
