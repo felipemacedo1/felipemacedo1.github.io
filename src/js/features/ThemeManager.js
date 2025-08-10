@@ -2,6 +2,7 @@
 export class ThemeManager {
   constructor(terminal) {
     this.terminal = terminal;
+    this._sessionTheme = null;
     this.currentTheme = this.loadTheme();
   }
 
@@ -45,13 +46,22 @@ export class ThemeManager {
     document.body.className = `theme-${this.currentTheme}`;
   }
 
-  loadTheme() {
-    return localStorage.getItem("terminal-theme") || "dark";
-  }
-
   saveTheme(theme) {
     try {
       localStorage.setItem("terminal-theme", theme);
-    } catch {}
+    } catch (error) {
+      console.warn('Failed to save theme to localStorage:', error.message);
+      // Fallback: store in memory for session
+      this._sessionTheme = theme;
+    }
+  }
+
+  loadTheme() {
+    try {
+      return localStorage.getItem("terminal-theme") || this._sessionTheme || "dark";
+    } catch (error) {
+      console.warn('Failed to load theme from localStorage:', error.message);
+      return this._sessionTheme || "dark";
+    }
   }
 }
