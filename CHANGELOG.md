@@ -2,7 +2,42 @@
 
 Todas as mudanças notáveis do projeto serão documentadas neste arquivo.
 
-## [2.2.0] - 2025-08-02
+## [2.2.0] - 2025-08-09
+
+### ✨ Major Features
+- **Standardized contributions command** - Unified single command approach (removed contrib, contrib-debug aliases)
+- **Enhanced contribution display** - New modular theme structure with real-time status indicators  
+- **Improved terminal initialization** - Always starts with help + clean empty input field
+- **UX Enhancement System** - Contextual suggestions and user guidance features
+- **Discovery Commands** - Better user onboarding and feature discovery
+
+### 🎨 UI/UX Improvements  
+- **Elegant loading states** - Animated dots with real-time status feedback
+- **Enhanced error handling** - Retry functionality with clear error messages
+- **Better visual hierarchy** - Improved contribution display layout
+- **Terminal feedback** - Enhanced animations and response indicators
+- **Cursor positioning** - Fixed cursor alignment after terminal initialization
+
+### 🔧 Technical Improvements
+- **Modular widget architecture** - Reusable contribution components
+- **Robust error boundaries** - Comprehensive logging and fallback handling
+- **Enhanced command system** - Improved registration and processing
+- **Better focus management** - Proper terminal input handling
+- **Mobile compatibility** - Enhanced touch interactions and responsiveness
+
+### 📚 Developer Experience
+- **Comprehensive documentation** - Added multiple technical documentation files
+- **Test files** - Created validation and testing utilities
+- **Code organization** - Improved maintainability and structure
+- **Debugging tools** - Enhanced development and troubleshooting capabilities
+
+### 🐛 Bug Fixes
+- Fixed cursor positioning issues on terminal startup
+- Resolved duplicate command registrations  
+- Improved terminal focus and input management
+- Enhanced mobile touch interaction handling
+
+## [2.1.2] - 2025-08-02
 
 ### Added
 - Unified contribution widget system with mobile optimization
