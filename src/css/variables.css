@@ -47,6 +47,6 @@
   
   /* Z-index */
   --z-keyboard: 1000;
-  --z-suggestions: 1000;
+  --z-suggestions: 9999 !important;
   --z-loading: 9999;
 }

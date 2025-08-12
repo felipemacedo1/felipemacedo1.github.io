@@ -3,6 +3,7 @@ import { Terminal } from './core/Terminal.js';
 import { CommandProcessor } from './core/CommandProcessor.js';
 import { BasicCommands } from './commands/BasicCommands.js';
 import { AdditionalCommands } from './commands/AdditionalCommands.js';
+import { EnterpriseCommands } from './commands/EnterpriseCommands.js';
 import { ThemeManager } from './features/ThemeManager.js';
 import { AutoComplete } from './features/AutoComplete.js';
 import { Onboarding } from './features/onboarding.js';
@@ -40,10 +41,12 @@ export class TerminalPortfolio {
   registerCommands() {
     const basicCommands = new BasicCommands(this.terminal);
     const additionalCommands = new AdditionalCommands(this.terminal);
+    const enterpriseCommands = new EnterpriseCommands(this.terminal);
     
     this.commandProcessor.registerCommands({
       ...basicCommands.getCommands(),
       ...additionalCommands.getCommands(),
+      ...enterpriseCommands.getCommands(),
       ...this.themeManager.getCommands(),
       menu: () => this.showMenu(),
       projects: () => this.showProjects(),
@@ -222,11 +225,20 @@ export class TerminalPortfolio {
 
   async fetchVersion() {
     try {
+      // Check rate limiting before making API call
+      if (window.rateLimiter && !window.rateLimiter.isAllowed('github-api').allowed) {
+        this.version = "v1.0.1";
+        return;
+      }
+
       const repo = "felipemacedo1/felipemacedo1.github.io";
       const apiUrl = `https://api.github.com/repos/${repo}/releases/latest`;
 
       const response = await fetch(apiUrl, {
-        headers: { Accept: "application/vnd.github.v3+json" },
+        headers: { 
+          Accept: "application/vnd.github.v3+json",
+          'User-Agent': 'Terminal-Portfolio/1.0'
+        },
       });
 
       if (response.ok) {
@@ -277,7 +289,7 @@ Portfólio interativo dual com interface terminal para desktop e BIOS Android pa
 • <strong>Mobile:</strong> Interface BIOS Android com Material Design
 • <strong>Arquitetura:</strong> Modular, responsiva, zero dependências
 </span>
-<span class="project-link">🔗 <a href="https://felipemacedo1.github.io" target="_blank" class="project-link">felipemacedo1.github.io</a></span>
+<span class="project-link">🔗 <a href="https://felipemacedo1.github.io" target="_blank" rel="noopener noreferrer" class="project-link">felipemacedo1.github.io</a></span>
 </div>
 
 <div class="project-item">
@@ -289,7 +301,7 @@ API de monitoramento de preços de criptomoedas integrando CoinGecko e Binance.
 • <strong>Integração:</strong> CoinGecko API, Binance API
 • <strong>Performance:</strong> Cache inteligente, baixa latência
 </span>
-<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-pricefeed" target="_blank" class="project-link">github.com/felipemacedo1/go-pricefeed</a></span>
+<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-pricefeed" target="_blank" rel="noopener noreferrer" class="project-link">github.com/felipemacedo1/go-pricefeed</a></span>
 </div>
 
 <div class="project-item">
@@ -301,7 +313,7 @@ Microserviço em Go integrando com OpenAI GPT para geração de respostas e auto
 • <strong>Features:</strong> Rate limiting, error handling, logs estruturados
 • <strong>Deploy:</strong> Docker ready, configurações via env
 </span>
-<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-service-gpt" target="_blank" class="project-link">github.com/felipemacedo1/go-service-gpt</a></span>
+<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-service-gpt" target="_blank" rel="noopener noreferrer" class="project-link">github.com/felipemacedo1/go-service-gpt</a></span>
 </div>
 
 <div class="project-item">
@@ -313,7 +325,7 @@ Wallet Bitcoin modular com SPV (Simple Payment Verification) construída em Java
 • <strong>Segurança:</strong> Criptografia, backup de seeds, validação
 • <strong>Arquitetura:</strong> Modular, extensível, testável
 </span>
-<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/spring-mcd-wallet" target="_blank" class="project-link">github.com/felipemacedo1/spring-mcd-wallet</a></span>
+<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/spring-mcd-wallet" target="_blank" rel="noopener noreferrer" class="project-link">github.com/felipemacedo1/spring-mcd-wallet</a></span>
 </div>
 
 <span class="highlight">🏢 Projetos Organizacionais (Growthfolio):</span>
@@ -323,7 +335,7 @@ Wallet Bitcoin modular com SPV (Simple Payment Verification) construída em Java
 <span class="project-description">
 Backend completo para plataforma de blog full-stack com Spring Boot.
 </span>
-<span class="project-link">🔗 <a href="https://github.com/growthfolio/spring-blog-platform" target="_blank" class="project-link">github.com/growthfolio/spring-blog-platform</a></span>
+<span class="project-link">🔗 <a href="https://github.com/growthfolio/spring-blog-platform" target="_blank" rel="noopener noreferrer" class="project-link">github.com/growthfolio/spring-blog-platform</a></span>
 </div>
 
 <div class="project-item">
@@ -331,7 +343,7 @@ Backend completo para plataforma de blog full-stack com Spring Boot.
 <span class="project-description">
 Frontend em React/TypeScript para blog, demonstrando integração com APIs REST.
 </span>
-<span class="project-link">🔗 <a href="https://github.com/growthfolio/react-blog-plataform" target="_blank" class="project-link">github.com/growthfolio/react-blog-plataform</a></span>
+<span class="project-link">🔗 <a href="https://github.com/growthfolio/react-blog-plataform" target="_blank" rel="noopener noreferrer" class="project-link">github.com/growthfolio/react-blog-plataform</a></span>
 </div>
 
 <div class="project-item">
@@ -339,7 +351,7 @@ Frontend em React/TypeScript para blog, demonstrando integração com APIs REST.
 <span class="project-description">
 Pipeline de microserviços com RabbitMQ para processamento transacional.
 </span>
-<span class="project-link">🔗 <a href="https://github.com/growthfolio/amqp-transactions-ms" target="_blank" class="project-link">github.com/growthfolio/amqp-transactions-ms</a></span>
+<span class="project-link">🔗 <a href="https://github.com/growthfolio/amqp-transactions-ms" target="_blank" rel="noopener noreferrer" class="project-link">github.com/growthfolio/amqp-transactions-ms</a></span>
 </div>
 
 <span class="success">📋 Características dos Projetos:</span>

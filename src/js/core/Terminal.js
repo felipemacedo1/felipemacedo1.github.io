@@ -1,4 +1,4 @@
-// Core Terminal functionality
+// Core Terminal functionality - Enterprise Edition
 export class Terminal {
   constructor() {
     this.output = document.getElementById("output");
@@ -7,15 +7,32 @@ export class Terminal {
     this.isTyping = false;
     this.typewriterSpeed = 50;
     
+    // Enterprise features
+    this.rateLimiter = window.rateLimiter;
+    this.performanceMonitor = window.performanceMonitor;
+    
     // Inicializar cursor na posição correta
     this.updateCursor();
   }
 
   addToOutput(text, type = 'normal') {
+    // Rate limiting check
+    if (this.rateLimiter) {
+      const rateLimitResult = this.rateLimiter.isAllowed('terminal-output', 1);
+      if (!rateLimitResult.allowed) {
+        console.warn('Output rate limited:', rateLimitResult.reason);
+        return;
+      }
+    }
+
+    // Performance timing
+    const timing = this.performanceMonitor?.startTiming('terminal-output');
+    
     const outputElement = document.createElement("div");
     
     if (type === 'system' || type === 'achievement') {
-      outputElement.innerHTML = text; // Allow HTML for system messages
+      // Sanitize even system messages to prevent XSS
+      outputElement.innerHTML = this.sanitizeHTML(text);
     } else {
       outputElement.textContent = text; // Sanitize user content
     }
@@ -26,6 +43,34 @@ export class Terminal {
     
     this.output.appendChild(outputElement);
     this.scrollToBottom();
+    
+    // End performance timing
+    timing?.end();
+  }
+
+  sanitizeHTML(html) {
+    // Create a temporary div to parse HTML safely
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    
+    // Remove script tags and dangerous elements
+    const scripts = temp.querySelectorAll('script, iframe, object, embed');
+    scripts.forEach(script => script.remove());
+    
+    // Remove dangerous attributes
+    const allElements = temp.querySelectorAll('*');
+    allElements.forEach(el => {
+      Array.from(el.attributes).forEach(attr => {
+        if (attr.name.startsWith('on') || 
+            attr.name === 'javascript:' || 
+            attr.name === 'data:' || 
+            attr.name === 'vbscript:') {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    
+    return temp.innerHTML;
   }
 
   clearTerminal() {

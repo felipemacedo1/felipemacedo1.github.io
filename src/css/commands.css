@@ -354,3 +354,8 @@
     gap: var(--spacing-xs);
   }
 }
+
+:root {
+  --text-primary: var(--color-text, #ffffff);
+  --text-secondary: var(--color-text-secondary, #cccccc);
+}

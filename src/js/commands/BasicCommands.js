@@ -4,6 +4,10 @@ import ContributionCommands from './ContributionCommands.js';
 import { DiscoveryCommands } from './DiscoveryCommands.js';
 
 export class BasicCommands {
+  static NEW_USER_THRESHOLD = 3;
+  static CONTEXTUAL_SUGGESTION_THRESHOLD = 5;
+  static CONTEXTUAL_SUGGESTION_DELAY = 1000;
+  
   constructor(terminal) {
     this.terminal = terminal;
     this.contributionCommands = new ContributionCommands(terminal);
@@ -41,10 +45,10 @@ export class BasicCommands {
     // Track help usage and show appropriate version
     this.discoveryCommands.markAsDiscovered('help');
     
-    // Check if user is new (less than 3 commands discovered)
+    // Check if user is new (less than threshold commands discovered)
     const discovered = this.discoveryCommands.commandsDiscovered.length;
     
-    if (discovered < 3) {
+    if (discovered < BasicCommands.NEW_USER_THRESHOLD) {
       // Show basic help for new users
       this.terminal.addToOutput(CONTENT.helpBasic, 'system');
       this.terminal.addToOutput(`
@@ -63,14 +67,14 @@ export class BasicCommands {
     // Contextual suggestion for first-time users
     setTimeout(() => {
       const discovered = this.discoveryCommands.commandsDiscovered.length;
-      if (discovered < 5) {
+      if (discovered < BasicCommands.CONTEXTUAL_SUGGESTION_THRESHOLD) {
         this.terminal.addToOutput(`
 <span class="success">👍 Ótimo começo!</span> Agora experimente:
 <span class="info">💻 <span class="cmd">whoami</span> - Resumo técnico</span>
 <span class="info">📊 <span class="cmd">contributions</span> - Atividade GitHub</span>
 <span class="info">🎨 <span class="cmd">theme matrix</span> - Mudar visual</span>`, 'system');
       }
-    }, 1000);
+    }, BasicCommands.CONTEXTUAL_SUGGESTION_DELAY);
   }
 
   showDate() {

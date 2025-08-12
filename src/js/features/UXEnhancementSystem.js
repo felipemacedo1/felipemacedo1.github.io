@@ -1,16 +1,24 @@
 // Enhanced UX System - Status Bar and Notifications
 export class UXEnhancementSystem {
-  constructor(terminal) {
+  constructor(terminal = null) {
     this.terminal = terminal;
     this.statusBar = null;
     this.commandsDiscovered = this.loadDiscoveredCommands();
     this.sessionCommands = [];
     this.totalCommands = 35; // Estimated total
+    this.notifications = [];
     this.init();
   }
 
   init() {
-    this.createStatusBar();
+    // Defer terminal-dependent initialization
+    if (this.terminal) {
+      this.createStatusBar();
+    } else {
+      // Wait for terminal to be available
+      this.waitForTerminal();
+    }
+    
     this.loadUXStyles();
     this.updateProgress();
     
@@ -20,6 +28,19 @@ export class UXEnhancementSystem {
         this.statusBar.classList.add('show');
       }
     }, 2000);
+  }
+
+  waitForTerminal() {
+    // Poll for terminal availability
+    const checkTerminal = () => {
+      if (window.terminal) {
+        this.terminal = window.terminal;
+        this.createStatusBar();
+      } else {
+        setTimeout(checkTerminal, 100);
+      }
+    };
+    checkTerminal();
   }
 
   loadUXStyles() {

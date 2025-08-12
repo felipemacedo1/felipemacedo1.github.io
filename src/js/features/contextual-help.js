@@ -28,17 +28,28 @@ export class ContextualHelp {
   showTooltip(message, duration = 3000) {
     const tooltip = document.createElement('div');
     tooltip.className = 'help-tooltip';
-    tooltip.innerHTML = `
-      <div class="tooltip-content">
-        ${message}
-        <button class="tooltip-close">×</button>
-      </div>
-    `;
+    
+    const tooltipContent = document.createElement('div');
+    tooltipContent.className = 'tooltip-content';
+    
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = message; // Use textContent to prevent XSS
+    
+    const closeButton = document.createElement('button');
+    closeButton.className = 'tooltip-close';
+    closeButton.textContent = '×';
+    closeButton.addEventListener('click', () => tooltip.remove());
+    
+    tooltipContent.appendChild(messageSpan);
+    tooltipContent.appendChild(closeButton);
+    tooltip.appendChild(tooltipContent);
     
     document.body.appendChild(tooltip);
     
     setTimeout(() => {
-      tooltip.remove();
+      if (tooltip.parentNode) {
+        tooltip.remove();
+      }
     }, duration);
   }
 
@@ -61,7 +72,26 @@ export class ContextualHelp {
   }
 
   loadProgress() {
-    return JSON.parse(localStorage.getItem('terminal-progress') || '{"discoveredCommands": []}');
+    try {
+      const data = localStorage.getItem('terminal-progress');
+      if (!data) return { discoveredCommands: [] };
+      
+      const parsed = JSON.parse(data);
+      
+      // Validate structure and sanitize
+      if (typeof parsed !== 'object' || !Array.isArray(parsed.discoveredCommands)) {
+        return { discoveredCommands: [] };
+      }
+      
+      // Sanitize commands array - only allow strings
+      const sanitizedCommands = parsed.discoveredCommands.filter(cmd => 
+        typeof cmd === 'string' && /^[a-zA-Z0-9_-]+$/.test(cmd)
+      );
+      
+      return { discoveredCommands: sanitizedCommands };
+    } catch {
+      return { discoveredCommands: [] };
+    }
   }
 
   saveProgress() {

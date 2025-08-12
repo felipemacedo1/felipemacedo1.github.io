@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme System Test - Terminal Portfolio</title>
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="stylesheet" href="src/css/themes.css">
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 20px;
+            transition: all 0.3s ease;
+        }
+        .theme-selector {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--effect-border-radius);
+        }
+        .theme-button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: var(--color-primary);
+            color: var(--color-background);
+            border: none;
+            border-radius: var(--effect-border-radius);
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--effect-transition);
+        }
+        .theme-button:hover {
+            background: var(--color-accent);
+            box-shadow: var(--effect-box-shadow);
+        }
+        .theme-preview {
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--color-background);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            border-radius: var(--effect-border-radius);
+        }
+        .terminal-demo {
+            background: var(--color-surface);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: var(--effect-border-radius);
+            font-family: var(--typography-font-family);
+        }
+        .prompt { color: var(--color-primary); }
+        .success { color: var(--color-success); }
+        .error { color: var(--color-error); }
+        .warning { color: var(--color-warning); }
+        .accent { color: var(--color-accent); }
+        .secondary { color: var(--color-text-secondary); }
+        .cursor {
+            background: var(--color-primary);
+            color: var(--color-background);
+            padding: 0 2px;
+            animation: cursor-blink 1s infinite;
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    <div class="theme-selector">
+        <h1>🎨 Sistema de Temas - Terminal Portfolio</h1>
+        <p>Teste todos os 6 temas implementados:</p>
+        
+        <button class="theme-button" onclick="changeTheme('dark')">🌑 Dark</button>
+        <button class="theme-button" onclick="changeTheme('light')">☀️ Light</button>
+        <button class="theme-button" onclick="changeTheme('matrix')">🔢 Matrix</button>
+        <button class="theme-button" onclick="changeTheme('hacker')">🔴 Hacker</button>
+        <button class="theme-button" onclick="changeTheme('retro')">🟠 Retro</button>
+        <button class="theme-button" onclick="changeTheme('contrast')">⚫ Contrast</button>
+    </div>
+
+    <div class="theme-preview">
+        <h2>Tema Atual: <span id="current-theme">dark</span></h2>
+        
+        <div class="terminal-demo">
+            <div class="prompt">user@portfolio:~$ </div>
+            <div class="success">✅ Sistema inicializado com sucesso</div>
+            <div class="error">❌ Exemplo de mensagem de erro</div>
+            <div class="warning">⚠️ Aviso importante do sistema</div>
+            <div class="accent">🎯 Texto destacado em accent</div>
+            <div class="secondary">📝 Texto secundário</div>
+            <div class="prompt">user@portfolio:~$ theme matrix<span class="cursor">_</span></div>
+        </div>
+
+        <h3>Variáveis CSS Ativas:</h3>
+        <div id="css-variables"></div>
+    </div>
+
+    <script type="module">
+        // Import theme provider if available
+        let themeProvider;
+        try {
+            const { ThemeProvider } = await import('./src/js/theming/ThemeProvider.js');
+            themeProvider = new ThemeProvider();
+            console.log('✅ ThemeProvider loaded');
+        } catch (error) {
+            console.log('ℹ️ Using CSS-only theme system');
+        }
+
+        window.changeTheme = async function(theme) {
+            document.getElementById('current-theme').textContent = theme;
+            
+            if (themeProvider) {
+                try {
+                    await themeProvider.applyTheme(theme, { animated: true });
+                    console.log(`✅ Applied theme: ${theme} (Enterprise mode)`);
+                } catch (error) {
+                    console.error('Failed to apply theme:', error);
+                    // Fallback to CSS classes
+                    document.body.className = `theme-${theme}`;
+                }
+            } else {
+                // CSS-only mode
+                document.body.className = `theme-${theme}`;
+                console.log(`✅ Applied theme: ${theme} (CSS-only mode)`);
+            }
+
+            updateCSSVariables();
+        };
+
+        function updateCSSVariables() {
+            const variables = [
+                '--color-primary',
+                '--color-background', 
+                '--color-text',
+                '--color-accent',
+                '--color-surface',
+                '--typography-font-family'
+            ];
+
+            const styles = getComputedStyle(document.documentElement);
+            let html = '<ul>';
+            
+            variables.forEach(varName => {
+                const value = styles.getPropertyValue(varName).trim();
+                if (value) {
+                    html += `<li><code>${varName}</code>: <strong>${value}</strong></li>`;
+                }
+            });
+            
+            html += '</ul>';
+            document.getElementById('css-variables').innerHTML = html;
+        }
+
+        // Initialize
+        updateCSSVariables();
+
+        // Test all themes automatically (optional)
+        console.log('🧪 Theme Test Page Loaded');
+        console.log('Available commands: changeTheme("dark|light|matrix|hacker|retro|contrast")');
+    </script>
+</body>
+</html>

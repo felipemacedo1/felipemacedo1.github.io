@@ -23,6 +23,11 @@ class ContributionCommands {
     }
   }
 
+  sanitizeLogInput(input) {
+    if (typeof input !== 'string') return String(input);
+    return input.replace(/[\r\n\t\x00-\x1f\x7f-\x9f]/g, '').substring(0, 200);
+  }
+
   async showContributions(args = []) {
     try {
       const options = this.parseArgs(args);
@@ -31,7 +36,7 @@ class ContributionCommands {
       // Clear previous widget if exists
       this.cleanup();
       
-      console.log('🚀 Starting terminal contribution command with options:', options);
+      console.log('🚀 Starting terminal contribution command with options:', this.sanitizeLogInput(JSON.stringify(options)));
       
       // Create interface with loading state
       const output = this.createContributionHTML(widgetId, options);
@@ -243,7 +248,7 @@ class ContributionCommands {
             <div class="error-content">
               <h4>Failed to load contributions</h4>
               <p>${error.message}</p>
-              <button onclick="location.reload()" class="retry-button">
+              <button class="retry-button" data-action="retry-reload">
                 🔄 Retry
               </button>
             </div>
@@ -293,6 +298,9 @@ class ContributionCommands {
             opacity: 0.8;
           }
           </style>`;
+
+        const retryBtn = containerElement.querySelector('[data-action="retry-reload"]');
+        if (retryBtn) retryBtn.addEventListener('click', () => location.reload());
       }
       
       // Show detailed error in terminal output
@@ -344,6 +352,12 @@ class ContributionCommands {
     return options;
   }
 
+  sanitizeLogInput(input) {
+    // Prevent log injection by removing control characters and newlines
+    if (typeof input !== 'string') return String(input);
+    return input.replace(/[\r\n\t\x00-\x1f\x7f-\x9f]/g, '');
+  }
+
   cleanup() {
     if (this.currentWidget) {
       try {
@@ -351,7 +365,7 @@ class ContributionCommands {
           this.currentWidget.destroy();
         }
       } catch (error) {
-        console.warn('Error cleaning up widget:', error);
+        console.warn('Error cleaning up widget:', this.sanitizeLogInput(error.message));
       }
     }
     

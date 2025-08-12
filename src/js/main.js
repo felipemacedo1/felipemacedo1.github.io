@@ -1,97 +1,477 @@
-// Main entry point
+/**
+ * 🏢 ENTERPRISE TERMINAL PORTFOLIO - MAIN ENTRY POINT
+ * Production-ready architecture with enterprise security, performance, and UX
+ * 
+ * Features:
+ * - CSP with cryptographic nonces
+ * - Rate limiting with sliding window + token bucket
+ * - Core Web Vitals monitoring
+ * - WCAG 2.1 AAA accessibility
+ * - Service worker with intelligent caching
+ * - Gesture recognition system
+ * - Advanced theme management
+ * - Modular architecture with dependency injection
+ */
+
+// Enterprise Core Imports
+import { CSPManager } from './security/CSPManager.js';
+import { RateLimiter } from './core/RateLimiter.js';
+import { PerformanceMonitor } from './core/PerformanceMonitor.js';
+import { ResourcePreloader } from './core/ResourcePreloader.js';
+import { StateManager } from './core/StateManager.js';
+import { EventStore } from './core/EventStore.js';
+import { ModuleFederation } from './core/ModuleFederation.js';
+
+// Advanced UX Features
+import { AccessibilityEngine } from './a11y/AccessibilityEngine.js';
+import { ThemeProvider } from './theming/ThemeProvider.js';
+import { GestureRecognizer } from './features/GestureRecognizer.js';
+import { UXEnhancementSystem } from './features/UXEnhancementSystem.js';
+
+// Core Terminal System
 import { TerminalPortfolio } from './TerminalPortfolio.js';
-import { DeviceDetector } from './utils/DeviceDetector.js';
-import { Onboarding } from './features/onboarding.js';
 import { Analytics } from './features/analytics.js';
 
-// Check if should redirect to mobile version
-function checkMobileRedirect() {
-  const deviceInfo = DeviceDetector.getDeviceInfo();
-  
-  // Don't redirect if user specifically wants desktop version
-  const urlParams = new URLSearchParams(window.location.search);
-  const forceDesktop = urlParams.get('desktop') === 'true';
-  
-  if (deviceInfo.isMobile && !forceDesktop) {
-    // Add a small delay to show loading, then redirect
+// Utility Imports
+import { DeviceDetector } from './utils/DeviceDetector.js';
+
+/**
+ * Enterprise Application State
+ */
+class EnterpriseApp {
+  constructor() {
+    this.initialized = false;
+    this.modules = new Map();
+    this.performance = {
+      startTime: performance.now(),
+      loadTime: null,
+      criticalPathComplete: false
+    };
+  }
+
+  async initialize() {
+    if (this.initialized) return;
+
+    try {
+      console.log('🏢 Starting Enterprise Terminal Portfolio...');
+      
+      // Phase 1: Critical Security & Performance Foundation
+      await this.initializeCriticalPath();
+      
+      // Phase 2: Core Application Systems
+      await this.initializeCoreModules();
+      
+      // Phase 3: Advanced UX Features
+      await this.initializeAdvancedFeatures();
+      
+      // Phase 4: Service Worker & PWA Features
+      await this.initializeServiceWorker();
+      
+      // Phase 5: Analytics & Monitoring
+      await this.initializeAnalytics();
+      
+      // Phase 6: Start Application
+      await this.startApplication();
+      
+      this.initialized = true;
+      this.performance.loadTime = performance.now() - this.performance.startTime;
+      
+      console.log(`✅ Enterprise Terminal loaded in ${this.performance.loadTime.toFixed(2)}ms`);
+      
+    } catch (error) {
+      console.error('❌ Enterprise initialization failed:', error);
+      await this.initializeFallbackMode();
+    }
+  }
+
+  async initializeCriticalPath() {
+    // 1. Security Layer - CRITICAL
+    window.cspManager = new CSPManager();
+    this.modules.set('security', window.cspManager);
+    
+    // Update CSP nonce in HTML
+    this.updateCSPNonce(window.cspManager.getNonce());
+    
+    // 2. Rate Limiting - CRITICAL
+    window.rateLimiter = new RateLimiter();
+    this.modules.set('rateLimiter', window.rateLimiter);
+    
+    // 3. Performance Monitoring - CRITICAL
+    window.performanceMonitor = new PerformanceMonitor();
+    this.modules.set('performance', window.performanceMonitor);
+    
+    // 4. Resource Preloading - HIGH PRIORITY
+    window.resourcePreloader = new ResourcePreloader();
+    this.modules.set('preloader', window.resourcePreloader);
+    
+    this.performance.criticalPathComplete = true;
+    console.log('✅ Critical security & performance foundation initialized');
+  }
+
+  async initializeCoreModules() {
+    // State Management
+    window.stateManager = new StateManager({
+      app: {
+        version: '2.0.0-enterprise',
+        environment: 'production',
+        features: {
+          security: true,
+          performance: true,
+          accessibility: true,
+          gestures: true
+        }
+      },
+      user: {
+        preferences: {},
+        progress: {},
+        analytics: {}
+      }
+    });
+    this.modules.set('state', window.stateManager);
+    
+    // Event Store
+    window.eventStore = new EventStore();
+    this.modules.set('events', window.eventStore);
+    
+    // Module Federation
+    window.moduleFederation = new ModuleFederation();
+    this.modules.set('federation', window.moduleFederation);
+    
+    console.log('✅ Core modules initialized');
+  }
+
+  async initializeAdvancedFeatures() {
+    // Accessibility Engine
+    window.accessibilityEngine = new AccessibilityEngine();
+    this.modules.set('a11y', window.accessibilityEngine);
+    
+    // Theme Provider
+    window.themeProvider = new ThemeProvider();
+    this.modules.set('theme', window.themeProvider);
+    
+    // Gesture Recognition
+    window.gestureRecognizer = new GestureRecognizer(document.body, {
+      swipeThreshold: 50,
+      tapTimeout: 300,
+      longPressTimeout: 500
+    });
+    this.modules.set('gestures', window.gestureRecognizer);
+    
+    // UX Enhancement System
+    window.uxSystem = new UXEnhancementSystem();
+    this.modules.set('ux', window.uxSystem);
+    
+    console.log('✅ Advanced UX features initialized');
+  }
+
+  async initializeServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register('/sw.js', {
+          scope: '/'
+        });
+        
+        console.log('✅ Service Worker registered:', registration.scope);
+        
+        // Handle updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              this.notifyServiceWorkerUpdate();
+            }
+          });
+        });
+        
+      } catch (error) {
+        console.warn('⚠️ Service Worker registration failed:', error);
+      }
+    }
+  }
+
+  async initializeAnalytics() {
+    window.analytics = new Analytics();
+    this.modules.set('analytics', window.analytics);
+    
+    // Track enterprise initialization
+    window.analytics.trackEvent('enterprise_init', {
+      loadTime: this.performance.loadTime,
+      modules: Array.from(this.modules.keys()),
+      userAgent: navigator.userAgent
+    });
+    
+    console.log('✅ Analytics system initialized');
+  }
+
+  async startApplication() {
+    // Check for mobile redirect
+    if (this.shouldRedirectToMobile()) {
+      this.initiateRedirect();
+      return;
+    }
+    
+    // Initialize main terminal
+    window.terminal = new TerminalPortfolio();
+    this.modules.set('terminal', window.terminal);
+    
+    // Setup global functions for mobile keyboard
+    window.typeChar = this.typeChar.bind(this);
+    window.typeCommand = this.typeCommand.bind(this);
+
+    // Attach mobile keyboard listeners (CSP-safe)
+    this.attachMobileKeyboardHandlers();
+
+    // Remove loading screen
+    this.removeLoadingScreen();
+    
+    // Setup enterprise event listeners
+    this.setupEnterpriseEventListeners();
+    
+    console.log('✅ Application started successfully');
+  }
+
+  // Added: no-op to avoid runtime error; can be extended later
+  setupEnterpriseEventListeners() {
+    // Example placeholders for future enterprise-wide listeners
+    // window.addEventListener('online', () => console.log('↔️ Network online'));
+    // window.addEventListener('offline', () => console.log('🚫 Network offline'));
+  }
+
+  attachMobileKeyboardHandlers() {
+    const container = document.getElementById('mobileKeyboard');
+    if (!container) return;
+
+    // Delegate clicks to avoid multiple listeners
+    container.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+
+      const ch = btn.getAttribute('data-char');
+      const cmd = btn.getAttribute('data-command');
+      if (ch) {
+        this.typeChar(ch);
+      } else if (cmd) {
+        this.typeCommand(cmd);
+      }
+    }, { passive: true });
+  }
+
+  async initializeFallbackMode() {
+    if (this.initialized) return;
+    console.warn('⚠️ Initializing fallback mode...');
+    
+    // Basic terminal without enterprise features
+    try {
+      const { TerminalPortfolio } = await import('./TerminalPortfolio.js');
+      window.terminal = new TerminalPortfolio();
+      
+      // Basic mobile functions
+      window.typeChar = this.typeChar.bind(this);
+      window.typeCommand = this.typeCommand.bind(this);
+      
+      this.removeLoadingScreen();
+      this.initialized = true;
+      console.log('✅ Fallback mode active');
+      
+    } catch (error) {
+      console.error('❌ Fallback mode failed:', error);
+      this.showErrorScreen();
+    }
+  }
+
+  showErrorScreen() {
+    document.body.innerHTML = `
+      <div style="
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: #000; color: #ff4444; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; font-family: monospace;
+        text-align: center; padding: 20px; box-sizing: border-box;
+      ">
+        <h1>❌ Enterprise System Error</h1>
+        <p>Unable to initialize terminal portfolio.</p>
+        <p>Please refresh the page or contact support.</p>
+        <button id="reload-app" style="
+          margin-top: 20px; padding: 10px 20px; background: #333;
+          color: #fff; border: 1px solid #666; cursor: pointer;
+          font-family: monospace;
+        ">
+          🔄 Reload Application
+        </button>
+      </div>
+    `;
+
+    const btn = document.getElementById('reload-app');
+    if (btn) btn.addEventListener('click', () => location.reload());
+  }
+
+  shouldRedirectToMobile() {
+    try {
+      return DeviceDetector.shouldRedirectToMobile();
+    } catch (error) {
+      // Fallback mobile detection
+      return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && 
+             window.innerWidth < 768;
+    }
+  }
+
+  initiateRedirect() {
+    const loadingScreen = document.getElementById('enterprise-loading');
+    if (loadingScreen) {
+      loadingScreen.innerHTML = `
+        <div>📱 Detectado dispositivo móvel</div>
+        <div style="margin-top: 20px;">Redirecionando para versão móvel...</div>
+      `;
+    }
+    
     setTimeout(() => {
       window.location.href = './mobile.html';
-    }, 800);
-    return true;
+    }, 1000);
   }
-  
-  return false;
-}
 
-// Mobile keyboard functions
-function typeChar(char) {
-  const input = document.getElementById("commandInput");
-  input.value += char;
-  input.focus();
-}
-
-function typeCommand(command) {
-  const input = document.getElementById("commandInput");
-  input.value = command;
-  input.focus();
-
-  const event = new KeyboardEvent("keydown", {
-    key: "Enter",
-    code: "Enter",
-    keyCode: 13,
-  });
-  input.dispatchEvent(event);
-}
-
-// Loading screen
-function createLoadingScreen() {
-  const loadingScreen = document.createElement("div");
-  loadingScreen.innerHTML = `
-    <div style="
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      color: #00ff00;
-      font-family: 'Courier New', monospace;
-    ">
-      <div style="text-align: center;">
-        <div class="loading"></div>
-        <p style="margin-top: 20px;">Inicializando terminal...</p>
-      </div>
-    </div>`;
-
-  document.body.appendChild(loadingScreen);
-
-  setTimeout(() => {
-    loadingScreen.style.opacity = "0";
-    loadingScreen.style.transition = "opacity 0.5s ease";
-    setTimeout(() => {
-      document.body.removeChild(loadingScreen);
-    }, 500);
-  }, 1500);
-}
-
-// Initialize application
-document.addEventListener("DOMContentLoaded", () => {
-  // Check if should redirect to mobile
-  if (checkMobileRedirect()) {
-    return; // Stop initialization if redirecting
+  updateCSPNonce(nonce) {
+    // Update placeholder nonces in the document
+    const scripts = document.querySelectorAll('script[nonce="PLACEHOLDER_NONCE"]');
+    scripts.forEach(script => {
+      script.setAttribute('nonce', nonce);
+    });
+    
+    // Update CSP meta tag
+    const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+    if (cspMeta) {
+      cspMeta.content = cspMeta.content.replace('PLACEHOLDER_NONCE', nonce);
+    }
   }
-  
-  window.terminal = new TerminalPortfolio();
-  window.analytics = new Analytics();
-  // Onboarding é inicializado pelo TerminalPortfolio, não duplicar aqui
-  
-  // Expose mobile functions globally
-  window.typeChar = typeChar;
-  window.typeCommand = typeCommand;
-});
 
-window.addEventListener("load", createLoadingScreen);
+  removeLoadingScreen() {
+    const loadingScreen = document.getElementById('enterprise-loading');
+    if (loadingScreen) {
+      // Animate progress to completion
+      const progressFill = loadingScreen.querySelector('.progress-fill');
+      if (progressFill) {
+        progressFill.style.width = '100%';
+      }
+      
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        loadingScreen.style.transition = 'opacity 0.5s ease';
+        
+        setTimeout(() => {
+          if (loadingScreen.parentNode) {
+            loadingScreen.parentNode.removeChild(loadingScreen);
+          }
+        }, 500);
+      }, 800);
+    }
+  }
+
+  // Mobile keyboard functions
+  typeChar(char) {
+    const input = document.getElementById("commandInput");
+    if (input) {
+      input.value += char;
+      input.focus();
+      
+      // Update cursor position
+      if (window.terminal?.updateCursor) {
+        window.terminal.updateCursor();
+      }
+    }
+  }
+
+  typeCommand(command) {
+    const input = document.getElementById("commandInput");
+    if (input) {
+      input.value = command;
+      input.focus();
+
+      // Simulate Enter key press
+      const event = new KeyboardEvent("keydown", {
+        key: "Enter",
+        code: "Enter",
+        keyCode: 13,
+        bubbles: true
+      });
+      input.dispatchEvent(event);
+    }
+  }
+
+  notifyServiceWorkerUpdate() {
+    if (window.terminal) {
+      window.terminal.addToOutput(
+        '<span class="info">🔄 Nova versão disponível. Recarregue a página para atualizar.</span>',
+        'system'
+      );
+    }
+  }
+
+  // Public API
+  getModuleStatus() {
+    const status = {};
+    for (const [name, module] of this.modules) {
+      status[name] = {
+        loaded: !!module,
+        healthy: typeof module.getStats === 'function' ? true : 'unknown'
+      };
+    }
+    return status;
+  }
+
+  getPerformanceStats() {
+    return {
+      loadTime: this.performance.loadTime,
+      criticalPath: this.performance.criticalPathComplete,
+      modules: this.modules.size,
+      memory: performance.memory ? {
+        used: Math.round(performance.memory.usedJSHeapSize / 1024 / 1024),
+        total: Math.round(performance.memory.totalJSHeapSize / 1024 / 1024),
+        limit: Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024)
+      } : 'not available'
+    };
+  }
+}
+
+// Initialize Enterprise Application
+const enterpriseApp = new EnterpriseApp();
+
+async function bootstrap() {
+  try {
+    await enterpriseApp.initialize();
+  } catch (e) {
+    console.error('Bootstrap initialize failed:', e);
+    try {
+      await enterpriseApp.initializeFallbackMode();
+    } catch (e2) {
+      console.error('Fallback initialize failed:', e2);
+    }
+  }
+}
+
+// Start immediately if DOM is already parsed, otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
+} else {
+  // Document already loaded/parsing done
+  bootstrap();
+}
+
+// Safety net: if after 5s not initialized, try again (handles rare timing/CSP issues)
+setTimeout(() => {
+  if (!enterpriseApp.initialized) {
+    console.warn('Initialization taking too long, attempting bootstrap again...');
+    bootstrap();
+  }
+}, 5000);
+
+// Hard fallback after 8s
+setTimeout(() => {
+  if (!enterpriseApp.initialized) {
+    console.warn('Initialization still not complete, engaging fallback mode.');
+    enterpriseApp.initializeFallbackMode();
+  }
+}, 8000);
+
+// Expose for debugging and mobile functions
+window.enterpriseApp = enterpriseApp;
+
+// Export for module system
+export default enterpriseApp;

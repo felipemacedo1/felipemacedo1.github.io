@@ -55,27 +55,40 @@ class UnifiedContributionWidget {
   }
 
   renderError(message) {
-    this.container.innerHTML = `
-      <div class="unified-widget-error">
-        <span class="error-icon">⚠️</span>
-        <span class="error-message">${message}</span>
-        <style>
-          .unified-widget-error {
-            color: #f85149;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-            background: rgba(248, 81, 73, 0.1);
-            border: 1px solid rgba(248, 81, 73, 0.3);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-          }
-        </style>
-      </div>
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'unified-widget-error';
+    
+    const errorIcon = document.createElement('span');
+    errorIcon.className = 'error-icon';
+    errorIcon.textContent = '⚠️';
+    
+    const errorMessage = document.createElement('span');
+    errorMessage.className = 'error-message';
+    errorMessage.textContent = message;
+    
+    const style = document.createElement('style');
+    style.textContent = `
+      .unified-widget-error {
+        color: #f85149;
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
+        background: rgba(248, 81, 73, 0.1);
+        border: 1px solid rgba(248, 81, 73, 0.3);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
     `;
+    
+    errorDiv.appendChild(errorIcon);
+    errorDiv.appendChild(errorMessage);
+    errorDiv.appendChild(style);
+    
+    this.container.innerHTML = '';
+    this.container.appendChild(errorDiv);
   }
 
   // Public API methods for backward compatibility and external control

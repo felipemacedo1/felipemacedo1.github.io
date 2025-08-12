@@ -20,10 +20,10 @@ class MobileBIOS {
     this.addLoadingStates();
     
     // Update clock every second
-    setInterval(() => this.updateClock(), 1000);
+    this.clockInterval = setInterval(() => this.updateClock(), 1000);
     
     // Update battery every 30 seconds
-    setInterval(() => this.updateBattery(), 30000);
+    this.batteryInterval = setInterval(() => this.updateBattery(), 30000);
   }
 
   startBootSequence() {
@@ -147,8 +147,9 @@ class MobileBIOS {
     const detailContent = document.getElementById('detailContent');
 
     detailTitle.textContent = this.getActionTitle(action);
-    // Use innerHTML but content is controlled (not user input)
-    detailContent.innerHTML = this.getActionContent(action);
+    // Use safe DOM manipulation instead of innerHTML
+    const content = this.getActionContent(action);
+    this.safeSetContent(detailContent, content);
 
     detailView.style.display = 'flex';
     detailView.classList.add('slide-in');
@@ -193,18 +194,48 @@ class MobileBIOS {
   }
 
   setupAndroidBackButton() {
-    // Handle browser back button (Android back gesture)
-    window.addEventListener('popstate', (e) => {
+    // Store reference to remove later if needed
+    this.popstateHandler = (e) => {
       e.preventDefault();
       if (this.isDetailViewOpen) {
         this.hideDetailView();
         // Push a new state to prevent actual navigation
         history.pushState({ page: 'main' }, '', window.location.href);
       }
-    });
+    };
+    
+    // Handle browser back button (Android back gesture)
+    window.addEventListener('popstate', this.popstateHandler);
 
     // Push initial state
     history.pushState({ page: 'main' }, '', window.location.href);
+  }
+
+  cleanup() {
+    // Remove event listeners to prevent memory leaks
+    if (this.popstateHandler) {
+      window.removeEventListener('popstate', this.popstateHandler);
+      this.popstateHandler = null;
+    }
+    
+    // Clear intervals
+    if (this.clockInterval) {
+      clearInterval(this.clockInterval);
+      this.clockInterval = null;
+    }
+    if (this.batteryInterval) {
+      clearInterval(this.batteryInterval);
+      this.batteryInterval = null;
+    }
+    
+    // Clear widget references
+    if (this.currentWidget) {
+      this.currentWidget = null;
+    }
+    
+    // Remove any remaining tooltips
+    const tooltips = document.querySelectorAll('.contribution-tooltip');
+    tooltips.forEach(tooltip => tooltip.remove());
   }
 
   setupScrollableContainers() {
@@ -269,6 +300,58 @@ class MobileBIOS {
       };
       return escapeMap[match];
     });
+  }
+
+  sanitizeHTML(html) {
+    // Create a temporary div to parse HTML safely
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    
+    // Remove dangerous elements
+    const dangerousElements = temp.querySelectorAll('script, iframe, object, embed, form, input, textarea, select, button[onclick], a[href^="javascript:"], a[href^="data:"], a[href^="vbscript:"]');
+    dangerousElements.forEach(el => el.remove());
+    
+    // Remove dangerous attributes
+    const allElements = temp.querySelectorAll('*');
+    allElements.forEach(el => {
+      Array.from(el.attributes).forEach(attr => {
+        if (attr.name.startsWith('on') || 
+            attr.name === 'javascript:' || 
+            attr.name === 'data:' || 
+            attr.name === 'vbscript:' ||
+            attr.name === 'srcdoc' ||
+            attr.name === 'formaction') {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    
+    return temp.innerHTML;
+  }
+
+  // Safely set content into a container, sanitizing strings and DOM nodes
+  safeSetContent(container, content) {
+    if (!container) return;
+    try {
+      if (typeof content === 'string') {
+        container.innerHTML = this.sanitizeHTML(content);
+      } else if (content instanceof Element) {
+        const temp = document.createElement('div');
+        temp.appendChild(content.cloneNode(true));
+        container.innerHTML = this.sanitizeHTML(temp.innerHTML);
+      } else if (content instanceof DocumentFragment) {
+        const temp = document.createElement('div');
+        temp.appendChild(content.cloneNode(true));
+        container.innerHTML = this.sanitizeHTML(temp.innerHTML);
+      } else if (content != null) {
+        container.textContent = String(content);
+      } else {
+        container.textContent = '';
+      }
+    } catch (e) {
+      console.warn('safeSetContent error:', e);
+      container.textContent = '';
+    }
   }
 
   sanitizeLogInput(input) {
@@ -994,7 +1077,7 @@ class MobileBIOS {
             </div>
 
             <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
-              <div style="color: #f85149; font-size: 12px; font-weight: 600; margin-bottom: 8px;">📈 Crescimento Contínuo</div>
+              <div style="color: #f85149; font-size: 12px; font-weight: 600, margin-bottom: 8px;">📈 Crescimento Contínuo</div>
               <div style="color: #7d8590; font-size: 11px;">
                 3+ anos de experiência hands-on em desenvolvimento, sempre focado em aprender novas tecnologias e melhorar processos.
               </div>
@@ -1097,7 +1180,7 @@ class MobileBIOS {
 
             <!-- In Progress -->
             <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
-              <div style="color: #FF9800; font-size: 12px; font-weight: 600; margin-bottom: 8px;">📚 Em Progresso</div>
+              <div style="color: #FF9800; font-size: 12px; font-weight: 600, margin-bottom: 8px;">📈 Crescimento Contínuo</div>
               <div style="color: #7d8590; font-size: 11px;">
                 • AWS Solutions Architect Associate (planejado para 2025)<br>
                 • Oracle Java SE 17 Developer (em preparação)
@@ -1484,7 +1567,29 @@ class MobileBIOS {
         throw new Error(`Could not load analytics data for period: ${period}`);
       }
       
-      const data = await response.json();
+      const rawData = await response.text();
+      let data;
+      try {
+        // Validate JSON string before parsing
+        if (typeof rawData !== 'string' || rawData.length > 1000000) {
+          throw new Error('Invalid data format');
+        }
+        
+        data = JSON.parse(rawData);
+        
+        // Validate parsed data structure
+        if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+          throw new Error('Invalid data format');
+        }
+        
+        // Validate required properties
+        if (!data.daily_metrics || typeof data.daily_metrics !== 'object') {
+          throw new Error('Missing or invalid daily_metrics');
+        }
+        
+      } catch (parseError) {
+        throw new Error('Invalid JSON data');
+      }
       const dailyMetrics = data.daily_metrics || {};
       
       console.log('Analytics data loaded for period:', this.sanitizeLogInput(period), { 
@@ -1506,7 +1611,7 @@ class MobileBIOS {
       for (const date of dates) {
         if (dailyMetrics[date] > 0 && checkingStreak) {
           currentStreak++;
-        } else if (dailyMetrics[date] === 0 && checkingStreak) {
+        } else {
           checkingStreak = false;
         }
       }
@@ -1838,13 +1943,18 @@ class MobileBIOS {
   }
 
   addHapticFeedback() {
-    // Add haptic feedback for interactions
+    // Add haptic feedback for interactions with error handling
     const interactiveElements = document.querySelectorAll('.menu-item, .nav-item, .back-btn');
 
     interactiveElements.forEach(element => {
       element.addEventListener('touchstart', () => {
-        if (navigator.vibrate) {
-          navigator.vibrate(10); // Short vibration
+        try {
+          if (navigator.vibrate && typeof navigator.vibrate === 'function') {
+            navigator.vibrate(10); // Short vibration
+          }
+        } catch (error) {
+          // Silently fail if vibration is not supported
+          console.debug('Vibration not supported:', this.sanitizeLogInput(error.message));
         }
       }, { passive: true });
     });
@@ -1897,4 +2007,11 @@ class MobileBIOS {
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   window.mobileBIOS = new MobileBIOS();
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  if (window.mobileBIOS && typeof window.mobileBIOS.cleanup === 'function') {
+    window.mobileBIOS.cleanup();
+  }
 });

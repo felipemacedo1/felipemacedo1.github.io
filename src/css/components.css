@@ -1,49 +1,49 @@
 /* ===== COMPONENTS ===== */
 
 /* Text Styles */
-.command { color: var(--primary-green); }
-.output-text { color: var(--primary-white); margin: 5px 0; }
-.success { color: var(--primary-green); }
-.error { color: var(--primary-red); }
-.warning { color: var(--primary-yellow); }
-.highlight { color: var(--primary-cyan); font-weight: bold; }
+.command { color: var(--color-primary); }
+.output-text { color: var(--color-text); margin: 5px 0; }
+.success { color: var(--color-success); }
+.error { color: var(--color-error); }
+.warning { color: var(--color-warning); }
+.highlight { color: var(--color-accent); font-weight: bold; }
 
 /* Menu */
 .menu-option {
-  color: var(--primary-white);
+  color: var(--color-text);
   margin: 5px 0;
   cursor: pointer;
   transition: color var(--transition-fast);
 }
 
 .menu-option:hover {
-  color: var(--primary-cyan);
+  color: var(--color-accent);
 }
 
 /* Projects */
 .project-item {
   margin: var(--spacing-md) 0;
   padding: var(--spacing-md);
-  border-left: 3px solid var(--primary-green);
+  border-left: 3px solid var(--color-primary);
   background: rgba(0, 255, 0, 0.05);
   border-radius: var(--radius-sm);
 }
 
 .project-title {
-  color: var(--primary-cyan);
+  color: var(--color-accent);
   font-weight: bold;
   margin-bottom: var(--spacing-sm);
   display: block;
 }
 
 .project-description {
-  color: var(--primary-white);
+  color: var(--color-text);
   margin: var(--spacing-sm) 0;
   line-height: 1.4;
 }
 
 .project-link {
-  color: var(--primary-yellow);
+  color: var(--color-warning);
   text-decoration: underline;
   cursor: pointer;
   margin-top: 5px;
@@ -52,24 +52,24 @@
 }
 
 .project-link:hover {
-  color: var(--primary-cyan);
-  text-shadow: 0 0 5px var(--primary-cyan);
+  color: var(--color-accent);
+  text-shadow: 0 0 5px currentColor;
 }
 
 /* Contact */
 .contact-item {
   margin: var(--spacing-xs) 0;
-  color: var(--primary-white);
+  color: var(--color-text);
 }
 
 .contact-label {
-  color: var(--primary-cyan);
+  color: var(--color-accent);
   font-weight: bold;
 }
 
 /* ASCII Art */
 .ascii-art {
-  color: var(--primary-green);
+  color: var(--color-primary);
   font-size: var(--font-size-small);
   line-height: 1;
   margin: var(--spacing-sm) 0;

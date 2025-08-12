@@ -82,53 +82,79 @@ export class AutoComplete {
       suggestionBox.style.cssText = `
         position: absolute;
         background: rgba(0, 0, 0, 0.95);
-        border: 1px solid var(--primary-green);
+        border: 1px solid #00ff00;
         border-radius: 6px;
         padding: 4px 0;
-        bottom: 35px;
+        bottom: 100%;
         left: 0;
+        margin-bottom: 5px;
         min-width: 200px;
         max-width: 350px;
-        z-index: 1001;
+        z-index: 999999 !important;
         max-height: 200px;
-        font-family: inherit;
+        font-family: 'Courier New', monospace;
         font-size: 12px;
         box-shadow: 0 -4px 12px rgba(0, 255, 0, 0.3);
         backdrop-filter: blur(8px);
         animation: slideUp 0.2s ease;
+        overflow-y: auto;
       `;
       document.getElementById("inputLine").appendChild(suggestionBox);
     }
 
-    suggestionBox.innerHTML = this.suggestions
-      .map((cmd, index) => {
-        const highlighted = this._highlightMatch(cmd, currentInput);
-        const isActive = index === this.suggestionIndex;
-        
-        return `<div class="suggestion-item ${
-          isActive ? "active" : ""
-        }" 
-        data-command="${cmd}"
-        onmouseenter="this.classList.add('hover')"
-        onmouseleave="this.classList.remove('hover')"
-        onclick="window.terminal.selectSuggestion('${cmd}')"
-        style="
-          padding: 8px 12px;
-          color: ${isActive ? '#00ffff' : '#00ff00'};
-          background: ${isActive ? 'rgba(0, 255, 0, 0.1)' : 'transparent'};
-          cursor: pointer;
-          border-radius: 3px;
-          transition: all 0.15s ease;
-          display: flex;
-          align-items: center;
-          border-left: 3px solid ${isActive ? '#00ffff' : 'transparent'};
-        ">
-          <span style="margin-right: 8px; opacity: 0.7;">▶</span>
-          <span>${highlighted}</span>
-          <span style="margin-left: auto; font-size: 10px; opacity: 0.5;">↵</span>
-        </div>`;
-      })
-      .join("");
+    // Clear previous content safely
+    suggestionBox.innerHTML = '';
+    
+    this.suggestions.forEach((cmd, index) => {
+      const highlighted = this._highlightMatch(cmd, currentInput);
+      const isActive = index === this.suggestionIndex;
+      
+      const suggestionItem = document.createElement('div');
+      suggestionItem.className = `suggestion-item ${isActive ? 'active' : ''}`;
+      suggestionItem.dataset.command = cmd;
+      
+      suggestionItem.style.cssText = `
+        padding: 8px 12px;
+        color: ${isActive ? '#00ffff' : '#00ff00'};
+        background: ${isActive ? 'rgba(0, 255, 0, 0.1)' : 'transparent'};
+        cursor: pointer;
+        border-radius: 3px;
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        border-left: 3px solid ${isActive ? '#00ffff' : 'transparent'};
+        white-space: nowrap;
+      `;
+      
+      const iconSpan = document.createElement('span');
+      iconSpan.style.cssText = 'margin-right: 8px; opacity: 0.7; font-size: 10px;';
+      iconSpan.textContent = '▶';
+      
+      const textSpan = document.createElement('span');
+      textSpan.style.cssText = 'flex: 1;';
+      textSpan.innerHTML = highlighted;
+      
+      const enterSpan = document.createElement('span');
+      enterSpan.style.cssText = 'margin-left: 8px; font-size: 9px; opacity: 0.5;';
+      enterSpan.textContent = '↵';
+      
+      suggestionItem.appendChild(iconSpan);
+      suggestionItem.appendChild(textSpan);
+      suggestionItem.appendChild(enterSpan);
+      
+      // Add event listeners safely
+      suggestionItem.addEventListener('mouseenter', () => suggestionItem.classList.add('hover'));
+      suggestionItem.addEventListener('mouseleave', () => suggestionItem.classList.remove('hover'));
+      suggestionItem.addEventListener('click', () => {
+        if (window.terminal?.selectSuggestion) {
+          window.terminal.selectSuggestion(cmd);
+        } else if (window.mobileBIOS?.selectSuggestion) {
+          window.mobileBIOS.selectSuggestion(cmd);
+        }
+      });
+      
+      suggestionBox.appendChild(suggestionItem);
+    });
 
     // Não auto-selecionar sugestões para evitar seleção acidental
   }
@@ -228,12 +254,12 @@ export class AutoComplete {
     } else if (exactMatches.length > 1) {
       // Mostrar opções disponíveis com melhor formatação
       this.terminal.addToOutput(
-        `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${currentInput}</span>`
+        `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${this._sanitizeHTML(currentInput)}</span>`
       );
       
       const formattedMatches = exactMatches
         .slice(0, 8) // Limitar a 8 opções
-        .map(cmd => `<span class="success">${cmd}</span>`)
+        .map(cmd => `<span class="success">${this._sanitizeHTML(cmd)}</span>`)
         .join(', ');
       
       this.terminal.addToOutput(

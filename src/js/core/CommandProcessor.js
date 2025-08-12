@@ -20,7 +20,7 @@ export class CommandProcessor {
     if (trimmedInput === "") return;
 
     this.terminal.addToOutput(
-      `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${input}</span>`, 'system'
+      `<span class="prompt">felipe-macedo@portfolio:~$ </span><span class="command">${this.sanitizeInput(input)}</span>`, 'system'
     );
 
     await this.executeCommand(trimmedInput);
@@ -46,7 +46,7 @@ export class CommandProcessor {
           await result;
         }
       } catch (error) {
-        console.error(`Error executing command '${command}':`, error);
+        console.error(`Error executing command '${this.sanitizeLogInput(command)}':`, error);
         this.terminal.addToOutput(
           `<span class="error">❌ Erro ao executar comando: ${error.message}</span>`, 'system'
         );
@@ -76,10 +76,31 @@ export class CommandProcessor {
           await result;
         }
       } catch (error) {
-        console.error(`Error executing silent command '${command}':`, error);
+        console.error(`Error executing silent command '${this.sanitizeLogInput(command)}':`, error);
       }
     }
     this.terminal.scrollToBottom();
+  }
+
+  sanitizeInput(input) {
+    // Basic XSS prevention for display
+    if (typeof input !== 'string') return String(input);
+    return input.replace(/[<>"'&]/g, function(match) {
+      const escapeMap = {
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#x27;',
+        '&': '&amp;'
+      };
+      return escapeMap[match];
+    });
+  }
+
+  sanitizeLogInput(input) {
+    // Prevent log injection by removing control characters and newlines
+    if (typeof input !== 'string') return String(input);
+    return input.replace(/[\r\n\t\x00-\x1f\x7f-\x9f]/g, '');
   }
 
   getAvailableCommands() {
