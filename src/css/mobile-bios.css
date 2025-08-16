@@ -200,9 +200,12 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--surface);
   max-height: calc(100vh - 200px);
+  touch-action: pan-y;
 }
 
 .menu-section {
@@ -397,9 +400,12 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
   font-family: var(--font-mono);
   line-height: 1.5;
   max-height: calc(100vh - 56px);
+  touch-action: pan-y;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -505,11 +511,13 @@ body {
 
 ::-webkit-scrollbar-track {
   background: var(--surface);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--primary);
   border-radius: 2px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -530,7 +538,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
   scroll-behavior: smooth;
   position: relative;
   /* Improved scroll performance */
@@ -539,28 +547,26 @@ body {
   /* Enhanced touch scrolling */
   touch-action: pan-y;
   scroll-snap-type: y proximity;
+  /* Prevent interference with touch navigation */
+  pointer-events: auto;
 }
 
 /* Touch scroll indicators */
 .touch-scroll-indicator {
   position: absolute;
   right: 4px;
-  width: 6px;
-  background: var(--primary);
-  border-radius: 3px;
+  width: 4px;
+  height: 30px;
+  background: rgba(3, 218, 198, 0.7);
+  border-radius: 2px;
   opacity: 0;
-  transition: opacity 0.3s ease, background-color 0.2s ease;
+  transition: opacity 0.2s ease;
   pointer-events: none;
-  z-index: 10;
+  z-index: 100;
 }
 
 .touch-scroll-indicator.visible {
-  opacity: 0.8;
-}
-
-.touch-scroll-indicator:hover {
-  background: var(--primary-variant);
-  width: 8px;
+  opacity: 0.7;
 }
 
 .github-contrib-container {
@@ -604,22 +610,28 @@ body {
 .scrollable {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+  touch-action: pan-y;
 }
 
 .horizontal-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  touch-action: pan-x;
 }
 
 /* ===== PREVENT BOUNCE ON MAIN CONTAINER ===== */
 .bios-container {
   overscroll-behavior: none;
+  touch-action: pan-y;
 }
 
 .detail-view {
   overscroll-behavior: none;
+  touch-action: pan-y;
 }
 
 /* ===== SCROLL INDICATORS ===== */
@@ -662,6 +674,10 @@ body {
   /* Better touch handling */
   touch-action: pan-y;
   overscroll-behavior-y: contain;
+  /* Ensure smooth scrolling */
+  scroll-behavior: smooth;
+  /* Prevent scroll interference */
+  isolation: isolate;
 }
 
 /* Swipe gesture feedback */
@@ -693,6 +709,9 @@ body {
   min-height: 44px;
   min-width: 44px;
   touch-action: manipulation;
+  /* Prevent text selection on touch */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Pull to refresh indicator */
@@ -727,18 +746,18 @@ body {
 }
 
 .github-content-scroll::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .github-content-scroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
 }
 
 .github-content-scroll::-webkit-scrollbar-thumb {
-  background: rgba(3, 218, 198, 0.5);
-  border-radius: 3px;
-  transition: background 0.3s ease;
+  background: rgba(3, 218, 198, 0.6);
+  border-radius: 2px;
+  transition: background 0.2s ease;
 }
 
 .github-content-scroll::-webkit-scrollbar-thumb:hover {

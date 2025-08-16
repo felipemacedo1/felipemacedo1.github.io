@@ -15,11 +15,13 @@ export class EnhancedTouchNavigation {
   }
 
   setupTouchHandlers() {
-    const options = { passive: false };
+    // Use passive listeners for better performance and native scroll
+    const passiveOptions = { passive: true };
+    const activeOptions = { passive: false };
     
-    this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), options);
-    this.container.addEventListener('touchmove', this.handleTouchMove.bind(this), options);
-    this.container.addEventListener('touchend', this.handleTouchEnd.bind(this), options);
+    this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), passiveOptions);
+    this.container.addEventListener('touchmove', this.handleTouchMove.bind(this), activeOptions);
+    this.container.addEventListener('touchend', this.handleTouchEnd.bind(this), passiveOptions);
   }
 
   handleTouchStart(e) {
@@ -39,30 +41,51 @@ export class EnhancedTouchNavigation {
     const deltaY = e.touches[0].clientY - this.touchStartY;
     const deltaX = e.touches[0].clientX - this.touchStartX;
     
-    // Determine scroll direction
-    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) {
-      this.isScrolling = true;
-      e.preventDefault();
-      
+    // Only handle horizontal swipes for navigation, let vertical scroll be native
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+      // This is a horizontal swipe - prevent default for navigation
       const scrollableElement = this.getScrollableParent(e.target);
-      if (scrollableElement) {
-        this.scrollWithMomentum(scrollableElement, -deltaY);
+      if (!scrollableElement || scrollableElement.scrollHeight <= scrollableElement.clientHeight) {
+        e.preventDefault();
+        this.isScrolling = false; // This is navigation, not scrolling
       }
+    } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) {
+      // This is vertical scroll - let it be handled natively
+      this.isScrolling = true;
+      // Don't prevent default - allow native scrolling
     }
   }
 
   handleTouchEnd(e) {
-    if (this.isScrolling) {
-      this.applyMomentumScrolling();
+    // Reset scroll state - native scrolling handles momentum
+    this.isScrolling = false;
+    
+    // Handle swipe gestures for navigation
+    const deltaX = e.changedTouches[0].clientX - this.touchStartX;
+    const deltaY = e.changedTouches[0].clientY - this.touchStartY;
+    
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+      if (deltaX > 0) {
+        this.handleSwipeRight();
+      } else {
+        this.handleSwipeLeft();
+      }
     }
   }
 
   getScrollableParent(element) {
-    const scrollableSelectors = ['.bios-menu', '.detail-content', '.github-content-scroll'];
+    const scrollableSelectors = ['.bios-menu', '.detail-content', '.github-content-scroll', '.scrollable'];
     
     while (element && element !== document.body) {
-      for (const selector of scrollableSelectors) {
-        if (element.matches && element.matches(selector)) {
+      if (element.matches) {
+        for (const selector of scrollableSelectors) {
+          if (element.matches(selector)) {
+            return element;
+          }
+        }
+        // Check if element has overflow scroll
+        const computedStyle = window.getComputedStyle(element);
+        if (computedStyle.overflowY === 'auto' || computedStyle.overflowY === 'scroll') {
           return element;
         }
       }
@@ -71,28 +94,11 @@ export class EnhancedTouchNavigation {
     return null;
   }
 
-  scrollWithMomentum(element, delta) {
-    const currentScroll = element.scrollTop;
-    const maxScroll = element.scrollHeight - element.clientHeight;
-    
-    let newScroll = currentScroll + delta * 0.5;
-    newScroll = Math.max(0, Math.min(newScroll, maxScroll));
-    
-    element.scrollTop = newScroll;
-    this.updateScrollIndicator(element, newScroll / maxScroll);
-  }
-
-  applyMomentumScrolling() {
-    // Simple momentum implementation
-    this.momentum.velocity *= 0.95;
-    
-    if (Math.abs(this.momentum.velocity) > 0.5) {
-      this.animationId = requestAnimationFrame(() => this.applyMomentumScrolling());
-    }
-  }
+  // Remove custom scrolling - let native handle it
+  // scrollWithMomentum and applyMomentumScrolling removed to prevent conflicts
 
   setupScrollIndicators() {
-    const scrollableElements = document.querySelectorAll('.bios-menu, .detail-content, .github-content-scroll');
+    const scrollableElements = document.querySelectorAll('.bios-menu, .detail-content, .github-content-scroll, .scrollable');
     
     scrollableElements.forEach(element => {
       this.createScrollIndicator(element);
@@ -100,28 +106,41 @@ export class EnhancedTouchNavigation {
   }
 
   createScrollIndicator(element) {
+    // Remove existing indicator to prevent duplicates
+    const existingIndicator = element.querySelector('.touch-scroll-indicator');
+    if (existingIndicator) existingIndicator.remove();
+    
     const indicator = document.createElement('div');
     indicator.className = 'touch-scroll-indicator';
     indicator.style.cssText = `
       position: absolute;
       right: 4px;
       top: 10px;
-      width: 6px;
-      height: 40px;
-      background: rgba(3, 218, 198, 0.6);
-      border-radius: 3px;
+      width: 4px;
+      height: 30px;
+      background: rgba(3, 218, 198, 0.7);
+      border-radius: 2px;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
       pointer-events: none;
-      z-index: 10;
+      z-index: 100;
     `;
     
-    element.style.position = 'relative';
+    // Ensure parent has relative positioning
+    if (window.getComputedStyle(element).position === 'static') {
+      element.style.position = 'relative';
+    }
     element.appendChild(indicator);
     
-    // Show indicator on scroll
+    // Show indicator on scroll with throttling
+    let scrollTimeout;
     element.addEventListener('scroll', () => {
-      this.updateScrollIndicator(element, element.scrollTop / (element.scrollHeight - element.clientHeight));
+      clearTimeout(scrollTimeout);
+      this.updateScrollIndicator(element, element.scrollTop / Math.max(1, element.scrollHeight - element.clientHeight));
+      
+      scrollTimeout = setTimeout(() => {
+        indicator.style.opacity = '0';
+      }, 1500);
     }, { passive: true });
   }
 
@@ -129,43 +148,22 @@ export class EnhancedTouchNavigation {
     const indicator = element.querySelector('.touch-scroll-indicator');
     if (!indicator) return;
     
-    const maxTop = element.clientHeight - 40;
-    indicator.style.top = `${progress * maxTop}px`;
-    indicator.style.opacity = element.scrollHeight > element.clientHeight ? '0.8' : '0';
+    const indicatorHeight = 30;
+    const maxTop = element.clientHeight - indicatorHeight - 10;
+    const isScrollable = element.scrollHeight > element.clientHeight;
     
-    // Auto-hide after 2 seconds
-    clearTimeout(indicator.hideTimeout);
-    indicator.hideTimeout = setTimeout(() => {
+    if (isScrollable) {
+      indicator.style.top = `${10 + (progress * maxTop)}px`;
+      indicator.style.opacity = '0.7';
+    } else {
       indicator.style.opacity = '0';
-    }, 2000);
+    }
   }
 
-  // Swipe gesture for navigation
+  // Swipe navigation is now handled in handleTouchEnd
   setupSwipeNavigation() {
-    let startX = 0;
-    let startY = 0;
-    
-    this.container.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    }, { passive: true });
-    
-    this.container.addEventListener('touchend', (e) => {
-      const endX = e.changedTouches[0].clientX;
-      const endY = e.changedTouches[0].clientY;
-      
-      const deltaX = endX - startX;
-      const deltaY = endY - startY;
-      
-      // Horizontal swipe for navigation
-      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-        if (deltaX > 0) {
-          this.handleSwipeRight();
-        } else {
-          this.handleSwipeLeft();
-        }
-      }
-    }, { passive: true });
+    // Swipe navigation integrated into main touch handlers
+    // This prevents duplicate event listeners
   }
 
   handleSwipeRight() {
@@ -185,9 +183,13 @@ export class EnhancedTouchNavigation {
       cancelAnimationFrame(this.animationId);
     }
     
-    // Remove event listeners
-    this.container.removeEventListener('touchstart', this.handleTouchStart);
-    this.container.removeEventListener('touchmove', this.handleTouchMove);
-    this.container.removeEventListener('touchend', this.handleTouchEnd);
+    // Remove event listeners with proper binding
+    this.container.removeEventListener('touchstart', this.handleTouchStart.bind(this));
+    this.container.removeEventListener('touchmove', this.handleTouchMove.bind(this));
+    this.container.removeEventListener('touchend', this.handleTouchEnd.bind(this));
+    
+    // Remove scroll indicators
+    const indicators = this.container.querySelectorAll('.touch-scroll-indicator');
+    indicators.forEach(indicator => indicator.remove());
   }
 }

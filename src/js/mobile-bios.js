@@ -263,8 +263,21 @@ class MobileBIOS {
   }
 
   setupScrollableContainers() {
-    // This method is now handled by EnhancedTouchNavigation
-    // Keeping for backward compatibility but delegating to touch navigation
+    // Ensure all scrollable containers have proper touch behavior
+    const scrollableElements = document.querySelectorAll('.bios-menu, .detail-content, .github-content-scroll, .scrollable');
+    
+    scrollableElements.forEach(element => {
+      // Ensure native scrolling is enabled
+      element.style.webkitOverflowScrolling = 'touch';
+      element.style.overscrollBehaviorY = 'contain';
+      element.style.scrollBehavior = 'smooth';
+      element.style.touchAction = 'pan-y';
+      
+      // Remove any existing touch handlers that might interfere
+      element.style.pointerEvents = 'auto';
+    });
+    
+    // Setup scroll indicators through touch navigation
     if (this.touchNavigation) {
       this.touchNavigation.setupScrollIndicators();
     }
@@ -1803,32 +1816,23 @@ class MobileBIOS {
     // Specific optimization for GitHub section scrolling
     const githubContent = document.querySelector('.github-content-scroll');
     if (githubContent) {
-      // Ensure proper scroll behavior
+      // Ensure proper native scroll behavior
       githubContent.style.overflowY = 'auto';
       githubContent.style.webkitOverflowScrolling = 'touch';
-      githubContent.style.overscrollBehavior = 'contain';
-
-      // Add momentum scrolling for iOS
-      githubContent.style.webkitOverflowScrolling = 'touch';
-
-      // Prevent rubber band effect
-      githubContent.addEventListener('scroll', (e) => {
-        const { scrollTop, scrollHeight, clientHeight } = e.target;
-
-        // Prevent overscroll at boundaries
-        if (scrollTop <= 0) {
-          e.target.scrollTop = 1;
-        } else if (scrollTop + clientHeight >= scrollHeight) {
-          e.target.scrollTop = scrollHeight - clientHeight - 1;
-        }
-      }, { passive: true });
+      githubContent.style.overscrollBehaviorY = 'contain';
+      githubContent.style.scrollBehavior = 'smooth';
+      githubContent.style.touchAction = 'pan-y';
+      githubContent.style.isolation = 'isolate';
+      
+      // Remove any interference with native scrolling
+      githubContent.style.pointerEvents = 'auto';
     }
 
     // Optimize contribution widget container
     const contribWidget = document.getElementById('mobile-contrib-widget');
     if (contribWidget) {
       contribWidget.style.overflow = 'hidden';
-      contribWidget.style.touchAction = 'pan-y';
+      contribWidget.style.touchAction = 'none'; // Widget doesn't need scrolling
     }
   }
 
@@ -1838,36 +1842,46 @@ class MobileBIOS {
 
     let startY = 0;
     let pullDistance = 0;
-    const maxPull = 80;
+    const maxPull = 60;
+    let isPulling = false;
 
     detailContent.addEventListener('touchstart', (e) => {
       if (detailContent.scrollTop === 0) {
         startY = e.touches[0].clientY;
+        isPulling = false;
       }
     }, { passive: true });
 
     detailContent.addEventListener('touchmove', (e) => {
       if (detailContent.scrollTop === 0 && startY > 0) {
-        pullDistance = Math.min(e.touches[0].clientY - startY, maxPull);
+        const currentY = e.touches[0].clientY;
+        pullDistance = Math.min(currentY - startY, maxPull);
 
-        if (pullDistance > 0) {
-          detailContent.style.transform = `translateY(${pullDistance * 0.5}px)`;
-          detailContent.style.opacity = 1 - (pullDistance / maxPull) * 0.2;
+        if (pullDistance > 10) {
+          isPulling = true;
+          // Gentle pull effect that doesn't interfere with scrolling
+          detailContent.style.transform = `translateY(${pullDistance * 0.3}px)`;
+          detailContent.style.transition = 'none';
         }
       }
     }, { passive: true });
 
     detailContent.addEventListener('touchend', () => {
-      if (pullDistance > 50) {
-        // Trigger refresh
-        this.refreshCurrentView();
-      }
+      if (isPulling) {
+        if (pullDistance > 40) {
+          // Trigger refresh
+          this.refreshCurrentView();
+        }
 
-      // Reset transform
-      detailContent.style.transform = '';
-      detailContent.style.opacity = '';
+        // Reset transform with smooth transition
+        detailContent.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        detailContent.style.transform = '';
+        detailContent.style.opacity = '';
+      }
+      
       startY = 0;
       pullDistance = 0;
+      isPulling = false;
     }, { passive: true });
   }
 
@@ -1992,7 +2006,8 @@ class MobileBIOS {
     const container = this.performanceOptimizer.cacheElement('.bios-container');
     if (container && !this.touchNavigation) {
       this.touchNavigation = new EnhancedTouchNavigation(container);
-      this.touchNavigation.setupSwipeNavigation();
+      // Swipe navigation is integrated into the main touch handlers
+      console.log('Enhanced touch navigation initialized');
     }
   }
 
