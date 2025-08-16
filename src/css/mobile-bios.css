@@ -1,6 +1,12 @@
 /* ===== MOBILE BIOS ANDROID STYLE ===== */
 
 :root {
+  /* Safe Area Support */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+  
   /* Android Material Colors */
   --primary: #03DAC6;
   --primary-variant: #018786;
@@ -54,10 +60,14 @@ body {
 
 .bios-container {
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
   background: linear-gradient(135deg, #0D1421 0%, #1A1A2E 50%, #16213E 100%);
   position: relative;
   overflow: hidden;
+  padding-top: var(--safe-area-top);
+  padding-left: var(--safe-area-left);
+  padding-right: var(--safe-area-right);
 }
 
 /* ===== BOOT SCREEN ===== */
@@ -132,10 +142,12 @@ body {
 /* ===== MAIN BIOS INTERFACE ===== */
 .bios-interface {
   width: 100%;
-  height: 100vh;
+  height: calc(100dvh - var(--safe-area-top));
+  min-height: calc(100vh - var(--safe-area-top));
   display: flex;
   flex-direction: column;
   background: var(--background);
+  padding-bottom: calc(var(--safe-area-bottom) + 60px);
 }
 
 .status-bar {
@@ -274,7 +286,13 @@ body {
   display: flex;
   background: var(--surface);
   border-top: 1px solid var(--bios-gray);
-  height: 60px;
+  height: calc(60px + var(--safe-area-bottom));
+  padding-bottom: var(--safe-area-bottom);
+  position: fixed;
+  bottom: 0;
+  left: var(--safe-area-left);
+  right: var(--safe-area-right);
+  z-index: 1000;
 }
 
 .nav-item {
@@ -313,14 +331,17 @@ body {
 /* ===== DETAIL VIEW ===== */
 .detail-view {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
+  top: var(--safe-area-top);
+  left: var(--safe-area-left);
+  right: var(--safe-area-right);
+  width: calc(100% - var(--safe-area-left) - var(--safe-area-right));
+  height: calc(100dvh - var(--safe-area-top));
+  min-height: calc(100vh - var(--safe-area-top));
   background: var(--background);
   z-index: 100;
   display: flex;
   flex-direction: column;
+  padding-bottom: calc(var(--safe-area-bottom) + 60px);
 }
 
 .detail-header {
@@ -430,6 +451,10 @@ body {
   .menu-section {
     margin-bottom: var(--spacing-md);
   }
+  
+  .bios-menu {
+    max-height: calc(100vh - 250px);
+  }
 }
 
 @media (max-width: 360px) {
@@ -444,6 +469,32 @@ body {
   
   .menu-item .label {
     font-size: 12px;
+  }
+}
+
+/* Safe area adjustments for different device orientations */
+@media (orientation: landscape) {
+  .bios-container {
+    padding-left: max(var(--safe-area-left), 20px);
+    padding-right: max(var(--safe-area-right), 20px);
+  }
+  
+  .nav-footer {
+    left: max(var(--safe-area-left), 20px);
+    right: max(var(--safe-area-right), 20px);
+    width: calc(100% - max(var(--safe-area-left), 20px) - max(var(--safe-area-right), 20px));
+  }
+}
+
+/* High refresh rate displays optimization */
+@media (min-resolution: 120dpi) {
+  .menu-item,
+  .nav-item {
+    transition-duration: 0.1s;
+  }
+  
+  .touch-scroll-indicator {
+    transition-duration: 0.1s;
   }
 }
 
@@ -485,6 +536,31 @@ body {
   /* Improved scroll performance */
   will-change: scroll-position;
   transform: translateZ(0);
+  /* Enhanced touch scrolling */
+  touch-action: pan-y;
+  scroll-snap-type: y proximity;
+}
+
+/* Touch scroll indicators */
+.touch-scroll-indicator {
+  position: absolute;
+  right: 4px;
+  width: 6px;
+  background: var(--primary);
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.3s ease, background-color 0.2s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.touch-scroll-indicator.visible {
+  opacity: 0.8;
+}
+
+.touch-scroll-indicator:hover {
+  background: var(--primary-variant);
+  width: 8px;
 }
 
 .github-contrib-container {
@@ -583,6 +659,71 @@ body {
   transform: translateZ(0); /* Force hardware acceleration */
   backface-visibility: hidden;
   perspective: 1000px;
+  /* Better touch handling */
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+}
+
+/* Swipe gesture feedback */
+.swipe-feedback {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(3, 218, 198, 0.9);
+  color: var(--on-primary);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.swipe-feedback.show {
+  opacity: 1;
+}
+
+/* Enhanced touch targets */
+.menu-item,
+.nav-item,
+.back-btn {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Pull to refresh indicator */
+.pull-to-refresh-indicator {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 12px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.pull-to-refresh-indicator.active {
+  opacity: 1;
+  top: 10px;
+}
+
+.pull-to-refresh-indicator .refresh-icon {
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .github-content-scroll::-webkit-scrollbar {
@@ -638,6 +779,44 @@ body {
 .nav-item:active {
   transform: scale(0.98);
   transition: transform 0.1s ease;
+  background: rgba(3, 218, 198, 0.1);
+}
+
+.menu-item:focus-visible,
+.nav-item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Touch ripple effect */
+.menu-item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(3, 218, 198, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+  pointer-events: none;
+}
+
+.menu-item:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* Haptic feedback indicator */
+.haptic-feedback {
+  animation: hapticPulse 0.1s ease;
+}
+
+@keyframes hapticPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
 }
 
 /* ===== BETTER CONTRAST FOR READABILITY ===== */
@@ -695,4 +874,40 @@ body {
 .github-section .loading {
   opacity: 0.7;
   pointer-events: none;
+}
+
+/* Performance optimizations for animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .touch-scroll-indicator {
+    transition: none;
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  .touch-scroll-indicator {
+    background: var(--primary);
+    box-shadow: 0 0 4px rgba(3, 218, 198, 0.3);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .touch-scroll-indicator {
+    background: #00FF00;
+    border: 1px solid #FFFFFF;
+  }
+  
+  .menu-item:focus,
+  .nav-item:focus {
+    outline: 3px solid #00FF00;
+    outline-offset: 2px;
+  }
 }

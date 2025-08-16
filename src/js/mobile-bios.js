@@ -1,5 +1,6 @@
 // Mobile BIOS Interface
-// import { DeviceDetector } from './utils/DeviceDetector.js';
+import { EnhancedTouchNavigation } from './features/EnhancedTouchNavigation.js';
+import { PerformanceOptimizer } from './utils/PerformanceOptimizer.js';
 
 class MobileBIOS {
   constructor() {
@@ -7,6 +8,9 @@ class MobileBIOS {
     this.bootProgress = 0;
     this.isBooted = false;
     this.isDetailViewOpen = false;
+    this.touchNavigation = null;
+    this.performanceOptimizer = new PerformanceOptimizer();
+    this.startTime = Date.now();
     
     this.init();
   }
@@ -18,6 +22,10 @@ class MobileBIOS {
     this.updateBattery();
     this.addHapticFeedback();
     this.addLoadingStates();
+    
+    // Clear existing intervals to prevent leaks
+    if (this.clockInterval) clearInterval(this.clockInterval);
+    if (this.batteryInterval) clearInterval(this.batteryInterval);
     
     // Update clock every second
     this.clockInterval = setInterval(() => this.updateClock(), 1000);
@@ -62,8 +70,10 @@ class MobileBIOS {
   }
 
   showMainInterface() {
-    const bootScreen = document.getElementById('bootScreen');
-    const biosInterface = document.getElementById('biosInterface');
+    const bootScreen = this.performanceOptimizer.cacheElement('#bootScreen');
+    const biosInterface = this.performanceOptimizer.cacheElement('#biosInterface');
+
+    if (!bootScreen || !biosInterface) return;
 
     bootScreen.style.opacity = '0';
     bootScreen.style.transition = 'opacity 0.5s ease';
@@ -77,6 +87,9 @@ class MobileBIOS {
         biosInterface.style.opacity = '1';
         biosInterface.style.transition = 'opacity 0.5s ease';
         this.isBooted = true;
+        
+        // Initialize touch navigation after interface is shown
+        this.initializeTouchNavigation();
       }, 100);
     }, 500);
   }
@@ -228,64 +241,33 @@ class MobileBIOS {
       this.batteryInterval = null;
     }
     
+    // Cleanup touch navigation
+    if (this.touchNavigation) {
+      this.touchNavigation.cleanup();
+      this.touchNavigation = null;
+    }
+    
+    // Cleanup performance optimizer
+    if (this.performanceOptimizer) {
+      this.performanceOptimizer.cleanup();
+    }
+    
     // Clear widget references
     if (this.currentWidget) {
       this.currentWidget = null;
     }
     
-    // Remove any remaining tooltips
+    // Remove any remaining tooltips efficiently
     const tooltips = document.querySelectorAll('.contribution-tooltip');
     tooltips.forEach(tooltip => tooltip.remove());
   }
 
   setupScrollableContainers() {
-    // Identify scrollable containers with improved selectors
-    const scrollableSelectors = [
-      '.bios-menu',
-      '.detail-content',
-      '.github-content-scroll',
-      '.github-contrib-container',
-      '.scrollable'
-    ];
-
-    scrollableSelectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        // Enable smooth scrolling
-        element.style.scrollBehavior = 'smooth';
-        element.style.overscrollBehavior = 'contain';
-        
-        // Prevent parent scroll when this element is scrolling
-        let startY = 0;
-        
-        element.addEventListener('touchstart', (e) => {
-          startY = e.touches[0].clientY;
-        }, { passive: true });
-
-        element.addEventListener('touchmove', (e) => {
-          const currentY = e.touches[0].clientY;
-          const scrollTop = element.scrollTop;
-          const scrollHeight = element.scrollHeight;
-          const clientHeight = element.clientHeight;
-          const deltaY = currentY - startY;
-          
-          // Only prevent default if we're at scroll boundaries
-          if (scrollHeight > clientHeight) {
-            // At top and trying to scroll up
-            if (scrollTop <= 0 && deltaY > 0) {
-              e.preventDefault();
-            }
-            // At bottom and trying to scroll down
-            else if (scrollTop + clientHeight >= scrollHeight && deltaY < 0) {
-              e.preventDefault();
-            }
-          } else {
-            // If content doesn't scroll, prevent all movement
-            e.preventDefault();
-          }
-        }, { passive: false });
-      });
-    });
+    // This method is now handled by EnhancedTouchNavigation
+    // Keeping for backward compatibility but delegating to touch navigation
+    if (this.touchNavigation) {
+      this.touchNavigation.setupScrollIndicators();
+    }
   }
 
   sanitizeInput(input) {
@@ -1241,8 +1223,7 @@ class MobileBIOS {
   }
 
   getUptime() {
-    const start = Date.now();
-    const uptime = Date.now() - start;
+    const uptime = Date.now() - this.startTime;
     const hours = Math.floor(uptime / (1000 * 60 * 60));
     const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
@@ -1965,7 +1946,8 @@ class MobileBIOS {
     const originalShowDetailView = this.showDetailView.bind(this);
 
     this.showDetailView = function(action) {
-      const detailContent = document.getElementById('detailContent');
+      const detailContent = this.performanceOptimizer.cacheElement('#detailContent');
+      if (!detailContent) return;
 
       // Show loading shimmer
       detailContent.innerHTML = `
@@ -1988,12 +1970,14 @@ class MobileBIOS {
       }
 
       // Show detail view immediately with loading
-      const detailView = document.getElementById('detailView');
-      const detailTitle = document.getElementById('detailTitle');
+      const detailView = this.performanceOptimizer.cacheElement('#detailView');
+      const detailTitle = this.performanceOptimizer.cacheElement('#detailTitle');
 
-      detailTitle.textContent = this.getActionTitle(action);
-      detailView.style.display = 'flex';
-      detailView.classList.add('slide-in');
+      if (detailTitle) detailTitle.textContent = this.getActionTitle(action);
+      if (detailView) {
+        detailView.style.display = 'flex';
+        detailView.classList.add('slide-in');
+      }
       this.isDetailViewOpen = true;
 
       // Load actual content after short delay
@@ -2001,6 +1985,52 @@ class MobileBIOS {
         originalShowDetailView(action);
       }, 300);
     };
+  }
+
+  // Initialize enhanced touch navigation
+  initializeTouchNavigation() {
+    const container = this.performanceOptimizer.cacheElement('.bios-container');
+    if (container && !this.touchNavigation) {
+      this.touchNavigation = new EnhancedTouchNavigation(container);
+      this.touchNavigation.setupSwipeNavigation();
+    }
+  }
+
+  // Optimized clock update with caching
+  updateClock() {
+    const timeElement = this.performanceOptimizer.cacheElement('#currentTime');
+    if (timeElement) {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      // Only update if time has changed
+      if (timeElement.textContent !== timeString) {
+        timeElement.textContent = timeString;
+      }
+    }
+  }
+
+  // Optimized battery update with caching
+  updateBattery() {
+    const batteryElement = this.performanceOptimizer.cacheElement('#batteryLevel');
+    if (batteryElement && 'getBattery' in navigator) {
+      navigator.getBattery().then(battery => {
+        const level = Math.round(battery.level * 100);
+        const levelString = `${level}%`;
+        
+        // Only update if level has changed
+        if (batteryElement.textContent !== levelString) {
+          batteryElement.textContent = levelString;
+        }
+      }).catch(() => {
+        if (batteryElement.textContent !== '100%') {
+          batteryElement.textContent = '100%';
+        }
+      });
+    }
   }
 }
 
@@ -2013,5 +2043,23 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('beforeunload', () => {
   if (window.mobileBIOS && typeof window.mobileBIOS.cleanup === 'function') {
     window.mobileBIOS.cleanup();
+  }
+});
+
+// Handle visibility change for performance optimization
+document.addEventListener('visibilitychange', () => {
+  if (window.mobileBIOS) {
+    if (document.hidden) {
+      // Pause non-essential operations when page is hidden
+      if (window.mobileBIOS.clockInterval) {
+        clearInterval(window.mobileBIOS.clockInterval);
+        window.mobileBIOS.clockInterval = null;
+      }
+    } else {
+      // Resume operations when page becomes visible
+      if (!window.mobileBIOS.clockInterval) {
+        window.mobileBIOS.clockInterval = setInterval(() => window.mobileBIOS.updateClock(), 1000);
+      }
+    }
   }
 });
