@@ -144,14 +144,63 @@ class MobileBIOS {
         this.showDetailView('settings');
         break;
       case 'desktop':
-        // Redirect to desktop version with force parameter
-        window.location.href = './index.html?desktop=true';
-        break;
       case 'desktop-link':
-        // Same as desktop nav
-        window.location.href = './index.html?desktop=true';
+        this.showDesktopConfirmModal();
         break;
     }
+  }
+
+  showDesktopConfirmModal() {
+    const modal = document.createElement('div');
+    modal.className = 'desktop-confirm-modal';
+    modal.innerHTML = `
+      <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div class="modal-content" style="background: linear-gradient(135deg, #1E1E1E 0%, #2A2A2A 100%); border-radius: 12px; padding: 24px; max-width: 320px; width: 100%; border: 1px solid #03DAC6; box-shadow: 0 8px 32px rgba(3, 218, 198, 0.3);">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 48px; margin-bottom: 12px;">⚠️</div>
+            <h3 style="color: #03DAC6; margin-bottom: 8px; font-size: 18px;">Versão Desktop</h3>
+            <p style="color: #c9d1d9; font-size: 14px; line-height: 1.5;">
+              A versão desktop ainda não foi otimizada para smartphones. É recomendada apenas para tablets e dispositivos maiores.
+            </p>
+          </div>
+          
+          <div style="display: flex; gap: 12px;">
+            <button class="modal-cancel" style="flex: 1; background: #424242; color: white; border: none; padding: 12px 16px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s;">
+              Ficar no Mobile
+            </button>
+            <button class="modal-confirm" style="flex: 1; background: linear-gradient(135deg, #03DAC6, #018786); color: black; border: none; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+              Prosseguir
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Add event listeners
+    modal.querySelector('.modal-cancel').addEventListener('click', () => {
+      modal.remove();
+    });
+
+    modal.querySelector('.modal-confirm').addEventListener('click', () => {
+      window.location.href = './index.html?desktop=true';
+    });
+
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        modal.remove();
+      }
+    });
+
+    // Add animation
+    requestAnimationFrame(() => {
+      modal.style.opacity = '0';
+      modal.style.transition = 'opacity 0.3s ease';
+      requestAnimationFrame(() => {
+        modal.style.opacity = '1';
+      });
+    });
   }
 
   showDetailView(action) {
@@ -257,9 +306,12 @@ class MobileBIOS {
       this.currentWidget = null;
     }
     
-    // Remove any remaining tooltips efficiently
+    // Remove any remaining tooltips and modals
     const tooltips = document.querySelectorAll('.contribution-tooltip');
     tooltips.forEach(tooltip => tooltip.remove());
+    
+    const modals = document.querySelectorAll('.desktop-confirm-modal');
+    modals.forEach(modal => modal.remove());
   }
 
   setupScrollableContainers() {
