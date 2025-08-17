@@ -712,6 +712,25 @@ class MobileBIOS {
                 <div>⭐ 50+ stars</div>
                 <div>🔥 Active</div>
               </div>
+              
+              <!-- Period Selector -->
+              <div style="margin-top: 16px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                <button class="period-btn" data-period="rolling" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 16px; font-size: 11px; cursor: pointer; transition: all 0.2s; font-weight: 500;">
+                  📅 Últimos 365 dias
+                </button>
+                <button class="period-btn" data-period="2025" style="background: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 16px; font-size: 11px; cursor: pointer; transition: all 0.2s; font-weight: 500;">
+                  2025
+                </button>
+                <button class="period-btn" data-period="2024" style="background: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 16px; font-size: 11px; cursor: pointer; transition: all 0.2s; font-weight: 500;">
+                  2024
+                </button>
+                <button class="period-btn" data-period="2023" style="background: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 16px; font-size: 11px; cursor: pointer; transition: all 0.2s; font-weight: 500;">
+                  2023
+                </button>
+                <button class="period-btn" data-period="2022" style="background: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 16px; font-size: 11px; cursor: pointer; transition: all 0.2s; font-weight: 500;">
+                  2022
+                </button>
+              </div>
             </div>
 
             <!-- Enhanced Stats Cards -->
@@ -756,14 +775,7 @@ class MobileBIOS {
                     </span>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px;">
-                    <select id="mobile-period-selector" onchange="window.mobileBIOS.changeMobilePeriod(this.value)" 
-                            style="background: #21262d; border: 1px solid #30363d; color: #e6edf3; padding: 6px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; touch-action: manipulation;">
-                      <option value="rolling">📅 Last 365 days</option>
-                      <option value="2025">📊 2025</option>
-                      <option value="2024">📊 2024</option>
-                      <option value="2023">📊 2023</option>
-                      <option value="2022">📊 2022</option>
-                    </select>
+                    <span id="current-period-info" style="color: #c9d1d9; font-size: 12px;">Últimos 365 dias</span>
                     <button onclick="document.getElementById('mobile-contrib-widget').classList.toggle('expanded')" 
                             style="background: #238636; border: none; color: white; padding: 6px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; touch-action: manipulation;">
                       📈
@@ -1416,21 +1428,11 @@ class MobileBIOS {
   // Função para alterar período do mobile contribution widget
   async changeMobilePeriod(period) {
     try {
-      // Atualizar informação do período
-      const periodInfo = document.getElementById('period-info');
-      if (periodInfo) {
-        const periodTexts = {
-          'rolling': 'Last 365 days',
-          '2025': 'Activity in 2025',
-          '2024': 'Activity in 2024', 
-          '2023': 'Activity in 2023',
-          '2022': 'Activity in 2022'
-        };
-        periodInfo.textContent = periodTexts[period] || `Activity in ${period}`;
+      // Simular clique no botão correspondente
+      const periodButton = document.querySelector(`[data-period="${period}"]`);
+      if (periodButton) {
+        periodButton.click();
       }
-
-      // Reinicializar widget com novo período
-      await this.initContributionWidget(period);
       
       console.log('Mobile period changed to:', period);
     } catch (error) {
@@ -1441,6 +1443,7 @@ class MobileBIOS {
   setupPeriodSelector() {
     const periodButtons = document.querySelectorAll('.period-btn');
     const periodInfo = document.getElementById('period-info');
+    const currentPeriodInfo = document.getElementById('current-period-info');
     
     periodButtons.forEach(button => {
       button.addEventListener('click', async (e) => {
@@ -1449,25 +1452,32 @@ class MobileBIOS {
         // Update button states
         periodButtons.forEach(btn => {
           btn.style.background = 'transparent';
-          btn.style.color = '#c9d1d9';
+          btn.style.color = 'rgba(255,255,255,0.8)';
+          btn.style.borderColor = 'rgba(255,255,255,0.3)';
           btn.classList.remove('active');
         });
         
-        e.target.style.background = '#238636';
+        e.target.style.background = 'rgba(255,255,255,0.2)';
         e.target.style.color = 'white';
+        e.target.style.borderColor = 'rgba(255,255,255,0.5)';
         e.target.classList.add('active');
         
         // Update period info text
         const periodTexts = {
-          'rolling': 'Atividade dos últimos 365 dias',
+          'rolling': 'Últimos 365 dias',
           '2025': 'Atividade em 2025',
           '2024': 'Atividade em 2024',
           '2023': 'Atividade em 2023',
           '2022': 'Atividade em 2022'
         };
         
+        const periodText = periodTexts[selectedPeriod] || `Atividade em ${selectedPeriod}`;
+        
         if (periodInfo) {
-          periodInfo.textContent = periodTexts[selectedPeriod] || `Atividade em ${selectedPeriod}`;
+          periodInfo.textContent = periodText;
+        }
+        if (currentPeriodInfo) {
+          currentPeriodInfo.textContent = periodText;
         }
         
         // Reload widget with new period

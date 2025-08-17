@@ -476,6 +476,11 @@ body {
   .menu-item .label {
     font-size: 12px;
   }
+  
+  .period-btn {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
 }
 
 /* Safe area adjustments for different device orientations */
@@ -909,6 +914,31 @@ body {
 .desktop-confirm-modal .modal-cancel:active,
 .desktop-confirm-modal .modal-confirm:active {
   transform: translateY(0) scale(0.98);
+}
+
+/* ===== GITHUB PERIOD SELECTOR ===== */
+.period-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.period-btn:hover {
+  background: rgba(255,255,255,0.15) !important;
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.5) !important;
+}
+
+.period-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.period-btn.active {
+  background: rgba(255,255,255,0.2) !important;
+  color: white !important;
+  border-color: rgba(255,255,255,0.5) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 /* Performance optimizations for animations */
