@@ -649,9 +649,9 @@ class MobileBIOS {
 
       case 'github':
         return `
-          <div class="github-section" style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-radius: 12px; overflow: hidden; height: 100%; display: flex; flex-direction: column;">
+          <div class="github-section scrollable" style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-radius: 12px; overflow-y: auto; -webkit-overflow-scrolling: touch; height: 100%;">
             <!-- Header Section -->
-            <div style="background: linear-gradient(135deg, #238636 0%, #2ea043 100%); padding: 20px; text-align: center; position: relative; overflow: hidden; flex-shrink: 0;">
+            <div style="background: linear-gradient(135deg, #238636 0%, #2ea043 100%); padding: 20px; text-align: center; position: relative; overflow: hidden; flex-shrink: 0; position: sticky; top: 0; z-index: 10;">
               <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
               <div style="color: white; font-size: 18px; font-weight: 600; margin-bottom: 4px;">🚀 GitHub Dashboard</div>
               <div style="color: rgba(255,255,255,0.8); font-size: 12px;">@felipemacedo1 • Computer Science Student & Full-Cycle Developer</div>
@@ -663,8 +663,8 @@ class MobileBIOS {
             </div>
 
             <!-- Enhanced Stats Cards -->
-            <div class="github-content-scroll" style="flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; background: #0d1117;">
-              <div class="github-stats-grid horizontal-scroll" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+            <div style="padding: 16px; background: #0d1117;">
+              <div class="github-stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
                 <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d; position: relative; overflow: hidden;">
                   <div style="position: absolute; top: -20px; right: -20px; width: 40px; height: 40px; background: radial-gradient(circle, #238636, transparent); opacity: 0.3; border-radius: 50%;"></div>
                   <div style="color: #7c3aed; font-size: 24px; font-weight: 700; margin-bottom: 4px;" id="commits-count">1,247</div>
@@ -705,7 +705,7 @@ class MobileBIOS {
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px;">
                     <select id="mobile-period-selector" onchange="window.mobileBIOS.changeMobilePeriod(this.value)" 
-                            style="background: #21262d; border: 1px solid #30363d; color: #e6edf3; padding: 6px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s;">
+                            style="background: #21262d; border: 1px solid #30363d; color: #e6edf3; padding: 6px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; touch-action: manipulation;">
                       <option value="rolling">📅 Last 365 days</option>
                       <option value="2025">📊 2025</option>
                       <option value="2024">📊 2024</option>
@@ -713,7 +713,7 @@ class MobileBIOS {
                       <option value="2022">📊 2022</option>
                     </select>
                     <button onclick="document.getElementById('mobile-contrib-widget').classList.toggle('expanded')" 
-                            style="background: #238636; border: none; color: white; padding: 6px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s;">
+                            style="background: #238636; border: none; color: white; padding: 6px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; touch-action: manipulation;">
                       📈
                     </button>
                   </div>
@@ -1814,18 +1814,25 @@ class MobileBIOS {
 
   optimizeGitHubScroll() {
     // Specific optimization for GitHub section scrolling
-    const githubContent = document.querySelector('.github-content-scroll');
-    if (githubContent) {
-      // Ensure proper native scroll behavior
-      githubContent.style.overflowY = 'auto';
-      githubContent.style.webkitOverflowScrolling = 'touch';
-      githubContent.style.overscrollBehaviorY = 'contain';
-      githubContent.style.scrollBehavior = 'smooth';
-      githubContent.style.touchAction = 'pan-y';
-      githubContent.style.isolation = 'isolate';
+    const githubSection = document.querySelector('.github-section');
+    if (githubSection) {
+      // Ensure proper native scroll behavior on main container
+      githubSection.style.overflowY = 'auto';
+      githubSection.style.webkitOverflowScrolling = 'touch';
+      githubSection.style.overscrollBehaviorY = 'contain';
+      githubSection.style.scrollBehavior = 'smooth';
+      githubSection.style.touchAction = 'pan-y';
+      githubSection.style.isolation = 'isolate';
       
       // Remove any interference with native scrolling
-      githubContent.style.pointerEvents = 'auto';
+      githubSection.style.pointerEvents = 'auto';
+    }
+
+    // Remove scroll from nested containers to prevent conflicts
+    const githubContent = document.querySelector('.github-content-scroll');
+    if (githubContent) {
+      githubContent.style.overflow = 'visible';
+      githubContent.style.height = 'auto';
     }
 
     // Optimize contribution widget container
@@ -1834,6 +1841,12 @@ class MobileBIOS {
       contribWidget.style.overflow = 'hidden';
       contribWidget.style.touchAction = 'none'; // Widget doesn't need scrolling
     }
+
+    // Ensure interactive elements work properly
+    const interactiveElements = document.querySelectorAll('#mobile-period-selector, .github-section button, .github-section a');
+    interactiveElements.forEach(element => {
+      element.style.touchAction = 'manipulation';
+    });
   }
 
   addPullToRefresh() {

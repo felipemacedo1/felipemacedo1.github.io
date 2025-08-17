@@ -527,14 +527,6 @@ body {
 /* ===== IMPROVED GITHUB SECTION SCROLLING ===== */
 .github-section {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-}
-
-.github-content-scroll {
-  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -546,9 +538,15 @@ body {
   transform: translateZ(0);
   /* Enhanced touch scrolling */
   touch-action: pan-y;
-  scroll-snap-type: y proximity;
   /* Prevent interference with touch navigation */
   pointer-events: auto;
+}
+
+.github-content-scroll {
+  /* Remove conflicting scroll container */
+  overflow: visible;
+  height: auto;
+  flex: none;
 }
 
 /* Touch scroll indicators */
@@ -570,21 +568,14 @@ body {
 }
 
 .github-contrib-container {
-  overflow: hidden;
+  overflow: visible;
   max-height: none;
   position: relative;
 }
 
 .github-stats-grid {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  overscroll-behavior-x: contain;
-}
-
-.github-stats-grid::-webkit-scrollbar {
-  display: none;
+  overflow: visible;
+  /* Remove horizontal scroll conflicts */
 }
 
 .github-repos-list {
@@ -665,7 +656,7 @@ body {
 }
 
 /* ===== ENHANCED GITHUB SCROLL OPTIMIZATION ===== */
-.github-content-scroll {
+.github-section.scrollable {
   /* Enhanced scroll performance */
   will-change: scroll-position;
   transform: translateZ(0); /* Force hardware acceleration */
@@ -745,22 +736,22 @@ body {
   to { transform: rotate(360deg); }
 }
 
-.github-content-scroll::-webkit-scrollbar {
+.github-section::-webkit-scrollbar {
   width: 4px;
 }
 
-.github-content-scroll::-webkit-scrollbar-track {
+.github-section::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 2px;
 }
 
-.github-content-scroll::-webkit-scrollbar-thumb {
+.github-section::-webkit-scrollbar-thumb {
   background: rgba(3, 218, 198, 0.6);
   border-radius: 2px;
   transition: background 0.2s ease;
 }
 
-.github-content-scroll::-webkit-scrollbar-thumb:hover {
+.github-section::-webkit-scrollbar-thumb:hover {
   background: rgba(3, 218, 198, 0.8);
 }
 
