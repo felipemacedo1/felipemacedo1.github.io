@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "generated_at": "2025-08-19T06:28:33Z",
+    "generated_at": "2025-08-20T06:28:28Z",
     "target_year": 2025,
     "target_user": "felipemacedo1",
     "date_range": {
       "start": "2025-01-01",
       "end": "2025-12-31"
     },
-    "workflow_run": "17061464545"
+    "workflow_run": "17090433295"
   },
   "daily_metrics": {
     "2025-01-01": 2,
