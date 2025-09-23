@@ -41,7 +41,7 @@ export class BasicCommands {
     };
   }
 
-  showEnhancedHelp() {
+  async showEnhancedHelp() {
     // Track help usage and show appropriate version
     this.discoveryCommands.markAsDiscovered('help');
     
@@ -50,13 +50,15 @@ export class BasicCommands {
     
     if (discovered < BasicCommands.NEW_USER_THRESHOLD) {
       // Show basic help for new users
-      this.terminal.addToOutput(CONTENT.helpBasic, 'system');
+      const helpBasicText = await contentService.getText('helpBasic', 'desktop');
+      this.terminal.addToOutput(helpBasicText, 'system');
       this.terminal.addToOutput(`
 <span class="info">🎯 Primeira vez aqui?</span> Digite <span class="cmd">start</span> para um tour guiado!
 <span class="warning">📚 Help completo:</span> <span class="cmd">help --all</span> para ver TODOS os comandos`, 'system');
     } else {
       // Show full help for experienced users
-      this.terminal.addToOutput(CONTENT.help, 'system');
+      const helpText = await contentService.getText('help', 'desktop');
+      this.terminal.addToOutput(helpText, 'system');
     }
   }
 

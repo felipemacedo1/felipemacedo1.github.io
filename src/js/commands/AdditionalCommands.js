@@ -329,7 +329,10 @@ ${project.demo ? `<a href="${project.demo}" target="_blank" class="project-link"
     return statusColors[status] || '#FFC107';
   }
 
-  downloadResume() {
+  async downloadResume() {
+    // Use ContentService for contact data
+    const contact = await contentService.getContact('desktop');
+    const meta = await contentService.getMeta('desktop');
     const resumeText = `
 <span class="ascii-art align-center">
     ╔══════════════════════════════════════╗
@@ -340,9 +343,9 @@ ${project.demo ? `<a href="${project.demo}" target="_blank" class="project-link"
 <span class="highlight">📥 Currículo disponível para download:</span>
 
 <div class="download-item">
-<span class="download-icon">📄</span> <span class="download-name">Currículo - Felipe Macedo.pdf</span>
+<span class="download-icon">📄</span> <span class="download-name">Currículo - ${meta.name}.pdf</span>
 <span class="download-description">Versão completa e atualizada (Janeiro 2025)</span>
-<a href="mailto:contato.dev.macedo@gmail.com?subject=Solicitação de Currículo&body=Olá Felipe, gostaria de receber seu currículo atualizado." class="project-link">
+<a href="mailto:${contact.email}?subject=Solicitação de Currículo&body=Olá ${meta.name.split(' ')[0]}, gostaria de receber seu currículo atualizado." class="project-link">
 📧 Solicitar por email
 </a>
 </div>
@@ -350,7 +353,7 @@ ${project.demo ? `<a href="${project.demo}" target="_blank" class="project-link"
 <div class="download-item">
 <span class="download-icon">💼</span> <span class="download-name">LinkedIn Profile</span>
 <span class="download-description">Perfil profissional completo e atualizado</span>
-<a href="https://linkedin.com/in/felipemacedo1" target="_blank" class="project-link">
+<a href="${contact.linkedin}" target="_blank" class="project-link">
 🔗 Acessar LinkedIn
 </a>
 </div>
@@ -411,7 +414,7 @@ ${project.demo ? `<a href="${project.demo}" target="_blank" class="project-link"
 
   sudoCommand() {
     const sudoText = `
-<span class="error">sudo: felipemacedo1 is not in the sudoers file. This incident will be reported.</span>
+<span class="error">sudo: user is not in the sudoers file. This incident will be reported.</span>
 
 <span class="warning">🚨 Acesso negado!</span>
 

@@ -9,7 +9,7 @@ import { AutoComplete } from './features/AutoComplete.js';
 import { Onboarding } from './features/onboarding.js';
 import { UXEnhancementSystem } from './features/UXEnhancementSystem.js';
 import { Storage } from './utils/Storage.js';
-import { CONTENT } from './data/content.js';
+import contentService from './services/ContentService.js';
 
 export class TerminalPortfolio {
   constructor() {
@@ -231,7 +231,9 @@ export class TerminalPortfolio {
         return;
       }
 
-      const repo = "felipemacedo1/felipemacedo1.github.io";
+      const meta = await contentService.getMeta('desktop');
+      const githubUsername = meta.github ? meta.github.split('/').pop() : 'user';
+      const repo = `${githubUsername}/${githubUsername}.github.io`;
       const apiUrl = `https://api.github.com/repos/${repo}/releases/latest`;
 
       const response = await fetch(apiUrl, {
@@ -272,95 +274,67 @@ export class TerminalPortfolio {
     this.terminal.addToOutput(menuText, 'system');
   }
 
-  showProjects() {
-    const projectsText = `
+  async showProjects() {
+    // Use ContentService for projects data
+    const projects = await contentService.getProjects('desktop');
+    const featuredProjects = await contentService.getFeaturedProjects('desktop');
+    const projectsText = this.formatProjectsText(projects, featuredProjects);
+    this.terminal.addToOutput(projectsText, 'system');
+  }
+
+  formatProjectsText(projects, featuredProjects) {
+    if (!projects || projects.length === 0) {
+      return '<span class="error">No projects data available</span>';
+    }
+
+    let projectsText = `
 <span class="ascii-art align-center">
     ╔═══════════════════════════════╗
              🚀 MEUS PROJETOS       
     ╚═══════════════════════════════╝
 </span>
 
-<div class="project-item">
-<span class="project-title">📱 Terminal Portfolio</span>
-<span class="project-description">
-Portfólio interativo dual com interface terminal para desktop e BIOS Android para mobile.
-• <strong>Frontend:</strong> HTML5, CSS3, JavaScript ES6+ vanilla
-• <strong>Features:</strong> 25+ comandos, 6 temas, auto-complete, detecção de dispositivo
-• <strong>Mobile:</strong> Interface BIOS Android com Material Design
-• <strong>Arquitetura:</strong> Modular, responsiva, zero dependências
-</span>
-<span class="project-link">🔗 <a href="https://felipemacedo1.github.io" target="_blank" rel="noopener noreferrer" class="project-link">felipemacedo1.github.io</a></span>
-</div>
+`;
 
-<div class="project-item">
-<span class="project-title">⚡ PriceFeed API</span>
-<span class="project-description">
-API de monitoramento de preços de criptomoedas integrando CoinGecko e Binance.
-• <strong>Backend:</strong> Go com PostgreSQL e Redis para cache
-• <strong>Features:</strong> WebSocket real-time, alertas de preço, rate limiting
-• <strong>Integração:</strong> CoinGecko API, Binance API
-• <strong>Performance:</strong> Cache inteligente, baixa latência
-</span>
-<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-pricefeed" target="_blank" rel="noopener noreferrer" class="project-link">github.com/felipemacedo1/go-pricefeed</a></span>
-</div>
+    // Show featured projects first
+    if (featuredProjects && featuredProjects.length > 0) {
+      featuredProjects.forEach(project => {
+        projectsText += this.formatProjectItem(project);
+      });
+    } else {
+      // Show first 4 projects if no featured projects
+      projects.slice(0, 4).forEach(project => {
+        projectsText += this.formatProjectItem(project);
+      });
+    }
 
-<div class="project-item">
-<span class="project-title">🤖 GPT Service Go</span>
-<span class="project-description">
-Microserviço em Go integrando com OpenAI GPT para geração de respostas e automações.
-• <strong>Backend:</strong> Go com Docker containerização
-• <strong>Integração:</strong> OpenAI API, gestão de tokens
-• <strong>Features:</strong> Rate limiting, error handling, logs estruturados
-• <strong>Deploy:</strong> Docker ready, configurações via env
-</span>
-<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/go-service-gpt" target="_blank" rel="noopener noreferrer" class="project-link">github.com/felipemacedo1/go-service-gpt</a></span>
-</div>
-
-<div class="project-item">
-<span class="project-title">₿ Spring MCD Wallet</span>
-<span class="project-description">
-Wallet Bitcoin modular com SPV (Simple Payment Verification) construída em Java.
-• <strong>Backend:</strong> Java com Spring Framework e bitcoinj
-• <strong>Features:</strong> SPV client, gerenciamento de chaves, transações
-• <strong>Segurança:</strong> Criptografia, backup de seeds, validação
-• <strong>Arquitetura:</strong> Modular, extensível, testável
-</span>
-<span class="project-link">🔗 <a href="https://github.com/felipemacedo1/spring-mcd-wallet" target="_blank" rel="noopener noreferrer" class="project-link">github.com/felipemacedo1/spring-mcd-wallet</a></span>
-</div>
-
-<span class="highlight">🏢 Projetos Organizacionais (Growthfolio):</span>
-
-<div class="project-item">
-<span class="project-title">📝 Spring Blog Platform</span>
-<span class="project-description">
-Backend completo para plataforma de blog full-stack com Spring Boot.
-</span>
-<span class="project-link">🔗 <a href="https://github.com/growthfolio/spring-blog-platform" target="_blank" rel="noopener noreferrer" class="project-link">github.com/growthfolio/spring-blog-platform</a></span>
-</div>
-
-<div class="project-item">
-<span class="project-title">⚛️ React Blog Platform</span>
-<span class="project-description">
-Frontend em React/TypeScript para blog, demonstrando integração com APIs REST.
-</span>
-<span class="project-link">🔗 <a href="https://github.com/growthfolio/react-blog-plataform" target="_blank" rel="noopener noreferrer" class="project-link">github.com/growthfolio/react-blog-plataform</a></span>
-</div>
-
-<div class="project-item">
-<span class="project-title">🔄 AMQP Transactions Microservices</span>
-<span class="project-description">
-Pipeline de microserviços com RabbitMQ para processamento transacional.
-</span>
-<span class="project-link">🔗 <a href="https://github.com/growthfolio/amqp-transactions-ms" target="_blank" rel="noopener noreferrer" class="project-link">github.com/growthfolio/amqp-transactions-ms</a></span>
-</div>
-
+    projectsText += `
 <span class="success">📋 Características dos Projetos:</span>
 <span class="output-text">✅ Código open source disponível no GitHub</span>
 <span class="output-text">🧪 Foco em boas práticas e clean code</span>
 <span class="output-text">🔄 Projetos em desenvolvimento ativo</span>
 <span class="output-text">📊 Demonstração de diferentes tecnologias</span>
 <span class="output-text">🔒 Aplicação de padrões de segurança</span>`;
-    this.terminal.addToOutput(projectsText, 'system');
+
+    return projectsText;
+  }
+
+  formatProjectItem(project) {
+    const techStack = project.technologies ? project.technologies.join(', ') : 'N/A';
+    
+    return `
+<div class="project-item">
+<span class="project-title">${project.icon || '🚀'} ${project.name}</span>
+<span class="project-description">
+${project.description}
+• <strong>Tech Stack:</strong> ${techStack}
+${project.features ? project.features.map(feature => `• <strong>${feature.category}:</strong> ${feature.description}`).join('\n') : ''}
+</span>
+${project.github ? `<span class="project-link">🔗 <a href="${project.github}" target="_blank" rel="noopener noreferrer" class="project-link">${project.github.replace('https://', '')}</a></span>` : ''}
+${project.demo ? `<span class="project-link">🌐 <a href="${project.demo}" target="_blank" rel="noopener noreferrer" class="project-link">${project.demo.replace('https://', '')}</a></span>` : ''}
+</div>
+
+`;
   }
 
   // Expose methods for global access

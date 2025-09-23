@@ -500,13 +500,40 @@ class MobileBIOS {
 
 
       case 'github':
+        // Use ContentService for GitHub data
+        const meta = await contentService.getMeta('mobile');
+        const githubUsername = meta.github ? meta.github.split('/').pop() : 'user';
+        
+        // Update GitHub links after content is rendered
+        setTimeout(async () => {
+          const contact = await contentService.getContact('mobile');
+          const githubBase = contact.github || meta.github || 'https://github.com/user';
+          
+          // Update dynamic links
+          const profileLink = document.getElementById('github-profile-link');
+          const reposLink = document.getElementById('github-repos-link');
+          const starsLink = document.getElementById('github-stars-link');
+          const allReposLink = document.getElementById('github-all-repos-link');
+          const subtitleEl = document.getElementById('github-subtitle');
+          const portfolioRepoEl = document.getElementById('portfolio-repo-name');
+          const recentRepoEl = document.getElementById('recent-repo-name');
+          
+          if (profileLink) profileLink.href = githubBase;
+          if (reposLink) reposLink.href = `${githubBase}?tab=repositories`;
+          if (starsLink) starsLink.href = `${githubBase}?tab=stars`;
+          if (allReposLink) allReposLink.href = `${githubBase}?tab=repositories`;
+          if (subtitleEl) subtitleEl.textContent = `@${githubUsername} • ${meta.title || 'Computer Science Student & Full-Cycle Developer'}`;
+          if (portfolioRepoEl) portfolioRepoEl.textContent = `📱 ${githubUsername}.github.io`;
+          if (recentRepoEl) recentRepoEl.textContent = `${githubUsername}.github.io`;
+        }, 100);
+        
         return `
           <div class="github-section scrollable" style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-radius: 12px; overflow-y: auto; -webkit-overflow-scrolling: touch; height: 100%;">
             <!-- Header Section -->
             <div style="background: linear-gradient(135deg, #238636 0%, #2ea043 100%); padding: 20px; text-align: center; position: relative; overflow: hidden; flex-shrink: 0; position: sticky; top: 0; z-index: 10;">
               <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
               <div style="color: white; font-size: 18px; font-weight: 600; margin-bottom: 4px;">🚀 GitHub Dashboard</div>
-              <div style="color: rgba(255,255,255,0.8); font-size: 12px;">@felipemacedo1 • Computer Science Student & Full-Cycle Developer</div>
+              <div style="color: rgba(255,255,255,0.8); font-size: 12px;" id="github-subtitle">Loading...</div>
               <div style="margin-top: 12px; display: flex; justify-content: center; gap: 16px; font-size: 11px; color: rgba(255,255,255,0.9);">
                 <div>📍 Brazil</div>
                 <div>⭐ 50+ stars</div>
@@ -696,13 +723,13 @@ class MobileBIOS {
               <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
                 <div style="color: #f0f6fc; font-size: 14px; font-weight: 600; margin-bottom: 12px;">🔗 Quick Actions</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                  <a href="https://github.com/felipemacedo1" target="_blank" rel="noopener noreferrer"
+                  <a href="#" target="_blank" rel="noopener noreferrer" id="github-profile-link"
                      style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); color: #f0f6fc; padding: 12px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 11px; border: 1px solid #30363d; transition: all 0.2s;"
                      onmouseover="this.style.background='linear-gradient(135deg, #30363d 0%, #40464d 100%)'; this.style.borderColor='#238636'"
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
                     👤 View Profile
                   </a>
-                  <a href="https://github.com/felipemacedo1?tab=repositories" target="_blank" rel="noopener noreferrer"
+                  <a href="#" target="_blank" rel="noopener noreferrer" id="github-repos-link"
                      style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); color: #f0f6fc; padding: 12px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 11px; border: 1px solid #30363d; transition: all 0.2s;"
                      onmouseover="this.style.background='linear-gradient(135deg, #30363d 0%, #40464d 100%)'; this.style.borderColor='#1f6feb'"
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
@@ -714,7 +741,7 @@ class MobileBIOS {
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
                     🏢 Organization
                   </a>
-                  <a href="https://github.com/felipemacedo1?tab=stars" target="_blank" rel="noopener noreferrer"
+                  <a href="#" target="_blank" rel="noopener noreferrer" id="github-stars-link"
                      style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); color: #f0f6fc; padding: 12px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 11px; border: 1px solid #30363d; transition: all 0.2s;"
                      onmouseover="this.style.background='linear-gradient(135deg, #30363d 0%, #40464d 100%)'; this.style.borderColor='#f85149'"
                      onmouseout="this.style.background='linear-gradient(135deg, #21262d 0%, #30363d 100%)'; this.style.borderColor='#30363d'">
@@ -730,7 +757,7 @@ class MobileBIOS {
                   <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 14px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #30363d; position: relative; overflow: hidden;">
                     <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: radial-gradient(circle, rgba(3, 218, 198, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
                     <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 8px;">
-                      <div style="color: #03DAC6; font-weight: 600; font-size: 13px;">📱 felipemacedo1.github.io</div>
+                      <div style="color: #03DAC6; font-weight: 600; font-size: 13px;" id="portfolio-repo-name">📱 Loading...</div>
                       <div style="color: #7d8590; font-size: 10px;">⭐ 12</div>
                     </div>
                     <div style="font-size: 11px; color: #c9d1d9; margin-bottom: 8px; line-height: 1.4;">Portfolio terminal interativo com detecção de dispositivo e interface BIOS mobile</div>
@@ -768,7 +795,7 @@ class MobileBIOS {
                 </div>
                 
                 <div style="text-align: center; margin-top: 12px;">
-                  <a href="https://github.com/felipemacedo1?tab=repositories" target="_blank" rel="noopener noreferrer"
+                  <a href="#" target="_blank" rel="noopener noreferrer" id="github-all-repos-link"
                      style="color: #1f6feb; text-decoration: none; font-size: 11px; font-weight: 500;">
                     Ver todos os 32 repositórios →
                   </a>
@@ -784,7 +811,7 @@ class MobileBIOS {
                       <div style="width: 6px; height: 6px; background: white; border-radius: 50%;"></div>
                     </div>
                     <div style="flex: 1;">
-                      <div style="color: #f0f6fc; font-size: 11px;">Pushed 3 commits to <span style="color: #1f6feb;">felipemacedo1.github.io</span></div>
+                      <div style="color: #f0f6fc; font-size: 11px;">Pushed 3 commits to <span style="color: #1f6feb;" id="recent-repo-name">portfolio</span></div>
                       <div style="color: #7d8590; font-size: 10px;">2 hours ago</div>
                     </div>
                   </div>
@@ -989,8 +1016,11 @@ class MobileBIOS {
           existingWidget.remove();
         }
         
+        const meta = await contentService.getMeta('mobile');
+        const githubUsername = meta.github ? meta.github.split('/').pop() : 'user';
+        
         const widget = new UnifiedContributionWidget(container, {
-          author: 'felipemacedo1',
+          author: githubUsername,
           period: period,
           size: 'compact',
           theme: 'github',
@@ -1264,9 +1294,11 @@ class MobileBIOS {
       // Determine filename based on period
       let filename;
       if (period === 'rolling') {
-        filename = `activity-rolling-365d-felipemacedo1.json`;
+        const meta = await contentService.getMeta('mobile');
+        const githubUsername = meta.github ? meta.github.split('/').pop() : 'user';
+        filename = `activity-rolling-365d-${githubUsername}.json`;
       } else {
-        filename = `activity-${period}-felipemacedo1.json`;
+        filename = `activity-${period}-${githubUsername}.json`;
       }
       
       // Try different base paths for analytics data
@@ -1469,7 +1501,9 @@ class MobileBIOS {
   async getProjectVersion() {
     try {
       // Try to fetch the latest release from GitHub API
-      const response = await fetch('https://api.github.com/repos/felipemacedo1/felipemacedo1.github.io/releases/latest', {
+      const meta = await contentService.getMeta('mobile');
+      const githubUsername = meta.github ? meta.github.split('/').pop() : 'user';
+      const response = await fetch(`https://api.github.com/repos/${githubUsername}/${githubUsername}.github.io/releases/latest`, {
         headers: {
           'Accept': 'application/vnd.github.v3+json'
         },

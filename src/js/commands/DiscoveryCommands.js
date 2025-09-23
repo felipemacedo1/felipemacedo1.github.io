@@ -10,13 +10,13 @@ export class DiscoveryCommands {
 
   getCommands() {
     return {
-      'help basic': () => this.terminal.addToOutput(CONTENT.helpBasic, 'system'),
-      'help info': () => this.terminal.addToOutput(CONTENT.helpInfo, 'system'),
-      'help github': () => this.terminal.addToOutput(CONTENT.helpGithub, 'system'),
-      'help fun': () => this.terminal.addToOutput(CONTENT.helpFun, 'system'),
-      'help system': () => this.terminal.addToOutput(CONTENT.helpSystem, 'system'),
-      'help themes': () => this.terminal.addToOutput(CONTENT.helpThemes, 'system'),
-      'help --all': () => this.terminal.addToOutput(CONTENT.helpAll, 'system'),
+      'help basic': () => this.showHelpBasic(),
+      'help info': () => this.showHelpInfo(),
+      'help github': () => this.showHelpGithub(),
+      'help fun': () => this.showHelpFun(),
+      'help system': () => this.showHelpSystem(),
+      'help themes': () => this.showHelpThemes(),
+      'help --all': () => this.showHelpAll(),
       demo: () => this.runDemo(),
       start: () => this.runGuidedTour(),
       showcase: () => this.runShowcase(),
