@@ -1,0 +1,341 @@
+{
+  "meta": {
+    "name": "Felipe Macedo",
+    "title": "Desenvolvedor Full Cycle",
+    "specialization": "Foco em Back-end e Arquitetura",
+    "location": {
+      "full": "São Paulo, Brasil",
+      "city": "São Paulo",
+      "country": "Brasil",
+      "timezone": "UTC-3 (Brasília)"
+    },
+    "status": "Empregado + Estudante",
+    "languages": ["Português (nativo)", "Inglês (intermediário)"]
+  },
+  "contact": {
+    "email": "contato.dev.macedo@gmail.com",
+    "linkedin": "https://linkedin.com/in/felipemacedo1",
+    "github": "https://github.com/felipemacedo1",
+    "whatsapp": {
+      "number": "+55 (11) 99753-4105",
+      "link": "https://wa.me/5511997534105",
+      "source": ["desktop"]
+    },
+    "organization": "https://github.com/orgs/growthfolio"
+  },
+  "education": {
+    "formal": [
+      {
+        "icon": "🎯",
+        "degree": "Bacharelado em Ciência da Computação",
+        "institution": "Faculdades Metropolitanas Unidas (FMU)",
+        "period": "2025 - 2029",
+        "status": "Em andamento",
+        "description": "Foco em: Algoritmos, Estruturas de Dados, Engenharia de Software, Banco de Dados, Redes, Inteligência Artificial"
+      },
+      {
+        "icon": "🎯",
+        "degree": "Tecnólogo em Gestão da TI",
+        "institution": "Universidade Anhembi Morumbi",
+        "period": "Agosto 2022 – Dezembro 2024",
+        "status": "Concluído",
+        "description": "Gestão de projetos, ITIL, governança de TI, análise de sistemas, planejamento estratégico de tecnologia"
+      }
+    ],
+    "bootcamps": [
+      {
+        "icon": "☁️",
+        "name": "AWS re/Start",
+        "period": "2025",
+        "description": "Cloud computing, AWS services, DevOps fundamentals"
+      },
+      {
+        "icon": "💻",
+        "name": "Generation Brasil - Java Full Stack",
+        "period": "2023",
+        "description": "480h de desenvolvimento intensivo - Java, Spring Boot, React"
+      }
+    ]
+  },
+  "experience": [
+    {
+      "icon": "🏢",
+      "title": "Analista de Sistemas",
+      "company": "Sansuy S.A.",
+      "period": "Março 2025 - presente",
+      "type": "full-time",
+      "description": [
+        "Manutenção e modernização de sistemas legados em Java e JavaFX",
+        "Implementação de APIs REST com Spring Boot",
+        "Uso de SQL Server, SVN, e padrões como Facade em ERP corporativo",
+        "Desenvolvimento de soluções corporativas escaláveis"
+      ],
+      "technologies": ["Java", "JavaFX", "Spring Boot", "SQL Server", "SVN"]
+    },
+    {
+      "icon": "🚀",
+      "title": "Backend Developer",
+      "company": "Asapcard",
+      "period": "Fevereiro 2024 - Agosto 2024",
+      "type": "full-time",
+      "description": [
+        "Desenvolvimento de microserviços financeiros em Go",
+        "Implementação de sistemas de pagamento e soluções financeiras",
+        "APIs focadas em performance e segurança",
+        "Trabalho com tecnologias de ponta no setor fintech"
+      ],
+      "technologies": ["Go", "Microservices", "APIs", "Fintech", "Security"]
+    },
+    {
+      "icon": "🎓",
+      "title": "Trainee Developer / Alumni",
+      "company": "Generation Brasil",
+      "period": "2023",
+      "type": "bootcamp",
+      "description": [
+        "Bootcamp intensivo de 3 meses em desenvolvimento Full Stack",
+        "Projetos práticos com Java, Spring Boot, React",
+        "Metodologias ágeis e trabalho em equipe",
+        "Projeto final: E-commerce completo com microserviços"
+      ],
+      "technologies": ["Java", "Spring Boot", "React", "Agile", "Team Work"]
+    }
+  ],
+  "skills": {
+    "backend": [
+      { "name": "Java", "level": 90, "category": "language" },
+      { "name": "Go", "level": 80, "category": "language" },
+      { "name": "Spring Boot", "level": 85, "category": "framework" },
+      { "name": "PostgreSQL", "level": 80, "category": "database" },
+      { "name": "SQL Server", "level": 80, "category": "database" },
+      { "name": "MongoDB", "level": 80, "category": "database" },
+      { "name": "Redis", "level": 75, "category": "database" },
+      { "name": "Microservices", "level": 85, "category": "architecture" }
+    ],
+    "frontend": [
+      { "name": "JavaScript", "level": 80, "category": "language" },
+      { "name": "HTML5", "level": 85, "category": "markup" },
+      { "name": "CSS3", "level": 85, "category": "styling" },
+      { "name": "React", "level": 80, "category": "framework" },
+      { "name": "TypeScript", "level": 80, "category": "language" }
+    ],
+    "devops": [
+      { "name": "Docker", "level": 80, "category": "containerization" },
+      { "name": "AWS", "level": 70, "category": "cloud" },
+      { "name": "GitHub Actions", "level": 80, "category": "ci-cd" },
+      { "name": "Linux", "level": 85, "category": "os" }
+    ]
+  },
+  "certifications": {
+    "cloud": {
+      "icon": "☁️",
+      "title": "Cloud & Infrastructure",
+      "items": [
+        {
+          "icon": "🔵",
+          "name": "Microsoft Azure AZ-900",
+          "issuer": "Microsoft",
+          "date": "2023",
+          "description": "Azure Fundamentals - Cloud concepts, services, security"
+        },
+        {
+          "icon": "🌐",
+          "name": "AWS re/Start Graduate",
+          "issuer": "Amazon Web Services",
+          "date": "2025",
+          "description": "Cloud fundamentals, Linux, Python scripting"
+        }
+      ]
+    },
+    "blockchain": {
+      "icon": "🔗",
+      "title": "Blockchain & Web3",
+      "items": [
+        {
+          "icon": "⛓️",
+          "name": "Blockchain e Solidity",
+          "issuer": "DIO",
+          "date": "2024",
+          "description": "Smart contracts, DeFi, Web3 development"
+        }
+      ]
+    },
+    "development": {
+      "icon": "💻",
+      "title": "Desenvolvimento",
+      "items": [
+        {
+          "icon": "☕",
+          "name": "Java Full Stack Developer",
+          "issuer": "Generation Brasil",
+          "date": "2023",
+          "description": "480h - Java, Spring Boot, React, metodologias ágeis"
+        },
+        {
+          "icon": "💻",
+          "name": "Desenvolvedor Web Full Stack Junior",
+          "issuer": "Generation Brasil",
+          "date": "2024",
+          "description": "Spring Boot, React, TypeScript, Spring Security, APIs REST"
+        },
+        {
+          "icon": "🌐",
+          "name": "Introdução à Programação com foco em Front-End",
+          "issuer": "Proz + Meta + AWS",
+          "date": "2023",
+          "description": "300h - Git, HTML, CSS, JavaScript, desenvolvimento web"
+        }
+      ]
+    },
+    "management": {
+      "icon": "📊",
+      "title": "Gerenciamento & Liderança",
+      "items": [
+        {
+          "icon": "📋",
+          "name": "Fundamentos do Gerenciamento de Projetos",
+          "issuer": "Google",
+          "date": "2024",
+          "description": "Planejamento, execução e monitoramento de projetos"
+        }
+      ]
+    },
+    "inProgress": [
+      "AWS Solutions Architect Associate (planejado para 2025)",
+      "Oracle Java SE 17 Developer (em preparação)"
+    ]
+  },
+  "projects": [
+    {
+      "icon": "📱",
+      "name": "Terminal Portfolio",
+      "category": "web",
+      "technologies": ["JavaScript", "CSS3", "HTML5"],
+      "description": "Interactive terminal-style portfolio website",
+      "status": "Live",
+      "github": "https://github.com/felipemacedo1/felipemacedo1.github.io",
+      "demo": "https://felipemacedo1.github.io",
+      "stars": 12,
+      "featured": true
+    },
+    {
+      "icon": "🚀",
+      "name": "PriceFeed API",
+      "category": "backend",
+      "technologies": ["Go", "PostgreSQL", "Redis"],
+      "description": "Cryptocurrency price monitoring API",
+      "status": "Active development",
+      "github": "https://github.com/felipemacedo1/go-pricefeed",
+      "demo": null,
+      "stars": 8,
+      "featured": true
+    },
+    {
+      "icon": "🤖",
+      "name": "GPT Service Go",
+      "category": "backend",
+      "technologies": ["Go", "OpenAI API", "Docker"],
+      "description": "Microservice integrating with OpenAI GPT",
+      "status": "Active development",
+      "github": null,
+      "demo": null,
+      "featured": true
+    },
+    {
+      "icon": "💰",
+      "name": "Spring MCD Wallet",
+      "category": "blockchain",
+      "technologies": ["Java", "Spring Framework", "bitcoinj"],
+      "description": "Modular Bitcoin wallet with SPV",
+      "status": "In progress",
+      "github": "https://github.com/felipemacedo1/spring-mcd-wallet",
+      "demo": null,
+      "stars": 5,
+      "featured": true
+    }
+  ],
+  "availability": {
+    "status": "DISPONIBILIDADE LIMITADA",
+    "work_week": "Indisponível trabalho/estudo durante a semana",
+    "freelance": "Freelances apenas finais de semana",
+    "open_source": "Contribuições open source",
+    "networking": "Networking e mentoria técnica",
+    "schedule": {
+      "weekdays": "18h - 22h",
+      "weekends": "9h - 17h (projetos especiais)"
+    },
+    "response_time": "Resposta em até 24h",
+    "best_contact_times": "Finais de semana disponível"
+  },
+  "commands": {
+    "source": ["desktop"],
+    "basic": [
+      { "command": "help", "description": "Lista todos os comandos disponíveis" },
+      { "command": "clear", "description": "Limpa a tela do terminal" },
+      { "command": "about", "alias": ["1"], "description": "Informações pessoais e apresentação" },
+      { "command": "projects", "alias": ["2"], "description": "Portfólio completo de projetos" },
+      { "command": "contact", "alias": ["3"], "description": "Informações de contato" },
+      { "command": "whoami", "description": "Resumo técnico profissional" }
+    ],
+    "professional": [
+      { "command": "skills", "description": "Skills técnicas com barras de progresso animadas" },
+      { "command": "experience", "description": "Timeline de experiência profissional detalhada" },
+      { "command": "education", "description": "Formação acadêmica completa" },
+      { "command": "certifications", "description": "Certificados e cursos conquistados" },
+      { "command": "resume", "description": "Download do currículo (PDF)" },
+      { "command": "status", "description": "Status atual e disponibilidade" }
+    ],
+    "system": [
+      { "command": "date", "description": "Data e hora atual formatada" },
+      { "command": "pwd", "description": "Diretório atual simulado" },
+      { "command": "ls", "description": "Lista arquivos do portfólio" },
+      { "command": "ls -la", "description": "Lista detalhada com permissões simuladas" },
+      { "command": "sudo", "description": "Tentativa de privilégios (easter egg)" }
+    ],
+    "external": [
+      { "command": "github", "description": "Perfil GitHub principal" },
+      { "command": "linkedin", "description": "Perfil LinkedIn profissional" },
+      { "command": "contributions", "description": "Gráfico de contribuições GitHub interativo" },
+      { "command": "growthfolio", "description": "Sobre a organização GrowthFolio" }
+    ],
+    "easter_eggs": [
+      { "command": "coffee", "alias": ["tdah"], "description": "Diagnóstico TDAH/cafeína" },
+      { "command": "h4x0r-mode", "description": "Ativar modo hacker" },
+      { "command": "matrix", "description": "Entrar na Matrix" },
+      { "command": "konami", "description": "Código Konami clássico" },
+      { "command": "glitch", "description": "Efeito glitch visual" },
+      { "command": "ascii", "description": "Logo ASCII artístico" },
+      { "command": "eastereggs", "description": "Lista completa de easter eggs" }
+    ]
+  },
+  "themes": {
+    "source": ["desktop"],
+    "available": [
+      { "name": "dark", "description": "Tema escuro (padrão)", "default": true },
+      { "name": "light", "description": "Tema claro" },
+      { "name": "matrix", "description": "Tema Matrix verde" },
+      { "name": "hacker", "description": "Tema hacker vermelho" },
+      { "name": "retro", "description": "Tema retro laranja" },
+      { "name": "contrast", "description": "Alto contraste (acessibilidade)" }
+    ]
+  },
+  "analytics": {
+    "github": {
+      "username": "felipemacedo1",
+      "total_repos": 32,
+      "languages": {
+        "JavaScript": 42.3,
+        "Go": 28.7,
+        "Java": 18.2,
+        "CSS": 5.8,
+        "Python": 3.2,
+        "Shell": 1.8
+      },
+      "data_source": "analytics/*.json files"
+    }
+  },
+  "texts": {
+    "about": "Desenvolvedor Full Stack com especialização em Java, Go e arquitetura de microserviços. Apaixonado por tecnologia e sempre buscando soluções inovadoras para problemas complexos.\n\n🎓 Formação:\n• Cursando Bacharelado em Ciência da Computação (FMU - 2025 a 2029)\n• Concluído Gestão da TI (Anhembi Morumbi - Agosto 2022 – Dezembro 2024)\n• Bootcamps: AWS re/Start (2025), Full Stack Java (Generation Brasil)\n• Certificações: Azure AZ-900, Blockchain com Solidity\n\n💼 Experiência:\n• Analista de Sistemas - Sansuy S.A. (Java, JavaFX, Spring Boot)\n• Backend Developer - Asapcard (Go, microserviços financeiros)\n• Trainee Developer - Generation Brasil (Bootcamp Full Stack)\n\n🛠️ Tecnologias:\n• Java (8+), Spring Boot, Spring Security, JPA/Hibernate, JavaFX\n• Go (Gorilla Mux, GORM), APIs REST, microserviços\n• PostgreSQL, SQL Server, MongoDB, Redis, Docker, GitHub Actions\n• HTML, CSS, TypeScript, React (para UIs completas)\n\n🚀 Destaques:\n• Sistemas escaláveis com foco em performance e manutenção\n• Arquiteturas baseadas em microsserviços e eventos\n• Autenticação OAuth2, JWT, WebSockets e CI/CD com GitHub Actions\n\n💡 Curiosidade: Sou apaixonado por sistemas financeiros, criptografia, automação e terminal retrô. E sim, café move código ☕.",
+    "whoami": "👋 Felipe Macedo - Desenvolvedor Full Cycle\n\n🎓 Formação:\n• Gestão da TI (Anhembi Morumbi)\n• Cursando Ciência da Computação (FMU)\n• Alumni Generation Brasil\n\n💼 Experiência com Java, Go, Spring Boot e arquitetura de APIs\n⚙️ Foco em soluções escaláveis, microserviços e automação backend\n\n📊 Status: Em constante evolução — aprendendo, construindo e compartilhando!\n💬 Stack preferido: Go pra performance. Java pra manter vivo.\n\n💡 Dica: Digite contributions para ver minha atividade no GitHub"
+  }
+}

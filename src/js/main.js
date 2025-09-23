@@ -31,6 +31,7 @@ import { UXEnhancementSystem } from './features/UXEnhancementSystem.js';
 // Core Terminal System
 import { TerminalPortfolio } from './TerminalPortfolio.js';
 import { Analytics } from './features/analytics.js';
+import contentService from './services/ContentService.js';
 
 // Utility Imports
 import { DeviceDetector } from './utils/DeviceDetector.js';
@@ -109,6 +110,11 @@ class EnterpriseApp {
   }
 
   async initializeCoreModules() {
+    // Content Service - Load centralized data
+    window.contentService = contentService;
+    await contentService.load(); // Pre-load content.json
+    this.modules.set('content', contentService);
+    
     // State Management
     window.stateManager = new StateManager({
       app: {

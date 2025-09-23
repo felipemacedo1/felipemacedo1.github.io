@@ -1,4 +1,5 @@
-// Mobile BIOS Interface
+// Mobile BIOS Interface - Refactored to use ContentService
+import contentService from './services/ContentService.js';
 import { EnhancedTouchNavigation } from './features/EnhancedTouchNavigation.js';
 import { PerformanceOptimizer } from './utils/PerformanceOptimizer.js';
 
@@ -409,7 +410,7 @@ class MobileBIOS {
 
   getActionTitle(action) {
     const titles = {
-      about: ' About Me',
+      about: '👨💻 About Me',
       status: '📊 System Status',
       whoami: '🆔 Identity',
       skills: '🛠️ Technical Skills',
@@ -424,7 +425,7 @@ class MobileBIOS {
     return titles[action] || 'Information';
   }
 
-  getActionContent(action) {
+  async getActionContent(action) {
     // Load version dynamically for status menu
     if (action === 'status') {
       // Update version after content is rendered
@@ -445,259 +446,58 @@ class MobileBIOS {
 
     switch (action) {
       case 'about':
+        // Use ContentService for about text
+        const aboutText = await contentService.getText('about', 'mobile');
         return `
           <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
-            <h3 style="color: #03DAC6; margin-bottom: 16px;">Felipe Macedo</h3>
-            <p style="margin-bottom: 16px;">
-              Desenvolvedor Full Stack com especialização em Java, Go e arquitetura de microserviços. 
-              Apaixonado por tecnologia e sempre buscando soluções inovadoras para problemas complexos.
-            </p>
-            <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; border-left: 4px solid #03DAC6;">
-              <h4 style="color: #BB86FC; margin-bottom: 8px;">Especialidades:</h4>
-              <ul style="margin-left: 16px;">
-                <li>Backend Development (Java, Go)</li>
-                <li>Spring Boot & Microservices</li>
-                <li>Database Design (PostgreSQL, Redis)</li>
-                <li>API REST & GraphQL</li>
-                <li>DevOps & Cloud Architecture</li>
-              </ul>
-            </div>
+            <pre style="white-space: pre-wrap; font-family: 'Roboto', sans-serif; color: #c9d1d9;">${aboutText}</pre>
           </div>
         `;
 
       case 'status':
-        return `
-          <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.5;">
-            <!-- Header Status -->
-            <div style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); padding: 16px; border-radius: 12px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden;">
-              <div style="position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-              <div style="color: white; font-size: 18px; font-weight: 600; margin-bottom: 4px;">🟢 SYSTEM ONLINE</div>
-              <div style="color: rgba(255,255,255,0.9); font-size: 12px;">All systems operational • Last checked: ${new Date().toLocaleTimeString()}</div>
-            </div>
-
-            <!-- Quick Stats Grid -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-              <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 14px; border-radius: 8px; text-align: center; border: 1px solid #30363d;">
-                <div style="color: #03DAC6; font-size: 20px; font-weight: 700; margin-bottom: 4px;">${this.getStatusUptime()}</div>
-                <div style="color: #c9d1d9; font-size: 10px;">Uptime</div>
-              </div>
-              
-              <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 14px; border-radius: 8px; text-align: center; border: 1px solid #30363d;">
-                <div style="color: #1f6feb; font-size: 20px; font-weight: 700; margin-bottom: 4px;">${this.getActiveProjects()}</div>
-                <div style="color: #c9d1d9; font-size: 10px;">Active Projects</div>
-              </div>
-              
-              <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 14px; border-radius: 8px; text-align: center; border: 1px solid #30363d;">
-                <div style="color: #238636; font-size: 20px; font-weight: 700; margin-bottom: 4px;">${this.getCommitsThisWeek()}</div>
-                <div style="color: #c9d1d9; font-size: 10px;">Commits This Week</div>
-              </div>
-              
-              <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 14px; border-radius: 8px; text-align: center; border: 1px solid #30363d;">
-                <div style="color: #f85149; font-size: 20px; font-weight: 700; margin-bottom: 4px;">${this.getCurrentStreak()}</div>
-                <div style="color: #c9d1d9; font-size: 10px;">Current Streak</div>
-              </div>
-            </div>
-
-            <!-- System Information -->
-            <div style="background: #1E1E1E; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-              <h4 style="color: #f0f6fc; margin-bottom: 12px; font-size: 14px;">💻 System Information</h4>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
-                <div style="color: #7d8590;">Location:</div><div style="color: #c9d1d9;">São Paulo, Brazil</div>
-                <div style="color: #7d8590;">Timezone:</div><div style="color: #c9d1d9;">UTC-3 (BRT)</div>
-                <div style="color: #7d8590;">Environment:</div><div style="color: #c9d1d9;">Production</div>
-                <div style="color: #7d8590;">Version:</div><div style="color: #7d8590;" id="project-version">🔄 Loading...</div>
-                <div style="color: #7d8590;">Last Deploy:</div><div style="color: #c9d1d9;">${this.getLastDeploy()}</div>
-                <div style="color: #7d8590;">Build:</div><div style="color: #c9d1d9;">${this.getBuildNumber()}</div>
-              </div>
-            </div>
-
-            <!-- Current Status -->
-            <div style="background: #1E1E1E; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-              <h4 style="color: #f0f6fc; margin-bottom: 12px; font-size: 14px;">📊 Current Status</h4>
-              
-              <!-- Availability -->
-              <div style="margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                  <span style="color: #c9d1d9; font-size: 11px;">Availability for Projects</span>
-                  <span style="color: #4CAF50; font-size: 11px; font-weight: 600;">Available</span>
-                </div>
-                <div style="background: #21262d; border-radius: 4px; overflow: hidden; height: 6px;">
-                  <div style="background: linear-gradient(90deg, #4CAF50, #2E7D32); width: 85%; height: 100%; transition: width 0.3s;"></div>
-                </div>
-                <div style="color: #7d8590; font-size: 10px; margin-top: 2px;">Weekend freelances and side projects</div>
-              </div>
-
-              <!-- Workload -->
-              <div style="margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                  <span style="color: #c9d1d9; font-size: 11px;">Current Workload</span>
-                  <span style="color: #FF9800; font-size: 11px; font-weight: 600;">Moderate</span>
-                </div>
-                <div style="background: #21262d; border-radius: 4px; overflow: hidden; height: 6px;">
-                  <div style="background: linear-gradient(90deg, #FF9800, #F57C00); width: 70%; height: 100%; transition: width 0.3s;"></div>
-                </div>
-                <div style="color: #7d8590; font-size: 10px; margin-top: 2px;">Full-time job + personal projects</div>
-              </div>
-
-              <!-- Learning -->
-              <div style="margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                  <span style="color: #c9d1d9; font-size: 11px;">Learning Progress</span>
-                  <span style="color: #1f6feb; font-size: 11px; font-weight: 600;">Active</span>
-                </div>
-                <div style="background: #21262d; border-radius: 4px; overflow: hidden; height: 6px;">
-                  <div style="background: linear-gradient(90deg, #1f6feb, #0969da); width: 90%; height: 100%; transition: width 0.3s;"></div>
-                </div>
-                <div style="color: #7d8590; font-size: 10px; margin-top: 2px;">Currently studying AWS Architecture</div>
-              </div>
-            </div>
-
-            <!-- Active Projects -->
-            <div style="background: #1E1E1E; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-              <h4 style="color: #f0f6fc; margin-bottom: 12px; font-size: 14px;">🚀 Active Projects</h4>
-              
-              <div style="margin-bottom: 8px; padding: 8px; background: #0d1117; border-radius: 6px; border-left: 3px solid #4CAF50;">
-                <div style="color: #4CAF50; font-size: 11px; font-weight: 600;">Terminal Portfolio</div>
-                <div style="color: #7d8590; font-size: 10px;">Interactive terminal-style portfolio website</div>
-                <div style="color: #c9d1d9; font-size: 10px; margin-top: 2px;">Status: <span style="color: #4CAF50;">Active Development</span></div>
-              </div>
-              
-              <div style="margin-bottom: 8px; padding: 8px; background: #0d1117; border-radius: 6px; border-left: 3px solid #1f6feb;">
-                <div style="color: #1f6feb; font-size: 11px; font-weight: 600;">Microservices Architecture</div>
-                <div style="color: #7d8590; font-size: 10px;">Enterprise-level microservices design</div>
-                <div style="color: #c9d1d9; font-size: 10px; margin-top: 2px;">Status: <span style="color: #1f6feb;">Planning Phase</span></div>
-              </div>
-              
-              <div style="margin-bottom: 8px; padding: 8px; background: #0d1117; border-radius: 6px; border-left: 3px solid #f85149;">
-                <div style="color: #f85149; font-size: 11px; font-weight: 600;">AWS Certification Study</div>
-                <div style="color: #7d8590; font-size: 10px;">Solutions Architect Associate preparation</div>
-                <div style="color: #c9d1d9; font-size: 10px; margin-top: 2px;">Status: <span style="color: #f85149;">In Progress</span></div>
-              </div>
-            </div>
-
-            <!-- Contact Availability -->
-            <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); border: 1px solid #30363d; border-radius: 8px; padding: 16px;">
-              <h4 style="color: #f0f6fc; margin-bottom: 12px; font-size: 14px;">📱 Contact & Availability</h4>
-              
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <div style="text-align: center;">
-                  <div style="color: #4CAF50; font-size: 24px; margin-bottom: 4px;">🟢</div>
-                  <div style="color: #c9d1d9; font-size: 11px; font-weight: 600;">Quick Response</div>
-                  <div style="color: #7d8590; font-size: 10px;">Usually within 2-4 hours</div>
-                </div>
-                
-                <div style="text-align: center;">
-                  <div style="color: #1f6feb; font-size: 24px; margin-bottom: 4px;">💼</div>
-                  <div style="color: #c9d1d9; font-size: 11px; font-weight: 600;">Open to Freelance</div>
-                  <div style="color: #7d8590; font-size: 10px;">Weekend projects welcome</div>
-                </div>
-              </div>
-              
-              <div style="text-align: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #30363d;">
-                <div style="color: #7d8590; font-size: 10px;">
-                  Best times to reach: Weekdays 9-18h (UTC-3) | Weekends flexible
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
+        // Use ContentService for availability and meta data
+        const availability = await contentService.getAvailability('mobile');
+        const meta = await contentService.getMeta('mobile');
+        return this.formatMobileStatus(availability, meta);
 
       case 'whoami':
+        // Use ContentService for whoami text
+        const whoamiText = await contentService.getText('whoami', 'mobile');
         return `
           <div class="scrollable" style="font-family: 'Roboto Mono', monospace; font-size: 14px;">
-            <div style="background: #000; color: #00ff00; padding: 16px; border-radius: 4px; margin-bottom: 16px;">
-              <div>felipe-macedo@portfolio:~$ whoami</div>
-              <div>Felipe Macedo</div>
-              <div></div>
-              <div>felipe-macedo@portfolio:~$ id</div>
-              <div>uid=1000(felipe-macedo) gid=1000(developer)</div>
-              <div>groups=1000(developer),27(sudo),999(docker)</div>
-              <div></div>
-              <div>felipe-macedo@portfolio:~$ uname -a</div>
-              <div>Developer 5.15.0-felipe #1 SMP Full-Stack Developer</div>
-            </div>
-            
-            <div style="color: #03DAC6;">
-              <h4>Identity Matrix:</h4>
-              <div style="font-size: 12px; margin-top: 8px;">
-                Name: Felipe Macedo<br>
-                Role: Full Stack Developer<br>
-                Specialization: Backend Architecture<br>
-                Primary Languages: Java, Go<br>
-                Location: Brazil<br>
-                Experience: 3+ years<br>
-                Status: Employed + Weekend freelances
-              </div>
-            </div>
+            <pre style="white-space: pre-wrap; font-family: 'Roboto Mono', monospace; color: #00ff00;">${whoamiText}</pre>
           </div>
         `;
 
       case 'skills':
+        // Use ContentService for skills data
+        const skills = await contentService.getSkills('mobile');
         return `
           <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
             <div style="margin-bottom: 20px;">
               <h4 style="color: #03DAC6; margin-bottom: 12px;">🚀 Backend Technologies</h4>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                ${this.createSkillBadges(['Java', 'Go', 'Spring Boot', 'Microservices', 'PostgreSQL', 'Redis'])}
+                ${this.createSkillBadgesFromData(skills.backend)}
               </div>
             </div>
             
             <div style="margin-bottom: 20px;">
               <h4 style="color: #BB86FC; margin-bottom: 12px;">🌐 Frontend & Web</h4>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                ${this.createSkillBadges(['JavaScript', 'TypeScript', 'HTML5', 'CSS3', 'React'])}
+                ${this.createSkillBadgesFromData(skills.frontend)}
               </div>
             </div>
             
             <div style="margin-bottom: 20px;">
               <h4 style="color: #FF9800; margin-bottom: 12px;">🛠️ DevOps & Tools</h4>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                ${this.createSkillBadges(['Docker', 'AWS', 'Git', 'Linux'])}
+                ${this.createSkillBadgesFromData(skills.devops)}
               </div>
             </div>
           </div>
         `;
 
-      case 'projects':
-        return `
-          <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
-            <div style="margin-bottom: 16px; padding: 16px; background: #1E1E1E; border-radius: 8px; border-left: 4px solid #4CAF50;">
-              <h4 style="color: #4CAF50; margin-bottom: 8px;">🌟 Featured Projects</h4>
-              <div style="font-size: 12px; color: #ccc;">
-                Explore my latest work and contributions
-              </div>
-            </div>
-            
-            <div id="mobile-contrib-widget" style="margin-bottom: 16px;"></div>
-            
-            ${this.createProjectCards([
-              {
-                name: 'Terminal Portfolio',
-                tech: 'JavaScript, CSS3, HTML5',
-                desc: 'Interactive terminal-style portfolio website',
-                status: 'Live'
-              },
-              {
-                name: 'PriceFeed API',
-                tech: 'Go, PostgreSQL, Redis',
-                desc: 'Cryptocurrency price monitoring API',
-                status: 'Active development'
-              },
-              {
-                name: 'GPT Service Go',
-                tech: 'Go, OpenAI API, Docker',
-                desc: 'Microservice integrating with OpenAI GPT',
-                status: 'Active development'
-              },
-              {
-                name: 'Spring MCD Wallet',
-                tech: 'Java, Spring Framework, bitcoinj',
-                desc: 'Modular Bitcoin wallet with SPV',
-                status: 'In progress'
-              }
-            ])}
-          </div>
-        `;
+
 
       case 'github':
         return `
@@ -1015,6 +815,9 @@ class MobileBIOS {
         `;
 
       case 'contact':
+        // Use ContentService for contact data (mobile version without WhatsApp)
+        const contact = await contentService.getContact('mobile');
+        const meta2 = await contentService.getMeta('mobile');
         return `
           <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
             <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
@@ -1022,22 +825,22 @@ class MobileBIOS {
               
               <div style="margin-bottom: 12px;">
                 <div style="color: #BB86FC; font-size: 14px; margin-bottom: 4px;">📧 Email</div>
-                <div style="font-size: 12px; font-family: monospace;">contato.dev.macedo@gmail.com</div>
+                <div style="font-size: 12px; font-family: monospace;">${contact.email}</div>
               </div>
               
               <div style="margin-bottom: 12px;">
                 <div style="color: #BB86FC; font-size: 14px; margin-bottom: 4px;">💼 LinkedIn</div>
-                <div style="font-size: 12px; font-family: monospace;">linkedin.com/in/felipemacedo1</div>
+                <div style="font-size: 12px; font-family: monospace;">${contact.linkedin.replace('https://', '')}</div>
               </div>
               
               <div style="margin-bottom: 12px;">
                 <div style="color: #BB86FC; font-size: 14px; margin-bottom: 4px;">💻 GitHub</div>
-                <div style="font-size: 12px; font-family: monospace;">github.com/felipemacedo1</div>
+                <div style="font-size: 12px; font-family: monospace;">${contact.github.replace('https://', '')}</div>
               </div>
               
               <div>
                 <div style="color: #BB86FC; font-size: 14px; margin-bottom: 4px;">🌍 Location</div>
-                <div style="font-size: 12px; font-family: monospace;">Brazil</div>
+                <div style="font-size: 12px; font-family: monospace;">${meta2.location.full}</div>
               </div>
             </div>
             
@@ -1083,170 +886,27 @@ class MobileBIOS {
         `;
 
       case 'experience':
-        return `
-          <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
-            <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-              <h3 style="color: #03DAC6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                💼 Experiência Profissional
-              </h3>
-              <p style="color: #7d8590; font-size: 12px;">Timeline de crescimento professional</p>
-            </div>
+        // Use ContentService for experience data
+        const experience = await contentService.getExperience('mobile');
+        return this.formatMobileExperience(experience);
 
-            <!-- Timeline Item -->
-            <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #4CAF50;">
-              <div style="color: #FF9800; font-size: 11px; font-weight: 600; margin-bottom: 4px;">Março 2025 - presente</div>
-              <h4 style="color: #4CAF50; margin-bottom: 8px; font-size: 14px;">🏢 Analista de Sistemas - Sansuy S.A.</h4>
-              <div style="color: #c9d1d9; font-size: 12px; margin-bottom: 12px;">
-                • Manutenção e modernização de sistemas legados em Java e JavaFX<br>
-                • Implementação de APIs REST com Spring Boot<br>
-                • Uso de SQL Server, SVN, e padrões como Facade em ERP corporativo<br>
-                • Desenvolvimento de soluções corporativas escaláveis
-              </div>
-              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                ${this.createSkillBadges(['Java', 'JavaFX', 'Spring Boot', 'SQL Server', 'SVN'])}
-              </div>
-            </div>
-
-            <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #1f6feb;">
-              <div style="color: #FF9800; font-size: 11px; font-weight: 600; margin-bottom: 4px;">Fevereiro 2024 - Agosto 2024</div>
-              <h4 style="color: #1f6feb; margin-bottom: 8px; font-size: 14px;">🚀 Backend Developer - Asapcard</h4>
-              <div style="color: #c9d1d9; font-size: 12px; margin-bottom: 12px;">
-                • Desenvolvimento de microserviços financeiros em Go<br>
-                • Implementação de sistemas de pagamento e soluções financeiras<br>
-                • APIs focadas em performance e segurança<br>
-                • Trabalho com tecnologias de ponta no setor fintech
-              </div>
-              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                ${this.createSkillBadges(['Go', 'Microservices', 'APIs', 'Fintech', 'Security'])}
-              </div>
-            </div>
-
-            <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #BB86FC;">
-              <div style="color: #FF9800; font-size: 11px; font-weight: 600; margin-bottom: 4px;">2023</div>
-              <h4 style="color: #BB86FC; margin-bottom: 8px; font-size: 14px;">🎓 Trainee Developer / Alumni - Generation Brasil</h4>
-              <div style="color: #c9d1d9; font-size: 12px; margin-bottom: 12px;">
-                • Bootcamp intensivo de 3 meses em desenvolvimento Full Stack<br>
-                • Projetos práticos com Java, Spring Boot, React<br>
-                • Metodologias ágeis e trabalho em equipe<br>
-                • Projeto final: E-commerce completo com microserviços
-              </div>
-              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                ${this.createSkillBadges(['Java', 'Spring Boot', 'React', 'Agile', 'Team Work'])}
-              </div>
-            </div>
-
-            <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
-              <div style="color: #f85149; font-size: 12px; font-weight: 600, margin-bottom: 8px;">📈 Crescimento Contínuo</div>
-              <div style="color: #7d8590; font-size: 11px;">
-                3+ anos de experiência hands-on em desenvolvimento, sempre focado em aprender novas tecnologias e melhorar processos.
-              </div>
-            </div>
-          </div>
-        `;
+      case 'education':
+        // Use ContentService for education data
+        const education = await contentService.getEducation('mobile');
+        return this.formatMobileEducation(education);
 
       case 'certifications':
-        return `
-          <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
-            <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-              <h3 style="color: #03DAC6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                🏆 Certificações & Qualificações
-              </h3>
-              <p style="color: #7d8590; font-size: 12px;">Certificados oficiais e especializações</p>
-            </div>
+        // Use ContentService for certifications data
+        const certifications = await contentService.getCertifications('mobile');
+        return this.formatMobileCertifications(certifications);
 
-            <!-- Cloud & Infrastructure -->
-            <div style="margin-bottom: 20px;">
-              <h4 style="color: #1f6feb; margin-bottom: 12px; font-size: 13px;">☁️ Cloud & Infrastructure</h4>
-              
-              <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #1f6feb;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                  <span style="font-size: 16px;">🔵</span>
-                  <span style="color: #1f6feb; font-weight: 600; font-size: 13px;">Microsoft Azure AZ-900</span>
-                </div>
-                <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">Microsoft | 2023</div>
-                <div style="color: #c9d1d9; font-size: 11px;">Azure Fundamentals - Cloud concepts, services, security</div>
-              </div>
+      case 'projects':
+        // Use ContentService for projects data
+        const projects = await contentService.getProjects('mobile');
+        const featuredProjects = await contentService.getFeaturedProjects('mobile');
+        return this.formatMobileProjects(projects, featuredProjects);
 
-              <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #FF9800;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                  <span style="font-size: 16px;">🌐</span>
-                  <span style="color: #FF9800; font-weight: 600; font-size: 13px;">AWS re/Start Graduate</span>
-                </div>
-                <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">Amazon Web Services | 2025</div>
-                <div style="color: #c9d1d9; font-size: 11px;">Cloud fundamentals, Linux, Python scripting</div>
-              </div>
-            </div>
 
-            <!-- Development -->
-            <div style="margin-bottom: 20px;">
-              <h4 style="color: #4CAF50; margin-bottom: 12px; font-size: 13px;">💻 Desenvolvimento</h4>
-              
-              <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #4CAF50;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                  <span style="font-size: 16px;">☕</span>
-                  <span style="color: #4CAF50; font-weight: 600; font-size: 13px;">Java Full Stack Developer</span>
-                </div>
-                <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">Generation Brasil | 2023</div>
-                <div style="color: #c9d1d9; font-size: 11px;">480h - Java, Spring Boot, React, metodologias ágeis</div>
-              </div>
-
-              <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #BB86FC;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                  <span style="font-size: 16px;">💻</span>
-                  <span style="color: #BB86FC; font-weight: 600; font-size: 13px;">Desenvolvedor Web Full Stack Junior</span>
-                </div>
-                <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">Generation Brasil | 2024</div>
-                <div style="color: #c9d1d9; font-size: 11px;">Spring Boot, React, TypeScript, Spring Security, APIs REST</div>
-              </div>
-
-              <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #03DAC6;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                  <span style="font-size: 16px;">🌐</span>
-                  <span style="color: #03DAC6; font-weight: 600; font-size: 13px;">Introdução à Programação - Front-End</span>
-                </div>
-                <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">Proz + Meta + AWS | 2023</div>
-                <div style="color: #c9d1d9; font-size: 11px;">300h - Git, HTML, CSS, JavaScript, desenvolvimento web</div>
-              </div>
-            </div>
-
-            <!-- Blockchain & Web3 -->
-            <div style="margin-bottom: 20px;">
-              <h4 style="color: #f85149; margin-bottom: 12px; font-size: 13px;">🔗 Blockchain & Web3</h4>
-              
-              <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #f85149;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                  <span style="font-size: 16px;">⛓️</span>
-                  <span style="color: #f85149; font-weight: 600; font-size: 13px;">Blockchain e Solidity</span>
-                </div>
-                <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">DIO | 2024</div>
-                <div style="color: #c9d1d9; font-size: 11px;">Smart contracts, DeFi, Web3 development</div>
-              </div>
-            </div>
-
-            <!-- Management -->
-            <div style="margin-bottom: 20px;">
-              <h4 style="color: #7c3aed; margin-bottom: 12px; font-size: 13px;">📊 Gerenciamento & Liderança</h4>
-              
-              <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #7c3aed;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                  <span style="font-size: 16px;">📋</span>
-                  <span style="color: #7c3aed; font-weight: 600; font-size: 13px;">Fundamentos do Gerenciamento de Projetos</span>
-                </div>
-                <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">Google | 2024</div>
-                <div style="color: #c9d1d9; font-size: 11px;">Planejamento, execução e monitoramento de projetos</div>
-              </div>
-            </div>
-
-            <!-- In Progress -->
-            <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
-              <div style="color: #FF9800; font-size: 12px; font-weight: 600, margin-bottom: 8px;">📈 Crescimento Contínuo</div>
-              <div style="color: #7d8590; font-size: 11px;">
-                • AWS Solutions Architect Associate (planejado para 2025)<br>
-                • Oracle Java SE 17 Developer (em preparação)
-              </div>
-            </div>
-          </div>
-        `;
 
       default:
         return `
@@ -1262,6 +922,13 @@ class MobileBIOS {
   createSkillBadges(skills) {
     return skills.map(skill => 
       `<span style="background: #03DAC6; color: black; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 500;">${skill}</span>`
+    ).join('');
+  }
+
+  createSkillBadgesFromData(skillsData) {
+    if (!skillsData || skillsData.length === 0) return '';
+    return skillsData.map(skill => 
+      `<span style="background: #03DAC6; color: black; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 500;" title="${skill.level}%">${skill.name}</span>`
     ).join('');
   }
 
@@ -2121,6 +1788,315 @@ class MobileBIOS {
         }
       });
     }
+  }
+
+  formatMobileStatus(availability, meta) {
+    return `
+      <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.5;">
+        <!-- Header Status -->
+        <div style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); padding: 16px; border-radius: 12px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="color: white; font-size: 18px; font-weight: 600; margin-bottom: 4px;">🟢 ${availability.status || 'SYSTEM ONLINE'}</div>
+          <div style="color: rgba(255,255,255,0.9); font-size: 12px;">All systems operational • Last checked: ${new Date().toLocaleTimeString()}</div>
+        </div>
+
+        <!-- System Information -->
+        <div style="background: #1E1E1E; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h4 style="color: #f0f6fc; margin-bottom: 12px; font-size: 14px;">💻 System Information</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+            <div style="color: #7d8590;">Location:</div><div style="color: #c9d1d9;">${meta.location?.full || 'São Paulo, Brazil'}</div>
+            <div style="color: #7d8590;">Timezone:</div><div style="color: #c9d1d9;">${meta.location?.timezone || 'UTC-3 (BRT)'}</div>
+            <div style="color: #7d8590;">Status:</div><div style="color: #c9d1d9;">${meta.status || 'Empregado + Estudante'}</div>
+          </div>
+        </div>
+
+        <!-- Current Status -->
+        <div style="background: #1E1E1E; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h4 style="color: #f0f6fc; margin-bottom: 12px; font-size: 14px;">📊 Current Status</h4>
+          
+          <!-- Availability -->
+          <div style="margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="color: #c9d1d9; font-size: 11px;">Availability for Projects</span>
+              <span style="color: #4CAF50; font-size: 11px; font-weight: 600;">Available</span>
+            </div>
+            <div style="background: #21262d; border-radius: 4px; overflow: hidden; height: 6px;">
+              <div style="background: linear-gradient(90deg, #4CAF50, #2E7D32); width: 85%; height: 100%; transition: width 0.3s;"></div>
+            </div>
+            <div style="color: #7d8590; font-size: 10px; margin-top: 2px;">${availability.freelance || 'Weekend freelances and side projects'}</div>
+          </div>
+
+          <!-- Schedule -->
+          <div style="margin-bottom: 12px;">
+            <div style="color: #c9d1d9; font-size: 11px; margin-bottom: 4px;">⏰ Schedule:</div>
+            <div style="color: #7d8590; font-size: 10px;">Weekdays: ${availability.schedule?.weekdays || '18h - 22h'}</div>
+            <div style="color: #7d8590; font-size: 10px;">Weekends: ${availability.schedule?.weekends || '9h - 17h'}</div>
+          </div>
+        </div>
+
+        <!-- Contact Availability -->
+        <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); border: 1px solid #30363d; border-radius: 8px; padding: 16px;">
+          <h4 style="color: #f0f6fc; margin-bottom: 12px; font-size: 14px;">📱 Contact & Availability</h4>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="text-align: center;">
+              <div style="color: #4CAF50; font-size: 24px; margin-bottom: 4px;">🟢</div>
+              <div style="color: #c9d1d9; font-size: 11px; font-weight: 600;">Quick Response</div>
+              <div style="color: #7d8590; font-size: 10px;">${availability.response_time || 'Usually within 24h'}</div>
+            </div>
+            
+            <div style="text-align: center;">
+              <div style="color: #1f6feb; font-size: 24px; margin-bottom: 4px;">💼</div>
+              <div style="color: #c9d1d9; font-size: 11px; font-weight: 600;">Open to Freelance</div>
+              <div style="color: #7d8590; font-size: 10px;">${availability.best_contact_times || 'Weekend projects welcome'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Mobile formatting methods for ContentService data
+  formatMobileExperience(experience) {
+    if (!experience || experience.length === 0) {
+      return '<div class="scrollable"><span class="error">No experience data available</span></div>';
+    }
+
+    let content = `
+      <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
+        <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <h3 style="color: #03DAC6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+            💼 Experiência Profissional
+          </h3>
+          <p style="color: #7d8590; font-size: 12px;">Timeline de crescimento profissional</p>
+        </div>
+    `;
+
+    experience.forEach((exp, index) => {
+      const borderColors = ['#4CAF50', '#1f6feb', '#BB86FC', '#FF9800'];
+      const textColors = ['#4CAF50', '#1f6feb', '#BB86FC', '#FF9800'];
+      const borderColor = borderColors[index % borderColors.length];
+      const textColor = textColors[index % textColors.length];
+      
+      content += `
+        <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ${borderColor};">
+          <div style="color: #FF9800; font-size: 11px; font-weight: 600; margin-bottom: 4px;">${exp.period}</div>
+          <h4 style="color: ${textColor}; margin-bottom: 8px; font-size: 14px;">${exp.icon} ${exp.title} - ${exp.company}</h4>
+          <div style="color: #c9d1d9; font-size: 12px; margin-bottom: 12px;">
+            ${exp.description.map(desc => `• ${desc}`).join('<br>')}
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+            ${this.createSkillBadges(exp.technologies || [])}
+          </div>
+        </div>
+      `;
+    });
+
+    content += `
+        <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
+          <div style="color: #f85149; font-size: 12px; font-weight: 600; margin-bottom: 8px;">📈 Crescimento Contínuo</div>
+          <div style="color: #7d8590; font-size: 11px;">
+            3+ anos de experiência hands-on em desenvolvimento, sempre focado em aprender novas tecnologias e melhorar processos.
+          </div>
+        </div>
+      </div>
+    `;
+
+    return content;
+  }
+
+  formatMobileEducation(education) {
+    if (!education) {
+      return '<div class="scrollable"><span class="error">No education data available</span></div>';
+    }
+
+    let content = `
+      <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
+        <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <h3 style="color: #03DAC6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+            🎓 Formação Acadêmica
+          </h3>
+          <p style="color: #7d8590; font-size: 12px;">Educação formal e especializações</p>
+        </div>
+    `;
+
+    // Format formal education
+    if (education.formal && education.formal.length > 0) {
+      education.formal.forEach((edu, index) => {
+        const borderColors = ['#4CAF50', '#1f6feb', '#BB86FC'];
+        const textColors = ['#4CAF50', '#1f6feb', '#BB86FC'];
+        const borderColor = borderColors[index % borderColors.length];
+        const textColor = textColors[index % textColors.length];
+        
+        content += `
+          <div style="background: #1E1E1E; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ${borderColor};">
+            <h4 style="color: ${textColor}; margin-bottom: 8px; font-size: 14px;">${edu.icon} ${edu.degree}</h4>
+            <div style="color: #FF9800; font-size: 11px; font-weight: 600; margin-bottom: 4px;">${edu.institution}</div>
+            <div style="color: #7d8590; font-size: 11px; margin-bottom: 8px;">${edu.period} (${edu.status})</div>
+            <div style="color: #c9d1d9; font-size: 12px;">${edu.description}</div>
+          </div>
+        `;
+      });
+    }
+
+    // Format bootcamps
+    if (education.bootcamps && education.bootcamps.length > 0) {
+      content += `
+        <div style="margin-bottom: 16px;">
+          <h4 style="color: #FF9800; margin-bottom: 12px; font-size: 13px;">🚀 Bootcamps & Cursos Intensivos</h4>
+      `;
+      
+      education.bootcamps.forEach(bootcamp => {
+        content += `
+          <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #FF9800;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">${bootcamp.icon}</span>
+              <span style="color: #FF9800; font-weight: 600; font-size: 13px;">${bootcamp.name}</span>
+            </div>
+            <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">${bootcamp.period}</div>
+            <div style="color: #c9d1d9; font-size: 11px;">${bootcamp.description}</div>
+          </div>
+        `;
+      });
+      
+      content += `</div>`;
+    }
+
+    content += `
+        <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
+          <div style="color: #4CAF50; font-size: 12px; font-weight: 600; margin-bottom: 8px;">🏆 Status</div>
+          <div style="color: #7d8590; font-size: 11px;">
+            Sempre estudando - aprendizado contínuo é essencial!
+          </div>
+        </div>
+      </div>
+    `;
+
+    return content;
+  }
+
+  formatMobileCertifications(certifications) {
+    if (!certifications) {
+      return '<div class="scrollable"><span class="error">No certifications data available</span></div>';
+    }
+
+    let content = `
+      <div class="scrollable" style="font-family: 'Roboto', sans-serif; line-height: 1.6;">
+        <div style="background: linear-gradient(135deg, #21262d 0%, #30363d 100%); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <h3 style="color: #03DAC6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+            🏆 Certificações & Qualificações
+          </h3>
+          <p style="color: #7d8590; font-size: 12px;">Certificados oficiais e especializações</p>
+        </div>
+    `;
+
+    // Format each category
+    const categoryColors = {
+      'cloud': '#1f6feb',
+      'development': '#4CAF50',
+      'blockchain': '#f85149',
+      'management': '#7c3aed',
+      'education': '#BB86FC'
+    };
+
+    Object.entries(certifications).forEach(([categoryKey, category]) => {
+      if (categoryKey === 'inProgress' || !category.items || category.items.length === 0) return;
+      
+      const categoryColor = categoryColors[categoryKey] || '#03DAC6';
+      
+      content += `
+        <div style="margin-bottom: 20px;">
+          <h4 style="color: ${categoryColor}; margin-bottom: 12px; font-size: 13px;">${category.icon} ${category.title}</h4>
+      `;
+      
+      category.items.forEach(cert => {
+        content += `
+          <div style="background: #1E1E1E; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid ${categoryColor};">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">${cert.icon}</span>
+              <span style="color: ${categoryColor}; font-weight: 600; font-size: 13px;">${cert.name}</span>
+            </div>
+            <div style="color: #FF9800; font-size: 11px; margin-bottom: 4px;">${cert.issuer} | ${cert.date}</div>
+            <div style="color: #c9d1d9; font-size: 11px;">${cert.description}</div>
+          </div>
+        `;
+      });
+      
+      content += `</div>`;
+    });
+
+    // Add in progress section
+    if (certifications.inProgress && certifications.inProgress.length > 0) {
+      content += `
+        <div style="background: linear-gradient(135deg, #0d1117 0%, #21262d 100%); padding: 16px; border-radius: 8px; border: 1px solid #30363d;">
+          <div style="color: #FF9800; font-size: 12px; font-weight: 600; margin-bottom: 8px;">📈 Crescimento Contínuo</div>
+          <div style="color: #7d8590; font-size: 11px;">
+            ${certifications.inProgress.map(cert => `• ${cert}`).join('<br>')}
+          </div>
+        </div>
+      `;
+    }
+
+    content += `</div>`;
+    return content;
+  }
+
+  formatMobileProjects(projects, featuredProjects) {
+    if (!projects || projects.length === 0) {
+      return '<div class="scrollable"><span class="error">No projects data available</span></div>';
+    }
+
+    let content = `
+      <div class="scrollable" style="font-family: 'Roboto', sans-serif;">
+        <div style="margin-bottom: 16px; padding: 16px; background: #1E1E1E; border-radius: 8px; border-left: 4px solid #4CAF50;">
+          <h4 style="color: #4CAF50; margin-bottom: 8px;">🌟 Featured Projects</h4>
+          <div style="font-size: 12px; color: #ccc;">
+            Explore my latest work and contributions
+          </div>
+        </div>
+        
+        <div id="mobile-contrib-widget" style="margin-bottom: 16px;"></div>
+    `;
+
+    // Show featured projects first
+    if (featuredProjects && featuredProjects.length > 0) {
+      featuredProjects.forEach(project => {
+        content += this.createMobileProjectCard(project, true);
+      });
+    } else {
+      // Show first 4 projects if no featured projects
+      projects.slice(0, 4).forEach(project => {
+        content += this.createMobileProjectCard(project, false);
+      });
+    }
+
+    content += `</div>`;
+    return content;
+  }
+
+  createMobileProjectCard(project, isFeatured) {
+    const statusColors = {
+      'Live': '#4CAF50',
+      'Active development': '#2196F3',
+      'In progress': '#FF9800',
+      'Completed': '#4CAF50',
+      'Archived': '#757575',
+      'Planning': '#9C27B0'
+    };
+    
+    const statusColor = statusColors[project.status] || '#FFC107';
+    const techStack = project.technologies ? project.technologies.join(', ') : 'N/A';
+    
+    return `
+      <div style="background: #1E1E1E; padding: 12px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid #03DAC6;">
+        <h5 style="color: #03DAC6; margin-bottom: 4px; font-size: 14px;">${project.icon || '📁'} ${project.name}</h5>
+        <div style="color: #BB86FC; font-size: 10px; margin-bottom: 6px;">${techStack}</div>
+        <div style="font-size: 12px; color: #ccc; margin-bottom: 8px;">${project.description}</div>
+        <div style="font-size: 10px; color: ${statusColor};">Status: ${project.status}</div>
+        ${project.github ? `<div style="margin-top: 8px;"><a href="${project.github}" target="_blank" style="color: #1f6feb; font-size: 10px; text-decoration: none;">🔗 GitHub</a></div>` : ''}
+        ${project.demo ? `<div style="margin-top: 4px;"><a href="${project.demo}" target="_blank" style="color: #4CAF50; font-size: 10px; text-decoration: none;">🌐 Demo</a></div>` : ''}
+      </div>
+    `;
   }
 }
 

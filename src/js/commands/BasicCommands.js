@@ -1,5 +1,5 @@
-// Basic terminal commands
-import { CONTENT } from '../data/content.js';
+// Basic terminal commands - Refactored to use ContentService
+import contentService from '../services/ContentService.js';
 import ContributionCommands from './ContributionCommands.js';
 import { DiscoveryCommands } from './DiscoveryCommands.js';
 
@@ -25,9 +25,9 @@ export class BasicCommands {
       about: () => this.showAbout(),
       sobre: () => this.showAbout(),
       1: () => this.showAbout(),
-      contact: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
-      contato: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
-      3: () => this.terminal.addToOutput(CONTENT.contact, 'system'),
+      contact: () => this.showContact(),
+      contato: () => this.showContact(),
+      3: () => this.showContact(),
       
       // System commands
       date: () => this.showDate(),
@@ -60,9 +60,11 @@ export class BasicCommands {
     }
   }
 
-  showAbout() {
+  async showAbout() {
     this.discoveryCommands.markAsDiscovered('about');
-    this.terminal.addToOutput(CONTENT.about, 'system');
+    // Use ContentService for about text
+    const aboutText = await contentService.getText('about', 'desktop');
+    this.terminal.addToOutput(aboutText, 'system');
     
     // Contextual suggestion for first-time users
     setTimeout(() => {
@@ -117,23 +119,61 @@ export class BasicCommands {
     this.terminal.addToOutput(detailedFiles, 'system');
   }
 
-  whoami() {
-    const introText = `
-<span class="highlight">👋 Felipe Macedo</span> - Desenvolvedor Full Cycle
+  async whoami() {
+    // Use ContentService for whoami text
+    const whoamiText = await contentService.getText('whoami', 'desktop');
+    this.terminal.addToOutput(whoamiText, 'system');
+  }
 
-🎓 Formação:
-• Gestão da TI (Anhembi Morumbi)
-• Cursando Ciência da Computação (FMU)
-• Alumni Generation Brasil
+  async showContact() {
+    // Use ContentService for contact data (desktop version with WhatsApp)
+    const contact = await contentService.getContact('desktop');
+    const contactText = this.formatContactText(contact);
+    this.terminal.addToOutput(contactText, 'system');
+  }
 
-💼 Experiência com Java, Go, Spring Boot e arquitetura de APIs  
-⚙️ Foco em soluções escaláveis, microserviços e automação backend
+  formatContactText(contact) {
+    return `
+<span class="ascii-art align-center">
+    ╔═══════════════════════════════════════╗
+            💬 CONECTE-SE COMIGO            
+    ╚═══════════════════════════════════════╝
+</span>
 
-<span class="success">📊 Status:</span> Em constante evolução — aprendendo, construindo e compartilhando!
-<span class="warning">💬 Stack preferido:</span> Go pra performance. Java pra manter vivo.
+<span class="highlight">🚀 Canais Principais:</span>
 
-<span class="info">💡 Dica:</span> Digite <code>contributions</code> para ver minha atividade no GitHub`;
-    this.terminal.addToOutput(introText, 'system');
+<div class="contact-item">
+<span class="contact-label">📧 Email:</span> <a href="mailto:${contact.email}" class="project-link">${contact.email}</a>
+<span class="output-text">   └─ Resposta em até 24h • Projetos e oportunidades</span>
+</div>
+
+<div class="contact-item">
+<span class="contact-label">💼 LinkedIn:</span> <a href="${contact.linkedin}" target="_blank" rel="noopener noreferrer" class="project-link">${contact.linkedin}</a>
+<span class="output-text">   └─ Networking profissional • Atualizações de carreira</span>
+</div>
+
+<div class="contact-item">
+<span class="contact-label">🐙 GitHub:</span> <a href="${contact.github}" target="_blank" rel="noopener noreferrer" class="project-link">${contact.github}</a>
+<span class="output-text">   └─ Código aberto • Contribuições • Projetos pessoais</span>
+</div>
+
+${contact.whatsapp ? `<div class="contact-item">
+<span class="contact-label">📱 WhatsApp:</span> <a href="${contact.whatsapp.link}" target="_blank" rel="noopener noreferrer" class="project-link">${contact.whatsapp.number}</a>
+<span class="output-text">   └─ Contato direto • Projetos • Consultoria</span>
+</div>
+
+` : ''}<span class="highlight">🏢 Organizações:</span>
+
+<div class="contact-item">
+<span class="contact-label">🌐 Growthfolio:</span> <a href="${contact.organization}" target="_blank" rel="noopener noreferrer" class="project-link">${contact.organization}</a>
+<span class="output-text">   └─ Projetos open source • Bibliotecas • Microserviços</span>
+</div>
+
+<span class="ascii-art align-center">
+    ╔═══════════════════════════════════════╗
+    ║  🚀 Vamos construir algo incrível!    ║
+    ╚═══════════════════════════════════════╝
+</span>`;
   }
 
 }

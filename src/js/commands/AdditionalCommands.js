@@ -1,5 +1,5 @@
-// Additional commands for the terminal
-import { CONTENT } from '../data/content.js';
+// Additional commands for the terminal - Refactored to use ContentService
+import contentService from '../services/ContentService.js';
 
 export class AdditionalCommands {
   constructor(terminal) {
@@ -12,6 +12,7 @@ export class AdditionalCommands {
       experience: () => this.showExperience(),
       education: () => this.showEducation(),
       certifications: () => this.showCertifications(),
+      projects: () => this.showProjects(),
       resume: () => this.downloadResume(),
       status: () => this.showStatus(),
       sudo: () => this.sudoCommand(),
@@ -27,202 +28,305 @@ export class AdditionalCommands {
     };
   }
 
-  showSkills() {
-    const skillsText = `
+  async showSkills() {
+    // Use ContentService for skills data
+    const skills = await contentService.getSkills('desktop');
+    const skillsText = this.formatSkillsText(skills);
+    this.terminal.addToOutput(skillsText, 'system');
+  }
+
+  formatSkillsText(skills) {
+    const formatSkillBar = (skillList, title, icon) => {
+      if (!skillList || skillList.length === 0) return '';
+      
+      let section = `<span class="highlight">${icon} ${title}:</span>\n<div class="skill-bar">\n`;
+      
+      skillList.forEach(skill => {
+        const progressBars = '█'.repeat(Math.floor(skill.level / 10)) + '░'.repeat(10 - Math.floor(skill.level / 10));
+        const levelText = this.getLevelText(skill.level);
+        section += `<span class="skill-label">${skill.name}</span>         <span class="skill-progress">${progressBars}</span> <span class="skill-level">${levelText} (${skill.level}%)</span>\n`;
+      });
+      
+      section += '</div>\n\n';
+      return section;
+    };
+
+    return `
 <span class="ascii-art align-center">
     ╔════════════════════════════════════╗
            🛠️ SKILLS & TECNOLOGIAS         
     ╚════════════════════════════════════╝
 </span>
 
-<span class="highlight">💻 Backend Development:</span>
-<div class="skill-bar">
-<span class="skill-label">Java</span>         <span class="skill-progress">██████████</span> <span class="skill-level">Expert (90%)</span>
-<span class="skill-label">Go</span>           <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">Spring Boot</span>  <span class="skill-progress">█████████░</span> <span class="skill-level">Expert (85%)</span>
-<span class="skill-label">PostgreSQL</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">SQL Server</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">MongoDB</span>      <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">Redis</span>        <span class="skill-progress">███████░░░</span> <span class="skill-level">Intermediate (75%)</span>
-</div>
-
-<span class="highlight">🌐 Frontend & Mobile:</span>
-<div class="skill-bar">
-<span class="skill-label">JavaScript</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">HTML/CSS</span>     <span class="skill-progress">█████████░</span> <span class="skill-level">Expert (85%)</span>
-<span class="skill-label">React</span>        <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">TypeScript</span>   <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-</div>
-
-<span class="highlight">🚀 DevOps & Cloud:</span>
-<div class="skill-bar">
-<span class="skill-label">Docker</span>       <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">AWS</span>          <span class="skill-progress">███████░░░</span> <span class="skill-level">Intermediate (70%)</span>
-<span class="skill-label">GitHub Actions</span> <span class="skill-progress">████████░░</span> <span class="skill-level">Advanced (80%)</span>
-<span class="skill-label">Linux</span>        <span class="skill-progress">█████████░</span> <span class="skill-level">Expert (85%)</span>
-</div>
-
+${formatSkillBar(skills.backend, 'Backend Development', '💻')}
+${formatSkillBar(skills.frontend, 'Frontend & Web', '🌐')}
+${formatSkillBar(skills.devops, 'DevOps & Cloud', '🚀')}
 <span class="warning">🎯 Foco atual:</span> Arquitetura de microserviços e performance optimization`;
-    this.terminal.addToOutput(skillsText, 'system');
   }
 
-  showExperience() {
-    const experienceText = `
+  getLevelText(level) {
+    if (level >= 90) return 'Expert';
+    if (level >= 80) return 'Advanced';
+    if (level >= 70) return 'Intermediate';
+    return 'Basic';
+  }
+
+  async showExperience() {
+    // Use ContentService for experience data
+    const experience = await contentService.getExperience('desktop');
+    const experienceText = this.formatExperienceText(experience);
+    this.terminal.addToOutput(experienceText, 'system');
+  }
+
+  formatExperienceText(experience) {
+    if (!experience || experience.length === 0) {
+      return '<span class="error">No experience data available</span>';
+    }
+
+    let experienceText = `
 <span class="ascii-art align-center">
     ╔══════════════════════════════════════╗
            💼 EXPERIÊNCIA PROFISSIONAL        
     ╚══════════════════════════════════════╝
 </span>
 
-<div class="timeline-item">
-<span class="timeline-date">Março 2025 - presente</span>
-<span class="timeline-title">🏢 Analista de Sistemas - Sansuy S.A.</span>
+`;
+
+    experience.forEach(exp => {
+      experienceText += `<div class="timeline-item">
+<span class="timeline-date">${exp.period}</span>
+<span class="timeline-title">${exp.icon} ${exp.title} - ${exp.company}</span>
 <span class="timeline-description">
-• Manutenção e modernização de sistemas legados em Java e JavaFX
-• Implementação de APIs REST com Spring Boot
-• Uso de SQL Server, SVN, e padrões como Facade em ERP corporativo
-• Desenvolvimento de soluções corporativas escaláveis
+${exp.description.map(desc => `• ${desc}`).join('\n')}
 </span>
 </div>
 
-<div class="timeline-item">
-<span class="timeline-date">Fevereiro 2024 - Agosto 2024</span>
-<span class="timeline-title">🚀 Backend Developer - Asapcard</span>
-<span class="timeline-description">
-• Desenvolvimento de microserviços financeiros em Go
-• Implementação de sistemas de pagamento e soluções financeiras
-• APIs focadas em performance e segurança
-• Trabalho com tecnologias de ponta no setor fintech
-</span>
-</div>
+`;
+    });
 
-<div class="timeline-item">
-<span class="timeline-date">2023</span>
-<span class="timeline-title">🎓 Trainee Developer / Alumni - Generation Brasil</span>
-<span class="timeline-description">
-• Bootcamp intensivo de 3 meses em desenvolvimento Full Stack
-• Projetos práticos com Java, Spring Boot, React
-• Metodologias ágeis e trabalho em equipe
-• Projeto final: E-commerce completo com microserviços
-</span>
-</div>
-
-<span class="success">📈 Crescimento contínuo:</span> 3+ anos de experiência hands-on em desenvolvimento`;
-    this.terminal.addToOutput(experienceText, 'system');
+    experienceText += `<span class="success">📈 Crescimento contínuo:</span> 3+ anos de experiência hands-on em desenvolvimento`;
+    return experienceText;
   }
 
-  showEducation() {
-    const educationText = `
+  async showEducation() {
+    // Use ContentService for education data
+    const education = await contentService.getEducation('desktop');
+    const educationText = this.formatEducationText(education);
+    this.terminal.addToOutput(educationText, 'system');
+  }
+
+  formatEducationText(education) {
+    if (!education) {
+      return '<span class="error">No education data available</span>';
+    }
+
+    let educationText = `
 <span class="ascii-art align-center">
     ╔═══════════════════════════════════════╗
             🎓 FORMAÇÃO ACADÊMICA             
     ╚═══════════════════════════════════════╝
 </span>
 
-<div class="education-item">
-<span class="education-degree">🎯 Bacharelado em Ciência da Computação</span>
-<span class="education-institution">Faculdades Metropolitanas Unidas (FMU)</span>
-<span class="education-period">2025 - 2029 (Em andamento)</span>
+`;
+
+    // Format formal education
+    if (education.formal && education.formal.length > 0) {
+      education.formal.forEach(edu => {
+        educationText += `<div class="education-item">
+<span class="education-degree">${edu.icon} ${edu.degree}</span>
+<span class="education-institution">${edu.institution}</span>
+<span class="education-period">${edu.period} (${edu.status})</span>
 <span class="education-description">
-Foco em: Algoritmos, Estruturas de Dados, Engenharia de Software, 
-Banco de Dados, Redes, Inteligência Artificial
+${edu.description}
 </span>
 </div>
 
-<div class="education-item">
-<span class="education-degree">🎯 Tecnólogo em Gestão da TI</span>
-<span class="education-institution">Universidade Anhembi Morumbi</span>
-<span class="education-period">Agosto 2022 – Dezembro 2024 (Concluído)</span>
-<span class="education-description">
-Gestão de projetos, ITIL, governança de TI, análise de sistemas,
-planejamento estratégico de tecnologia
-</span>
+`;
+      });
+    }
+
+    // Format bootcamps
+    if (education.bootcamps && education.bootcamps.length > 0) {
+      educationText += `<span class="highlight">🚀 Bootcamps & Cursos Intensivos:</span>
+
+`;
+      
+      education.bootcamps.forEach(bootcamp => {
+        educationText += `<div class="bootcamp-item">
+<span class="bootcamp-name">${bootcamp.icon} ${bootcamp.name}</span>
+<span class="bootcamp-period">${bootcamp.period}</span>
+<span class="bootcamp-description">${bootcamp.description}</span>
 </div>
 
-<span class="highlight">🚀 Bootcamps & Cursos Intensivos:</span>
+`;
+      });
+    }
 
-<div class="bootcamp-item">
-<span class="bootcamp-name">☁️ AWS re/Start</span>
-<span class="bootcamp-period">2025</span>
-<span class="bootcamp-description">Cloud computing, AWS services, DevOps fundamentals</span>
-</div>
-
-<div class="bootcamp-item">
-<span class="bootcamp-name">💻 Generation Brasil - Java Full Stack</span>
-<span class="bootcamp-period">2023</span>
-<span class="bootcamp-description">480h de desenvolvimento intensivo - Java, Spring Boot, React</span>
-</div>
-
-<span class="success">🏆 Status:</span> Sempre estudando - aprendizado contínuo é essencial!`;
-    this.terminal.addToOutput(educationText, 'system');
+    educationText += `<span class="success">🏆 Status:</span> Sempre estudando - aprendizado contínuo é essencial!`;
+    return educationText;
   }
 
-  showCertifications() {
-    const certificationsText = `
+  async showCertifications() {
+    // Use ContentService for certifications data
+    const certifications = await contentService.getCertifications('desktop');
+    const certificationsText = this.formatCertificationsText(certifications);
+    this.terminal.addToOutput(certificationsText, 'system');
+  }
+
+  formatCertificationsText(certifications) {
+    if (!certifications) {
+      return '<span class="error">No certifications data available</span>';
+    }
+
+    let certificationsText = `
 <span class="ascii-art align-center">
     ╔══════════════════════════════════════╗
          🏆 CERTIFICAÇÕES & QUALIFICAÇÕES     
     ╚══════════════════════════════════════╝
 </span>
 
-<span class="highlight">☁️ Cloud & Infrastructure:</span>
+`;
 
-<div class="cert-item">
-<span class="cert-badge">🔵</span> <span class="cert-name">Microsoft Azure AZ-900</span>
-<span class="cert-issuer">Microsoft</span> | <span class="cert-date">2023</span>
-<span class="cert-description">Azure Fundamentals - Cloud concepts, services, security</span>
+    // Format each category
+    Object.entries(certifications).forEach(([categoryKey, category]) => {
+      if (categoryKey === 'inProgress') return; // Handle separately
+      
+      if (category.items && category.items.length > 0) {
+        certificationsText += `<span class="highlight">${category.icon} ${category.title}:</span>
+
+`;
+        
+        category.items.forEach(cert => {
+          certificationsText += `<div class="cert-item">
+<span class="cert-badge">${cert.icon}</span> <span class="cert-name">${cert.name}</span>
+<span class="cert-issuer">${cert.issuer}</span> | <span class="cert-date">${cert.date}</span>
+<span class="cert-description">${cert.description}</span>
 </div>
 
-<span class="highlight">🔗 Blockchain & Web3:</span>
+`;
+        });
+      }
+    });
 
-<div class="cert-item">
-<span class="cert-badge">⛓️</span> <span class="cert-name">Blockchain e Solidity</span>
-<span class="cert-issuer">DIO</span> | <span class="cert-date">2024</span>
-<span class="cert-description">Smart contracts, DeFi, Web3 development</span>
+    // Add in progress section
+    if (certifications.inProgress && certifications.inProgress.length > 0) {
+      certificationsText += `<span class="warning">📚 Em progresso:</span>
+`;
+      certifications.inProgress.forEach(cert => {
+        certificationsText += `• ${cert}
+`;
+      });
+      certificationsText += `
+`;
+    }
+
+    certificationsText += `<span class="success">🎯 Meta:</span> Certificações são ferramentas, experiência prática é o que conta!`;
+    return certificationsText;
+  }
+
+  async showProjects() {
+    // Use ContentService for projects data
+    const projects = await contentService.getProjects('desktop');
+    const featuredProjects = await contentService.getFeaturedProjects('desktop');
+    const projectsText = this.formatProjectsText(projects, featuredProjects);
+    this.terminal.addToOutput(projectsText, 'system');
+  }
+
+  formatProjectsText(projects, featuredProjects) {
+    if (!projects || projects.length === 0) {
+      return '<span class="error">No projects data available</span>';
+    }
+
+    let projectsText = `
+<span class="ascii-art align-center">
+    ╔══════════════════════════════════════╗
+           📁 PORTFÓLIO DE PROJETOS           
+    ╚══════════════════════════════════════╝
+</span>
+
+`;
+
+    // Show featured projects first
+    if (featuredProjects && featuredProjects.length > 0) {
+      projectsText += `<span class="highlight">🌟 Projetos em Destaque:</span>
+
+`;
+      
+      featuredProjects.forEach(project => {
+        projectsText += this.formatProjectItem(project, true);
+      });
+      
+      projectsText += `
+`;
+    }
+
+    // Show all projects by category
+    const categories = {};
+    projects.forEach(project => {
+      if (!categories[project.category]) {
+        categories[project.category] = [];
+      }
+      categories[project.category].push(project);
+    });
+
+    Object.entries(categories).forEach(([category, categoryProjects]) => {
+      const categoryInfo = this.getCategoryInfo(category);
+      projectsText += `<span class="highlight">${categoryInfo.icon} ${categoryInfo.title}:</span>
+
+`;
+      
+      categoryProjects.forEach(project => {
+        projectsText += this.formatProjectItem(project, false);
+      });
+      
+      projectsText += `
+`;
+    });
+
+    projectsText += `<span class="success">🚀 Todos os projetos:</span> Disponíveis no GitHub para exploração e contribuição!`;
+    return projectsText;
+  }
+
+  formatProjectItem(project, isFeatured) {
+    const statusColor = this.getStatusColor(project.status);
+    const techStack = project.technologies ? project.technologies.join(', ') : 'N/A';
+    
+    return `<div class="project-item">
+<span class="project-title">${project.icon} ${project.name}</span>
+<span class="project-tech">${techStack}</span>
+<span class="project-description">${project.description}</span>
+<span class="project-status" style="color: ${statusColor};">Status: ${project.status}</span>
+${project.github ? `<a href="${project.github}" target="_blank" class="project-link">🔗 Ver no GitHub</a>` : ''}
+${project.demo ? `<a href="${project.demo}" target="_blank" class="project-link">🌐 Demo ao vivo</a>` : ''}
 </div>
 
-<span class="highlight">💻 Desenvolvimento:</span>
+`;
+  }
 
-<div class="cert-item">
-<span class="cert-badge">☕</span> <span class="cert-name">Java Full Stack Developer</span>
-<span class="cert-issuer">Generation Brasil</span> | <span class="cert-date">2023</span>
-<span class="cert-description">480h - Java, Spring Boot, React, metodologias ágeis</span>
-</div>
+  getCategoryInfo(category) {
+    const categoryMap = {
+      'web': { icon: '🌐', title: 'Desenvolvimento Web' },
+      'backend': { icon: '💻', title: 'Backend & APIs' },
+      'mobile': { icon: '📱', title: 'Desenvolvimento Mobile' },
+      'blockchain': { icon: '⛓️', title: 'Blockchain & Web3' },
+      'tools': { icon: '🔧', title: 'Ferramentas & Utilitários' },
+      'learning': { icon: '🎓', title: 'Projetos de Aprendizado' }
+    };
+    
+    return categoryMap[category] || { icon: '📁', title: 'Outros Projetos' };
+  }
 
-<div class="cert-item">
-<span class="cert-badge">🌐</span> <span class="cert-name">AWS re/Start Graduate</span>
-<span class="cert-issuer">Amazon Web Services</span> | <span class="cert-date">2025</span>
-<span class="cert-description">Cloud fundamentals, Linux, Python scripting</span>
-</div>
-
-<span class="highlight">📊 Gerenciamento & Liderança:</span>
-
-<div class="cert-item">
-<span class="cert-badge">📋</span> <span class="cert-name">Fundamentos do Gerenciamento de Projetos</span>
-<span class="cert-issuer">Google</span> | <span class="cert-date">2024</span>
-<span class="cert-description">Planejamento, execução e monitoramento de projetos</span>
-</div>
-
-<span class="highlight">🎓 Educação & Bootcamps:</span>
-
-<div class="cert-item">
-<span class="cert-badge">💻</span> <span class="cert-name">Desenvolvedor Web Full Stack Junior</span>
-<span class="cert-issuer">Generation Brasil</span> | <span class="cert-date">2024</span>
-<span class="cert-description">Spring Boot, React, TypeScript, Spring Security, APIs REST</span>
-</div>
-
-<div class="cert-item">
-<span class="cert-badge">🌐</span> <span class="cert-name">Introdução à Programação com foco em Front-End</span>
-<span class="cert-issuer">Proz + Meta + AWS</span> | <span class="cert-date">2023</span>
-<span class="cert-description">300h - Git, HTML, CSS, JavaScript, desenvolvimento web</span>
-</div>
-
-<span class="warning">📚 Em progresso:</span>
-• AWS Solutions Architect Associate (planejado para 2025)
-• Oracle Java SE 17 Developer (em preparação)
-
-<span class="success">🎯 Meta:</span> Certificações são ferramentas, experiência prática é o que conta!`;
-    this.terminal.addToOutput(certificationsText, 'system');
+  getStatusColor(status) {
+    const statusColors = {
+      'Live': '#4CAF50',
+      'Active development': '#2196F3',
+      'In progress': '#FF9800',
+      'Completed': '#4CAF50',
+      'Archived': '#757575',
+      'Planning': '#9C27B0'
+    };
+    
+    return statusColors[status] || '#FFC107';
   }
 
   downloadResume() {

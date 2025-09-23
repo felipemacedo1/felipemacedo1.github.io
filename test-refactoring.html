@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Refactoring - ContentService</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .test-title {
+            color: #58a6ff;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .success {
+            color: #56d364;
+        }
+        .error {
+            color: #f85149;
+        }
+        .warning {
+            color: #d29922;
+        }
+        pre {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 4px;
+            padding: 12px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Refactoring - ContentService Integration</h1>
+    
+    <div class="test-section">
+        <div class="test-title">📊 ContentService Status</div>
+        <div id="service-status">Loading...</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">💼 Experience Data</div>
+        <div id="experience-data">Loading...</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">🎓 Education Data</div>
+        <div id="education-data">Loading...</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">🏆 Certifications Data</div>
+        <div id="certifications-data">Loading...</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">📁 Projects Data</div>
+        <div id="projects-data">Loading...</div>
+    </div>
+
+    <script type="module">
+        import contentService from './src/js/services/ContentService.js';
+
+        async function testContentService() {
+            try {
+                // Test service loading
+                document.getElementById('service-status').innerHTML = '<span class="warning">Loading ContentService...</span>';
+                
+                await contentService.load();
+                document.getElementById('service-status').innerHTML = '<span class="success">✅ ContentService loaded successfully</span>';
+
+                // Test Experience
+                const experience = await contentService.getExperience('desktop');
+                document.getElementById('experience-data').innerHTML = `
+                    <span class="success">✅ Experience loaded: ${experience.length} items</span>
+                    <pre>${JSON.stringify(experience, null, 2)}</pre>
+                `;
+
+                // Test Education
+                const education = await contentService.getEducation('desktop');
+                document.getElementById('education-data').innerHTML = `
+                    <span class="success">✅ Education loaded</span>
+                    <div>Formal: ${education.formal?.length || 0} items</div>
+                    <div>Bootcamps: ${education.bootcamps?.length || 0} items</div>
+                    <pre>${JSON.stringify(education, null, 2)}</pre>
+                `;
+
+                // Test Certifications
+                const certifications = await contentService.getCertifications('desktop');
+                document.getElementById('certifications-data').innerHTML = `
+                    <span class="success">✅ Certifications loaded</span>
+                    <div>Categories: ${Object.keys(certifications).length}</div>
+                    <pre>${JSON.stringify(certifications, null, 2)}</pre>
+                `;
+
+                // Test Projects
+                const projects = await contentService.getProjects('desktop');
+                const featuredProjects = await contentService.getFeaturedProjects('desktop');
+                document.getElementById('projects-data').innerHTML = `
+                    <span class="success">✅ Projects loaded</span>
+                    <div>Total: ${projects.length} projects</div>
+                    <div>Featured: ${featuredProjects.length} projects</div>
+                    <pre>${JSON.stringify(projects, null, 2)}</pre>
+                `;
+
+            } catch (error) {
+                console.error('Test failed:', error);
+                document.getElementById('service-status').innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+            }
+        }
+
+        // Run tests when page loads
+        testContentService();
+    </script>
+</body>
+</html>
