@@ -1,219 +1,353 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Enterprise Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-PLACEHOLDER_NONCE' 'strict-dynamic'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Felipe Macedo - Java e Go</title>
+  <meta name="description" content="Desenvolvo ferramentas e sistemas em Java e Go para integração de dados, análise de aplicações legadas e automação.">
+  <meta name="author" content="Felipe Macedo">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#1a1a2e">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://felipemacedo1.github.io/">
+  <meta property="og:title" content="Felipe Macedo - Java e Go">
+  <meta property="og:description" content="Ferramentas e sistemas para integração de dados, análise de aplicações legadas e automação.">
+  <meta property="og:locale" content="pt_BR">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  
+  <style>
+    :root {
+      --bg: #0f0f1a;
+      --bg-card: #1a1a2e;
+      --text: #e8e8e8;
+      --text-muted: #a0a0a0;
+      --accent: #4f9cf9;
+      --accent-hover: #3d8ce8;
+      --border: #2a2a4a;
+      --tag-bg: #252540;
+    }
     
-    <!-- Application Metadata -->
-    <title>Felipe Macedo - Enterprise Terminal Portfolio</title>
-    <meta
-      name="description"
-      content="Enterprise-grade Terminal Portfolio showcasing advanced web technologies, security implementations, and performance optimization."
-    />
-    <meta
-      name="keywords"
-      content="Felipe Macedo, desenvolvedor, Java, Go, Spring Boot, portfolio, terminal, fullstack, backend, microserviços, APIs, enterprise, security, performance"
-    />
-    <meta name="author" content="Felipe Macedo" />
-    <meta name="robots" content="index, follow" />
-    <meta name="language" content="pt-BR" />
-    <meta name="theme-color" content="#00ff00" />
-    <meta http-equiv="Cache-Control" content="public, max-age=31536000" />
-    <meta http-equiv="Expires" content="Thu, 31 Dec 2025 23:59:59 GMT" />
-    <meta name="format-detection" content="telephone=no" />
-
-    <!-- Enterprise Performance Optimization -->
-    <link rel="modulepreload" href="src/js/main.js">
-    <link rel="preload" href="src/css/main.css" as="style">
-    <link rel="dns-prefetch" href="https://api.github.com">
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:url"
-      content="https://felipemacedo1.github.io/static-port/"
-    />
-    <meta property="og:title" content="Felipe Macedo - Enterprise Terminal Portfolio" />
-    <meta
-      property="og:description"
-      content="Enterprise-grade Terminal Portfolio demonstrating advanced web technologies, security implementations, and performance optimization."
-    />
-    <meta property="og:site_name" content="Felipe Macedo Portfolio" />
-    <meta property="og:locale" content="pt_BR" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta
-      property="twitter:url"
-      content="https://felipemacedo1.github.io/static-port/"
-    />
-    <meta
-      property="twitter:title"
-      content="Felipe Macedo - Enterprise Terminal Portfolio"
-    />
-    <meta
-      property="twitter:description"
-      content="Enterprise-grade Terminal Portfolio with advanced web technologies"
-    />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>"
-    />
-    <link
-      rel="manifest"
-      href='data:application/json,{"name":"Felipe Macedo - Terminal Portfolio","short_name":"Terminal","display":"standalone","theme_color":"#00ff00","background_color":"#000000"}'
-    />
-
-    <!-- Structured Data -->
-    <script type="application/ld+json" nonce="PLACEHOLDER_NONCE">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Felipe Macedo",
-        "jobTitle": "Senior Full Stack Developer",
-        "description": "Enterprise software engineer specializing in Java, Go, Spring Boot, microservices architecture, and advanced web technologies",
-        "url": "https://felipemacedo1.github.io/static-port/",
-        "sameAs": [
-          "https://linkedin.com/in/felipemacedo1",
-          "https://github.com/felipemacedo1",
-          "https://github.com/orgs/growthfolio/"
-        ],
-        "knowsAbout": [
-          "Java",
-          "Go",
-          "Spring Boot",
-          "Microserviços",
-          "Enterprise Architecture",
-          "Security Implementation",
-          "Performance Optimization",
-          "APIs REST",
-          "PostgreSQL",
-          "Redis",
-          "Docker",
-          "Web Security",
-          "CSP Implementation"
-        ]
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    
+    header {
+      margin-bottom: 3rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .tagline {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin: 0 0 1rem 0;
+    }
+    
+    .links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    
+    section {
+      margin-bottom: 3rem;
+    }
+    
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 0 0 1.5rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .projects {
+      display: grid;
+      gap: 1.5rem;
+    }
+    
+    .project {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .project h3 {
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .project h3 a {
+      color: var(--text);
+    }
+    
+    .project h3 a:hover {
+      color: var(--accent);
+    }
+    
+    .project p {
+      color: var(--text-muted);
+      margin: 0 0 1rem 0;
+      font-size: 0.95rem;
+    }
+    
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .tag {
+      background: var(--tag-bg);
+      color: var(--text-muted);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    
+    .status {
+      font-size: 0.85rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+    
+    .status-experimental {
+      background: #3d2e00;
+      color: #ffc107;
+    }
+    
+    .status-mvp {
+      background: #1e3a5f;
+      color: #64b5f6;
+    }
+    
+    .status-release {
+      background: #1b4332;
+      color: #4caf50;
+    }
+    
+    .case-study {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .case-study h3 {
+      font-size: 1rem;
+      margin: 0 0 0.75rem 0;
+      color: var(--text-muted);
+    }
+    
+    .case-study blockquote {
+      margin: 0 0 1rem 0;
+      padding-left: 1rem;
+      border-left: 3px solid var(--accent);
+      font-style: italic;
+    }
+    
+    .case-study p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+    
+    .stack {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    
+    .stack span {
+      background: var(--tag-bg);
+      color: var(--text);
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    
+    footer a {
+      color: var(--text-muted);
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem 1rem;
       }
-    </script>
-
-    <!-- Optimized Stylesheets -->
-    <link rel="stylesheet" href="src/css/main.css">
-    <link rel="stylesheet" href="src/css/contribution-widgets.css">
-    <link rel="stylesheet" href="src/css/enhancements.css">
-    <link rel="stylesheet" href="src/css/ux-enhancements.css">
-    <style nonce="PLACEHOLDER_NONCE">
-      @keyframes enterprise-progress {
-        0% { width: 0%; }
-        100% { width: 100%; }
+      
+      h1 {
+        font-size: 1.6rem;
       }
-      #enterprise-loading .progress-fill {
-        animation: enterprise-progress 1.6s ease forwards;
+      
+      .project-meta {
+        flex-direction: column;
+        align-items: flex-start;
       }
-    </style>
-  </head>
-
-  <body>
-    <!-- Enterprise Security Notice -->
-    <noscript>
-      <div style="background: #ff4444; color: #fff; padding: 1rem; text-align: center;">
-        This enterprise application requires JavaScript to be enabled for security and performance features.
-      </div>
-    </noscript>
-
-    <!-- Enterprise Loading Screen -->
-    <div id="enterprise-loading" style="
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-      background: #000; color: #00ff00; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; z-index: 9999;
-      font-family: 'Courier New', monospace;
-    ">
-      <div class="loading-animation">
-        <div>🏢 ENTERPRISE TERMINAL v2.0</div>
-        <div style="margin-top: 20px; font-size: 14px;">
-          <div>[ ✓ ] Initializing Security Layer...</div>
-          <div>[ ✓ ] Loading Performance Monitor...</div>
-          <div>[ ✓ ] Starting Rate Limiter...</div>
-          <div>[ ⏳ ] Preparing Enterprise Features...</div>
-        </div>
-        <div style="margin-top: 30px;">
-          <div class="progress-bar" style="width: 300px; height: 4px; background: #333; border-radius: 2px; overflow: hidden;">
-            <div class="progress-fill" style="width: 0%; height: 100%; background: #00ff00; transition: width 2s ease;"></div>
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Felipe Macedo</h1>
+      <p class="tagline">Java e Go • Integração de dados, ferramentas para desenvolvedores e sistemas legados</p>
+      <nav class="links">
+        <a href="https://github.com/felipemacedo1">📂 GitHub</a>
+        <a href="mailto:felipemacedo.dev@gmail.com">📧 E-mail</a>
+        <a href="https://linkedin.com/in/felipemacedo1">💼 LinkedIn</a>
+        <a href="terminal.html">💻 Terminal</a>
+      </nav>
+    </header>
+    
+    <section>
+      <h2>Projetos</h2>
+      <div class="projects">
+        <article class="project">
+          <h3><a href="https://github.com/felipemacedo1/database-radar">Database Radar</a></h3>
+          <p>CLI para entender impacto de mudanças em bancos de dados em sistemas Java legados. Analisa SQL, JDBC e JPA sem executar o código, construindo um grafo de evidências com origem (arquivo:linha) e nível de confiança.</p>
+          <div class="project-meta">
+            <div class="tags">
+              <span class="tag">Java</span>
+              <span class="tag">SQL</span>
+              <span class="tag">CLI</span>
+            </div>
+            <span class="status status-experimental">Experimental</span>
           </div>
-        </div>
+        </article>
+        
+        <article class="project">
+          <h3><a href="https://github.com/felipemacedo1/rizoma">Rizoma</a></h3>
+          <p>Engine Java para ingestão segura de planilhas (CSV/XLS/XLSX) com mapeamento explicável, validação e dry-run. Separa inferência de autorização — não escreve no destino.</p>
+          <div class="project-meta">
+            <div class="tags">
+              <span class="tag">Java 21</span>
+              <span class="tag">Data</span>
+              <span class="tag">API</span>
+            </div>
+            <span class="status status-experimental">Experimental</span>
+          </div>
+        </article>
+        
+        <article class="project">
+          <h3><a href="https://github.com/felipemacedo1/legacy-flight-recorder">Legacy Flight Recorder</a></h3>
+          <p>Agente Java para coletar evidências de execução em sistemas Java 8 acoplados sem modificar a aplicação. Registra execução de métodos e atividade JDBC em JSONL local.</p>
+          <div class="project-meta">
+            <div class="tags">
+              <span class="tag">Java 8</span>
+              <span class="tag">Agent</span>
+              <span class="tag">JDBC</span>
+            </div>
+            <span class="status status-mvp">MVP pré-release</span>
+          </div>
+        </article>
+        
+        <article class="project">
+          <h3><a href="https://github.com/growthfolio/javafx-diagonalcordeis-open">Diagonal Cordéis</a></h3>
+          <p>Aplicação JavaFX para gestão e impressão de cordéis — projeto social ODS 8 e 9. Instalador Windows e ZIP disponíveis.</p>
+          <div class="project-meta">
+            <div class="tags">
+              <span class="tag">JavaFX</span>
+              <span class="tag">Desktop</span>
+            </div>
+            <span class="status status-release">Release v1.0.0</span>
+          </div>
+        </article>
       </div>
-    </div>
-
-    <!-- Terminal Interface -->
-    <div class="terminal-container" role="application" aria-label="Enterprise Terminal Portfolio">
-      <div class="terminal-header">
-        <div class="terminal-buttons">
-          <span class="btn close" role="button" aria-label="Close terminal"></span>
-          <span class="btn minimize" role="button" aria-label="Minimize terminal"></span>
-          <span class="btn maximize" role="button" aria-label="Maximize terminal"></span>
-        </div>
-        <div class="terminal-title" role="banner">
-          felipe-macedo@my-portfolio:~ -zsh [SECURE]
-        </div>
-        <div id="terminal-clock" aria-live="polite"></div>
-        <div id="enterprise-status" class="enterprise-indicators">
-          <span id="security-status" title="Security: Active">🔒</span>
-          <span id="performance-status" title="Performance: Monitoring">📊</span>
-          <span id="accessibility-status" title="A11Y: WCAG AAA">♿</span>
-        </div>
+    </section>
+    
+    <section>
+      <h2>Caso de uso</h2>
+      <div class="case-study">
+        <h3>Database Radar</h3>
+        <blockquote>Antes de alterar uma coluna no banco, quero saber quais arquivos do sistema Java a usam, mesmo que o projeto não compile localmente.</blockquote>
+        <p>O Database Radar analisa código-fonte, arquivos SQL e mapeamentos JPA offline, construindo um grafo de evidências com origem (arquivo:linha) e nível de confiança. Útil para sistemas legados onde o build local é difícil ou impossível.</p>
       </div>
-      <div class="terminal-body" id="terminal" role="main" aria-live="polite">
-        <div class="output" id="output" aria-label="Terminal output"></div>
-        <div id="terminal-help" class="sr-only">
-          Enterprise Terminal Portfolio. Digite 'help' para comandos disponíveis. Use setas para navegar no histórico. ESC para cancelar operações.
-        </div>
-        <div class="input-line" id="inputLine">
-          <span class="prompt">felipe-macedo@my-portfolio:~$ </span>
-          <input
-            type="text"
-            id="commandInput"
-            autocomplete="off"
-            spellcheck="false"
-            aria-label="Terminal command input"
-            aria-describedby="terminal-help"
-            role="textbox"
-            aria-expanded="false"
-          />
-          <span class="cursor" id="cursor">█</span>
-        </div>
+    </section>
+    
+    <section>
+      <h2>Stack</h2>
+      <div class="stack">
+        <span>Java</span>
+        <span>Spring Boot</span>
+        <span>Go</span>
+        <span>SQL</span>
+        <span>PostgreSQL</span>
+        <span>Docker</span>
+        <span>GitHub Actions</span>
       </div>
-    </div>
-
-    <!-- Enhanced Mobile Interface -->
-    <div class="mobile-keyboard" id="mobileKeyboard" role="toolbar" aria-label="Mobile command shortcuts">
-      <div class="keyboard-row">
-        <button data-char="1" aria-label="Type 1">1</button>
-        <button data-char="2" aria-label="Type 2">2</button>
-        <button data-char="3" aria-label="Type 3">3</button>
-        <button data-command="help" class="wide" aria-label="Execute help command">help</button>
-        <button data-command="clear" class="wide" aria-label="Execute clear command">clear</button>
-      </div>
-      <div class="keyboard-row">
-        <button data-command="menu" aria-label="Execute menu command">menu</button>
-        <button data-command="about" aria-label="Execute about command">about</button>
-        <button data-command="skills" aria-label="Execute skills command">skills</button>
-        <button data-command="status" aria-label="Execute status command">status</button>
-      </div>
-      <div class="keyboard-row">
-        <button data-command="projects" aria-label="Execute projects command">projects</button>
-        <button data-command="contact" aria-label="Execute contact command">contact</button>
-        <button data-command="whoami" aria-label="Execute whoami command">whoami</button>
-        <button data-command="enterprise" aria-label="Show enterprise features">enterprise</button>
-      </div>
-    </div>
-
-    <!-- Enterprise Module Loader -->
-    <script type="module" nonce="PLACEHOLDER_NONCE" src="src/js/main.js"></script>
-  </body>
+    </section>
+    
+    <footer>
+      <p>A maioria dos repositórios são experimentos ou estudos em diferentes estágios.</p>
+      <p><a href="https://github.com/growthfolio">growthfolio</a> · laboratório e acervo de projetos</p>
+    </footer>
+  </div>
+</body>
 </html>
