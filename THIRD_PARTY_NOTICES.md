@@ -7,4 +7,4 @@
 - Portrait — Felipe Macedo's existing portrait in `growthfolio/html-linktree-personal/app/lib/profile-image.ts`; permission provided in the reconstruction brief. Resize/compression only.
 - All topology, waveform, mapping, tracing, favicon, interface icons and social preview compositions — original code in this repository. No reference-site code, premium template, model, stock video or proprietary asset is used.
 
-Research-only references: Lucide's ISC license and Three.js examples/docs were inspected; no Lucide package or example asset is shipped. Bruno Resende's website was inspected only for narrative clarity.
+Research-only references: Lucide's ISC license and Three.js examples/docs were inspected; no Lucide package or example asset is shipped. External sites were used only for general usability research; no text, code or assets were copied.

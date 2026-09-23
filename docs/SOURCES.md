@@ -3,7 +3,6 @@
 - felipemacedo1/database-radar: `ad322f5f9931bf965295ee45cc4ad2bc1f430f5d`
 - felipemacedo1/open-speech-bridge: `5573802b1bc6f11cecfe4bbb995db3fd9cb05c2b`
 - felipemacedo1/rizoma: `3122213ce2f1ee0bd6f7f0d7232f001d70ed61e2`
-- BrunoResendeEng/brunoresendeeng.github.io: `377dd7534783244876bdb4d626bcfaf8bb807423`
 - growthfolio/html-linktree-personal: `fd9454f601236d15661dfe91969c726768e548f4`
 - felipemacedo1/felipemacedo1: `332f98a4075f2afcd839f1ec574f80a0680d6561`
 - felipemacedo1/legacy-flight-recorder: `68d63ae2654980ff79d9193edd65006a45bcf33b`
@@ -12,7 +11,7 @@ Read README, architecture/status/roadmap and final assessments of all four featu
 
 Current profile README is contact authority: https://www.linkedin.com/in/felipe-macedo- replaces older /felipemacedo1. Employment, education and optimization story are supplied directly by Felipe; omit unknown employment dates, financial employer identity and numerical performance claims. No real CV PDF exists in the original tracked files.
 
-Bruno Resende benchmark: clear name/role, direct section navigation, chronological experience, separate education and contacts. No text, code or assets reused. Reviewed recent repository inventory; keep four relevant engineering projects rather than dilute with educational repositories. Link to full GitHub profile for further work.
+The narrative benchmark review focused on clear role, direct section navigation, chronological experience, separate education and contact sections. No external text, code or assets were reused. Reviewed the recent repository inventory; keep four relevant engineering projects rather than dilute the home page with educational repositories. Link to the full GitHub profile for further work.
 
 Old analytics were localStorage counters plus GitHub contribution aggregation; no useful recruiting value. Remove collectors and credential-dependent daily workflow. Existing SW uses stale-while-revalidate: publish retirement worker at same /sw.js URL.
 
