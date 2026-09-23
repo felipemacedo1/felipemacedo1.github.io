@@ -27,8 +27,10 @@ export function parsePublicBadge(payload, id) {
     typeof issuer?.name !== 'string'
   )
     throw new Error('Invalid public badge assertion');
-  const date = (v) =>
-    v == null ? null : typeof v === 'string' && Number.isFinite(Date.parse(v)) ? v : null;
+  const date = (v) => {
+    if (v == null || typeof v !== 'string') return null;
+    return Number.isFinite(Date.parse(v)) ? v : null;
+  };
   const image = d.image_url || t.image_url;
   if (new URL(image).hostname !== 'images.credly.com') throw new Error('Invalid badge image host');
   return {

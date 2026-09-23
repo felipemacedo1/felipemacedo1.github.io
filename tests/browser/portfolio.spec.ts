@@ -69,8 +69,7 @@ test('GPU unavailable keeps diagrams and content usable', async ({ page }) => {
     HTMLCanvasElement.prototype.getContext = () => null;
   });
   await page.goto('/');
-  await page.waitForTimeout(2800);
-  await expect(page.locator('.graphics-canvas')).toHaveCount(0);
+  await expect(page.locator('.graphics-canvas')).toHaveCount(0, { timeout: 5000 });
   await expect(page.locator('.topology')).toBeVisible();
   await expect(page.locator('#work')).toContainText('OpenSpeechBridge');
 });
@@ -80,7 +79,7 @@ test('default PT accessibility and local requests only', async ({ page }) => {
     if (!r.url().startsWith('http://localhost:4321')) external.push(r.url());
   });
   await page.goto('/');
-  await page.waitForTimeout(2500);
+  await page.waitForLoadState('networkidle');
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze();

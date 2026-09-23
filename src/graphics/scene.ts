@@ -131,7 +131,6 @@ export function startScene() {
       const f = progress * 4 - part;
       x = ((path[part][0] * (1 - f) + path[part + 1][0] * f) / 640 - 0.5) * 8;
       y = (0.5 - (path[part][1] * (1 - f) + path[part + 1][1] * f) / 330) * 4.125;
-      z = 0;
       if (i > count * 0.12) {
         x = 20;
         y = 20;
@@ -141,7 +140,6 @@ export function startScene() {
       const f = (u + t * 0.05) % 1;
       x = ((f * 210 + 205 - 320) / 640) * 8;
       y = ((165 - (60 + row * 65)) / 330) * 4.125;
-      z = 0;
       if (i > count * 0.12) {
         x = 20;
         y = 20;

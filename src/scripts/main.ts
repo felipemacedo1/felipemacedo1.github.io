@@ -29,14 +29,16 @@ button?.addEventListener('click', () => {
 });
 // Retire the historical root worker, which could serve stale HTML indefinitely.
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .getRegistrations()
-    .then((regs) =>
-      Promise.all(
-        regs.filter((r) => new URL(r.scope).origin === location.origin).map((r) => r.unregister()),
-      ),
-    )
-    .catch(() => {});
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(
+      registrations
+        .filter((registration) => new URL(registration.scope).origin === location.origin)
+        .map((registration) => registration.unregister()),
+    );
+  } catch {
+    // Service worker cleanup is best effort and never blocks the portfolio.
+  }
 }
 const connection = (navigator as Navigator & { connection?: { saveData: boolean } }).connection;
 if (!connection?.saveData && !new URLSearchParams(location.search).has('no3d')) {
@@ -55,3 +57,5 @@ document.querySelectorAll<HTMLAnchorElement>('.languages a').forEach((a) =>
     a.hash = location.hash;
   }),
 );
+
+export {};
