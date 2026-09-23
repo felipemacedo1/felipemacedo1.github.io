@@ -79,7 +79,7 @@ test('default PT accessibility and local requests only', async ({ page }) => {
     if (!r.url().startsWith('http://localhost:4321')) external.push(r.url());
   });
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
+  await expect(page.locator('#work')).toContainText('OpenSpeechBridge');
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze();

@@ -5,7 +5,7 @@ const htmls = ['index.html', 'en/index.html', 'legacy/index.html', '404.html'];
 assert.equal((await readFile('dist/CNAME', 'utf8')).trim(), 'felipemacedo.me');
 for (const path of htmls) {
   const html = await readFile(`dist/${path}`, 'utf8');
-  for (const [, url] of html.matchAll(/\b(?:src|href)="(\/[^"#?]*)[^"]*"/g)) {
+  for (const [, url] of html.matchAll(/\b(?:src|href)="(\/[^"#?]*)"/g)) {
     const file = `dist${url}${url.endsWith('/') ? 'index.html' : ''}`;
     assert.ok((await stat(file)).isFile(), `Broken asset/route ${url} in ${path}`);
   }

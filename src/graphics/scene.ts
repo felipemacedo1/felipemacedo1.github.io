@@ -162,27 +162,7 @@ export function startScene() {
   function requestDraw() {
     if (!frame && visible) frame = requestAnimationFrame(draw);
   }
-  function draw(now: number) {
-    frame = 0;
-    if (!visible || !active || (!dirty && reduced())) return;
-    if (now - last < (mobile ? 1000 / 30 : 1000 / 45) && !dirty) {
-      requestDraw();
-      return;
-    }
-    last = now;
-    const target = active.querySelector('svg') || active;
-    const bounds = target.getBoundingClientRect();
-    const viewBox = target instanceof SVGSVGElement ? target.viewBox.baseVal : null;
-    const scale = viewBox
-      ? Math.min(bounds.width / viewBox.width, bounds.height / viewBox.height)
-      : 1;
-    const width = viewBox ? viewBox.width * scale : bounds.width;
-    const height = viewBox ? viewBox.height * scale : bounds.height;
-    const left = bounds.left + (bounds.width - width) / 2;
-    const top = bounds.top + (bounds.height - height) / 2;
-    const r = { left, top, width, height, bottom: top + height };
-    if (r.bottom < 0 || r.top > innerHeight) return;
-    const t = reduced() ? 0 : now / 1000;
+  function updateParticles(t: number) {
     const position = geometry.getAttribute('position');
     for (let i = 0; i < count; i++) {
       setTarget(i, t);
@@ -193,20 +173,48 @@ export function startScene() {
     }
     position.array.set(positions);
     position.needsUpdate = true;
+  }
+  function updateLines() {
+    if (!lines.visible) return;
+    for (let i = 0; i < 240; i++) {
+      const a = i % count;
+      const b = (i + 21) % count;
+      for (let k = 0; k < 3; k++) {
+        linePositions[i * 6 + k] = positions[a * 3 + k];
+        linePositions[i * 6 + 3 + k] = positions[b * 3 + k];
+      }
+    }
+    lineGeometry.getAttribute('position').array.set(linePositions);
+    lineGeometry.getAttribute('position').needsUpdate = true;
+  }
+  function getViewport(target: Element) {
+    const bounds = target.getBoundingClientRect();
+    const viewBox = target instanceof SVGSVGElement ? target.viewBox.baseVal : null;
+    const scale = viewBox
+      ? Math.min(bounds.width / viewBox.width, bounds.height / viewBox.height)
+      : 1;
+    const width = viewBox ? viewBox.width * scale : bounds.width;
+    const height = viewBox ? viewBox.height * scale : bounds.height;
+    const left = bounds.left + (bounds.width - width) / 2;
+    const top = bounds.top + (bounds.height - height) / 2;
+    return { left, top, width, height, bottom: top + height };
+  }
+  function draw(now: number) {
+    frame = 0;
+    if (!visible || !active || (!dirty && reduced())) return;
+    if (now - last < (mobile ? 1000 / 30 : 1000 / 45) && !dirty) {
+      requestDraw();
+      return;
+    }
+    last = now;
+    const target = active.querySelector('svg') || active;
+    const r = getViewport(target);
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const t = reduced() ? 0 : now / 1000;
+    updateParticles(t);
     points.rotation.y = mode === 'hero' ? 0.15 : 0;
     lines.visible = mode === 'hero';
-    if (lines.visible) {
-      for (let i = 0; i < 240; i++) {
-        const a = i % count;
-        const b = (i + 21) % count;
-        for (let k = 0; k < 3; k++) {
-          linePositions[i * 6 + k] = positions[a * 3 + k];
-          linePositions[i * 6 + 3 + k] = positions[b * 3 + k];
-        }
-      }
-      lineGeometry.getAttribute('position').array.set(linePositions);
-      lineGeometry.getAttribute('position').needsUpdate = true;
-    }
+    updateLines();
     camera.aspect = r.width / r.height;
     camera.position.z = mode === 'hero' ? 8 : 4 / (Math.tan(Math.PI / 9) * camera.aspect);
     camera.updateProjectionMatrix();
