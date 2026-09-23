@@ -1,7 +1,7 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import assert from 'node:assert/strict';
-const htmls = ['index.html', 'en/index.html', 'legacy/index.html', '404.html'];
+const htmls = ['index.html', 'en/index.html', 'legacy/index.html', 'mobile.html', '404.html'];
 assert.equal((await readFile('dist/CNAME', 'utf8')).trim(), 'felipemacedo.me');
 for (const path of htmls) {
   const html = await readFile(`dist/${path}`, 'utf8');

@@ -95,3 +95,8 @@ test('optional terminal uses current source and safe text output', async ({ page
   await page.keyboard.press('Enter');
   await expect(page.locator('#output img')).toHaveCount(0);
 });
+test('legacy mobile URL returns to the current portfolio', async ({ page }) => {
+  await page.goto('/mobile.html');
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('h1')).toContainText('Felipe Macedo');
+});
