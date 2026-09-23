@@ -1,0 +1,374 @@
+---
+import { copy, profile, type Locale } from '../content/profile';
+import { projects } from '../content/projects';
+import credentials from '../data/credentials.generated.json';
+import Diagram from './Diagram.astro';
+import Project from './Project.astro';
+import '../styles/global.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = copy[locale];
+const formatDate = (date: string) =>
+  new Intl.DateTimeFormat(t.lang, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(date));
+const canonical = profile.site + (locale === 'pt' ? '/' : '/en/');
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': profile.site + '/#person',
+      name: profile.name,
+      url: profile.site,
+      jobTitle: t.role,
+      email: profile.email,
+      sameAs: [profile.github, profile.linkedin],
+      worksFor: { '@type': 'Organization', name: 'SANSUY' },
+    },
+    { '@type': 'WebSite', url: profile.site, name: profile.name, inLanguage: ['pt-BR', 'en'] },
+    ...projects(locale).map((p) => ({
+      '@type': 'SoftwareSourceCode',
+      name: p.name,
+      codeRepository: p.url,
+      description: p.idea,
+      author: { '@id': profile.site + '/#person' },
+    })),
+  ],
+};
+---
+
+<!doctype html>
+<html lang={t.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.title}</title>
+    <meta name="description" content={t.description} />
+    <meta name="theme-color" content="#0b1015" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="pt-BR" href={`${profile.site}/`} />
+    <link rel="alternate" hreflang="en" href={`${profile.site}/en/`} />
+    <link rel="alternate" hreflang="x-default" href={`${profile.site}/`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={t.title} />
+    <meta property="og:description" content={t.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${profile.site}/og-image.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Felipe Macedo — Systems Analysis & Software Engineering"
+    />
+    <meta property="og:locale" content={locale === 'pt' ? 'pt_BR' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={t.title} />
+    <meta name="twitter:description" content={t.description} />
+    <meta name="twitter:image" content={`${profile.site}/og-image.png`} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(schema).replace(/</g, '\\u003c')}
+    ></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      {t.skip}
+    </a>
+    <header class="header">
+      <a class="brand" href="#top" aria-label={`Felipe Macedo — ${t.top}`}>
+        <span class="brand-mark" aria-hidden="true">
+          f<span>m</span>
+          <i></i>
+        </span>
+        <span>Felipe Macedo</span>
+      </a>
+      <nav aria-label={locale === 'pt' ? 'Navegação principal' : 'Main navigation'}>
+        {['work', 'journey', 'education', 'contact'].map((id, i) => (
+          <a href={`#${id}`}>{t.nav[i]}</a>
+        ))}
+      </nav>
+      <div class="languages" aria-label="Language">
+        <a href="/" lang="pt-BR" aria-current={locale === 'pt' ? 'page' : undefined}>
+          PT
+        </a>
+        <span>/</span>
+        <a href="/en/" lang="en" aria-current={locale === 'en' ? 'page' : undefined}>
+          EN
+        </a>
+      </div>
+    </header>
+    <main id="main">
+      <section class="hero wrap" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">{t.eyebrow}</p>
+          <h1 id="hero-title">
+            Felipe Macedo
+            <span>
+              {t.headline[0]}
+              <br />
+              <em>{t.headline[1]}</em>
+            </span>
+          </h1>
+          <p class="intro">{t.intro}</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#work">
+              {t.explore}
+              <span aria-hidden="true">↘</span>
+            </a>
+            <a class="text-link" href={profile.linkedin}>
+              LinkedIn ↗
+            </a>
+            <a class="text-link" href={profile.github}>
+              GitHub ↗
+            </a>
+          </div>
+          <a href="#journey" class="current">
+            <span class="signal" aria-hidden="true"></span>
+            {t.current}
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="hero-art">
+          <Diagram mode="hero" label="CONTEXT → CONNECTION → CLARITY" />
+        </div>
+        <div class="hero-bottom">
+          <span class="mono">INDEPENDENT THINKING. CONNECTED SYSTEMS.</span>
+          <a href="#value">
+            SCROLL TO EXPLORE <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </section>
+      <div class="summary-bar">
+        <div class="wrap">
+          {t.summary.map((s, i) => (
+            <p>
+              <span class="mono">0{i + 1}</span>
+              {s}
+            </p>
+          ))}
+        </div>
+      </div>
+      <section class="section wrap" id="value">
+        <p class="eyebrow">{t.valueKicker}</p>
+        <div class="section-heading">
+          <h2>{t.valueTitle}</h2>
+          <p>{t.valueIntro}</p>
+        </div>
+        <div class="value-grid">
+          {t.values.map(([title, desc], i) => (
+            <article>
+              <span class="value-icon" aria-hidden="true">
+                {i === 0 ? (
+                  <svg viewBox="0 0 32 32">
+                    <circle cx="13" cy="13" r="8" />
+                    <path d="m19 19 9 9M9 13h8M13 9v8" />
+                  </svg>
+                ) : i === 1 ? (
+                  <svg viewBox="0 0 32 32">
+                    <rect x="3" y="3" width="8" height="8" />
+                    <rect x="21" y="21" width="8" height="8" />
+                    <path d="M11 7h14v14M7 11v14h14" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 32 32">
+                    <path d="m3 23 10-10 6 6L29 5M19 5h10v10M3 29h26" />
+                  </svg>
+                )}
+              </span>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section class="work-section" id="work">
+        <div class="wrap">
+          <p class="eyebrow">{t.workKicker}</p>
+          <div class="section-heading">
+            <h2>{t.workTitle}</h2>
+            <p>{t.workIntro}</p>
+          </div>
+          <nav
+            class="project-index"
+            aria-label={locale === 'pt' ? 'Índice de projetos' : 'Project index'}
+          >
+            {projects(locale).map((p, i) => (
+              <a href={`#${p.id}`}>
+                <span class="mono">0{i + 1}</span>
+                {p.name}
+                <span aria-hidden="true">↘</span>
+              </a>
+            ))}
+          </nav>
+          {[0, 1, 2, 3].map((index) => (
+            <Project locale={locale} index={index} />
+          ))}
+          <a class="more-link" href={profile.github}>
+            {t.more}
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+      <section class="section wrap" id="journey">
+        <p class="eyebrow">{t.journeyKicker}</p>
+        <div class="section-heading">
+          <h2>{t.journeyTitle}</h2>
+          <img
+            class="portrait"
+            src="/felipe.webp"
+            alt="Felipe Macedo"
+            width="96"
+            height="96"
+            loading="lazy"
+          />
+        </div>
+        <div class="timeline">
+          <article>
+            <p class="mono">
+              <span class="signal" aria-hidden="true"></span>
+              {t.now}
+            </p>
+            <div>
+              <h3>
+                {t.role}
+                <span>SANSUY</span>
+              </h3>
+              <p>{t.job}</p>
+            </div>
+          </article>
+          <article>
+            <p class="mono">{t.before}</p>
+            <div>
+              <h3>
+                {t.previousRole}
+                <span>{t.previousCompany}</span>
+              </h3>
+              <p>{t.previous}</p>
+            </div>
+          </article>
+        </div>
+        <aside class="impact">
+          <p class="eyebrow">{t.impactKicker}</p>
+          <h3>{t.impactTitle}</h3>
+          <p>{t.impact}</p>
+          <small>{t.impactNote}</small>
+        </aside>
+      </section>
+      <section class="education-section" id="education">
+        <div class="wrap">
+          <p class="eyebrow">{t.educationKicker}</p>
+          <h2>{t.educationTitle}</h2>
+          <div class="education-grid">
+            <div>
+              <p class="mono subheading">{t.degree}</p>
+              {['Universidade Anhembi Morumbi', 'FMU'].map((s, i) => (
+                <article class="degree">
+                  <span class="mono">{i === 0 ? t.complete : t.ongoing}</span>
+                  <h3>{t.degrees[i]}</h3>
+                  <p>{s}</p>
+                </article>
+              ))}
+            </div>
+            <div>
+              <p class="mono subheading">{t.training}</p>
+              <ul class="courses">
+                {t.courses.map((c) => (
+                  <li>{c}</li>
+                ))}
+              </ul>
+              <p class="small muted">{t.trainingNote}</p>
+            </div>
+          </div>
+          <div class="credentials-heading">
+            <h3>{t.badges}</h3>
+            <p>{t.badgesNote}</p>
+          </div>
+          <div class="credentials">
+            {credentials.map((b) => (
+              <article class="credential">
+                <div class="credential-head">
+                  {'localImage' in b && (
+                    <img src={String(b.localImage)} width="64" height="64" loading="lazy" alt="" />
+                  )}
+                  <p class="mono">{b.issuer}</p>
+                </div>
+                <h4>{b.name}</h4>
+                <details>
+                  <summary>{t.details}</summary>
+                  <p lang="en">{b.description}</p>
+                  <p>{b.issuedAt ? `${t.issued}: ${formatDate(b.issuedAt)}` : t.unknownDate}</p>
+                  {b.expiresAt && (
+                    <p>
+                      {t.expires}: {formatDate(b.expiresAt)}
+                    </p>
+                  )}
+                </details>
+                <a href={b.url}>
+                  {t.verify}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section class="section wrap" id="direction">
+        <p class="eyebrow">{t.interestsKicker}</p>
+        <h2>{t.interestsTitle}</h2>
+        <div class="interests">
+          {t.interests.map(([title, desc]) => (
+            <article>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section class="contact-section" id="contact">
+        <div class="wrap">
+          <p class="eyebrow">{t.contactKicker}</p>
+          <div class="contact-layout">
+            <h2>{t.contactTitle}</h2>
+            <div>
+              <p>{t.contactText}</p>
+              <a class="email" href={`mailto:${profile.email}`}>
+                {profile.email}
+                <span aria-hidden="true">↗</span>
+              </a>
+              <div class="contact-socials">
+                <a href={profile.linkedin}>LinkedIn ↗</a>
+                <a href={profile.github}>GitHub ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="wrap footer">
+      <div>
+        <a href="#top" class="brand">
+          Felipe Macedo<span aria-hidden="true">↗</span>
+        </a>
+        <p>{t.footer}</p>
+      </div>
+      <div>
+        <button id="motion-toggle" aria-pressed="false" data-on={t.motion} data-off={t.motionOff}>
+          {t.motion}
+        </button>
+        <a href="/legacy/">legacy interface ↗</a>
+      </div>
+      <span class="mono">© {new Date().getFullYear()} / FM</span>
+    </footer>
+    <script src="../scripts/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,91 @@
+---
+import { profile } from '../content/profile';
+import { projectNames } from '../content/projects';
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>Legacy interface — Felipe Macedo</title>
+    <style>
+      body {
+        margin: 0;
+        background: #0b1015;
+        color: #c4d7dd;
+        font: 16px/1.8 monospace;
+        padding: clamp(20px, 7vw, 90px);
+      }
+      main {
+        max-width: 850px;
+        margin: auto;
+      }
+      a {
+        color: #a9dbe6;
+      }
+      input {
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid #718e9d;
+        color: inherit;
+        font: inherit;
+        width: min(70%, 500px);
+        padding: 10px;
+      }
+      input:focus-visible,
+      a:focus-visible {
+        outline: 2px solid #a9dbe6;
+        outline-offset: 4px;
+      }
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      label {
+        color: #a9dbe6;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/">← Voltar ao portfólio</a>
+      <h1>Legacy interface</h1>
+      <p>Uma homenagem ao terminal original. O portfólio completo está na página principal.</p>
+      <p>Comandos: help / about / projects / contact / clear</p>
+      <pre id="output" role="log" aria-live="polite">Felipe Macedo / Systems Analyst</pre>
+      <form>
+        <label for="command">felipe ~ $ </label>
+        <input id="command" autocomplete="off" spellcheck="false" />
+      </form>
+      <noscript>
+        <p>
+          Este terminal opcional requer JavaScript.{' '}
+          <a href="/">O site principal funciona sem JavaScript.</a>
+        </p>
+      </noscript>
+    </main>
+    <script define:vars={{ profile, projectNames }}>
+      const form = document.querySelector('form');
+      const input = document.querySelector('input');
+      const out = document.querySelector('#output');
+      const responses = {
+        help: 'help / about / projects / contact / clear',
+        about:
+          'Felipe Macedo — Analista de Sistemas na SANSUY. Integração, investigação e modernização.',
+        projects: projectNames.join('\n'),
+        contact: profile.email + '\n' + profile.linkedin + '\n' + profile.github,
+      };
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const cmd = input.value.trim().toLowerCase();
+        if (cmd === 'clear') out.textContent = '';
+        else
+          out.textContent +=
+            '\n$ ' + cmd + '\n' + (responses[cmd] || 'Comando desconhecido. Digite help.');
+        input.value = '';
+      });
+    </script>
+  </body>
+</html>
