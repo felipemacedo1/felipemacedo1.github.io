@@ -149,7 +149,6 @@ export function startScene() {
       const f = (u + t * 0.07) % 1;
       x = ((180 + row * 28 + f * (385 - row * 67) - 320) / 640) * 8;
       y = ((165 - (55 + row * 48)) / 330) * 4.125;
-      z = 0;
       if (i > count * 0.12) {
         x = 20;
         y = 20;
