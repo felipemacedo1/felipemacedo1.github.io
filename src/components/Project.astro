@@ -2,14 +2,55 @@
 import Diagram from './Diagram.astro';
 import { copy, type Locale } from '../content/profile';
 import { projects } from '../content/projects';
-interface Props { locale: Locale; index: number; }
-const {locale,index} = Astro.props;
-const p = projects(locale)[index]; const t=copy[locale];
+interface Props {
+  locale: Locale;
+  index: number;
+}
+const { locale, index } = Astro.props;
+const p = projects(locale)[index];
+const t = copy[locale];
 ---
-<article class:list={['project',`project-${p.mode}`]} id={p.id}>
- <div class="project-heading"><span class="mono project-number">0{index+1} / 04</span><span class="mono">{p.category}</span><span class="status"><i></i>{p.status}</span></div>
- <div class="project-intro"><div><p class="project-name">{p.name}</p><h3>{p.title}</h3></div><p class="project-problem">{p.problem}</p></div>
- <Diagram mode={p.mode} label={t.diagram}/>
- <div class="case-grid"><div><h4>{t.idea}</h4><p>{p.idea}</p></div><div><h4>{t.evidence}</h4><p>{p.evidence}</p></div><div><h4>{t.limits}</h4><p>{p.limits}</p></div></div>
- <div class="project-footer"><p class="mono">{p.tech}</p><div><a href={p.url}>{t.source} <span aria-hidden="true">↗</span></a><a href={`${p.url}/blob/main/${p.docs}`}>{t.docs} <span aria-hidden="true">↗</span></a></div></div>
+
+<article class:list={['project', `project-${p.mode}`]} id={p.id}>
+  <div class="project-heading">
+    <span class="mono project-number">0{index + 1} / 04</span>
+    <span class="mono">{p.category}</span>
+    <span class="status">
+      <i></i>
+      {p.status}
+    </span>
+  </div>
+  <div class="project-intro">
+    <div>
+      <p class="project-name">{p.name}</p>
+      <h3>{p.title}</h3>
+    </div>
+    <p class="project-problem">{p.problem}</p>
+  </div>
+  <Diagram mode={p.mode} label={t.diagram} />
+  <div class="case-grid">
+    <div>
+      <h4>{t.idea}</h4>
+      <p>{p.idea}</p>
+    </div>
+    <div>
+      <h4>{t.evidence}</h4>
+      <p>{p.evidence}</p>
+    </div>
+    <div>
+      <h4>{t.limits}</h4>
+      <p>{p.limits}</p>
+    </div>
+  </div>
+  <div class="project-footer">
+    <p class="mono">{p.tech}</p>
+    <div>
+      <a href={p.url}>
+        {t.source} <span aria-hidden="true">↗</span>
+      </a>
+      <a href={`${p.url}/blob/main/${p.docs}`}>
+        {t.docs} <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
 </article>

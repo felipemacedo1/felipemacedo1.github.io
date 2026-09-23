@@ -1,0 +1,9 @@
+dist
+node_modules
+.astro
+.codex
+test-results
+package-lock.json
+public/badges
+public/og-image.svg
+src/data/credentials.generated.json

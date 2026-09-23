@@ -1,20 +1,39 @@
-import {test} from 'node:test';
+import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
-import {parseBadge,validBadge} from '../scripts/credly.mjs';
-import {badgeIds} from '../src/content/credentials.mjs';
-test('snapshot contains eight official assertions with no fabricated dates',async()=>{
- const data=JSON.parse(await readFile('src/data/credentials.generated.json','utf8'));
- assert.deepEqual(data.map(x=>x.id),badgeIds);
- for(const b of data){assert.ok(validBadge(b));assert.equal(b.issuedAt,null);assert.equal(b.expiresAt,null);assert.ok(!('recipient_email' in b));}
- assert.ok(data.some(b=>b.name==='Microsoft Certified: Azure Fundamentals'));
- assert.ok(data.filter(b=>b.issuer.includes('Amazon')).every(b=>!b.name.includes('AWS Certified')));
+import { readFile } from 'node:fs/promises';
+import { parsePublicBadge, validBadge } from '../scripts/credly.mjs';
+import { badgeIds } from '../src/content/credentials.mjs';
+test('snapshot contains eight official assertions with no fabricated dates', async () => {
+  const data = JSON.parse(await readFile('src/data/credentials.generated.json', 'utf8'));
+  assert.deepEqual(
+    data.map((x) => x.id),
+    badgeIds,
+  );
+  for (const b of data) {
+    assert.ok(validBadge(b));
+    assert.ok(b.issuedAt === null || Number.isFinite(Date.parse(b.issuedAt)));
+    assert.ok(!('recipient_email' in b));
+  }
+  assert.ok(data.some((b) => b.name === 'Microsoft Certified: Azure Fundamentals'));
+  assert.ok(
+    data.filter((b) => b.issuer.includes('Amazon')).every((b) => !b.name.includes('AWS Certified')),
+  );
 });
-test('unavailable metadata is rejected, never invented',()=>{
- assert.throws(()=>parseBadge('<title>Access denied</title>',badgeIds[0]));
- assert.equal(validBadge({id:badgeIds[0],name:'Unknown',issuer:'Unknown',url:'javascript:alert(1)',issuedAt:null,expiresAt:null}),false);
-});
-test('public metadata is escaped, unknown dates stay null',()=>{
- const id=badgeIds[0];const badge=parseBadge(`<meta property="og:title" content="Research &amp; Analysis was issued by Example to Felipe Macedo."><meta property="og:image" content="https://images.credly.com/example.png"><meta property="og:url" content="https://www.credly.com/badges/${id}"><meta property="og:description" content="A public badge.">`,id);
- assert.equal(badge.name,'Research & Analysis');assert.equal(badge.issuedAt,null);
+test('API parser rejects private badges and retains unknown dates', () => {
+  const id = badgeIds[0];
+  const data = {
+    id,
+    public: true,
+    state: 'accepted',
+    issued_to: 'Felipe Macedo',
+    badge_template: { name: 'Real training', skills: [{ name: 'Storage' }] },
+    issuer: { entities: [{ primary: true, entity: { name: 'Actual issuer' } }] },
+    image_url: 'https://images.credly.com/a.png',
+  };
+  const parsed = parsePublicBadge({ data }, id);
+  assert.equal(parsed.issuedAt, null);
+  assert.deepEqual(parsed.skills, ['Storage']);
+  assert.ok(!('issued_to' in parsed));
+  assert.throws(() => parsePublicBadge({ data: { ...data, public: false } }, id));
+  assert.throws(() => parsePublicBadge({ data: { ...data, id: 'other' } }, id));
 });

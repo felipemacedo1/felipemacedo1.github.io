@@ -1,435 +1,102 @@
-# 💻 Terminal Portfolio
+# Felipe Macedo — Engineering with context
 
-> Para rodar localmente com CSP e módulos ES, use um servidor HTTP:
->
-> - Python: `python3 -m http.server 8080`
-> - Node: `npx serve -l 8080`
-> - Docker/nginx: qualquer servidor estático
->
-> Abra: http://localhost:8080/
+Professional portfolio for systems analysis, software engineering, integration and modernization. The experience explains how Felipe investigates complex systems through four evidence-based case studies, professional background and verified credentials.
 
-<div align="center">
+**Production domain:** [felipemacedo.me](https://felipemacedo.me) · **Hosting:** GitHub Pages only · **Recurring infrastructure cost:** R$ 0.
 
-[![Version](https://img.shields.io/badge/Version-2.1.0-blue?style=for-the-badge)]()
-[![HTML5](https://img.shields.io/badge/HTML-5-E34F26?style=for-the-badge&logo=html5&logoColor=white)]()
-[![CSS3](https://img.shields.io/badge/CSS-3-1572B6?style=for-the-badge&logo=css3&logoColor=white)]()
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
-[![Terminal Retro](https://img.shields.io/badge/Terminal-Retro-00ff00?style=for-the-badge&logo=gnubash&logoColor=black)]()
-[![Mobile BIOS](https://img.shields.io/badge/Mobile-BIOS_Android-03DAC6?style=for-the-badge&logo=android&logoColor=white)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+![Desktop portfolio preview](docs/preview.webp)
 
-**🚀 Portfólio interativo dual: Terminal retrô para desktop + Interface BIOS Android para mobile**
+## Run locally
 
-[🔗 **Ver Demo**](https://felipemacedo1.github.io/index.html?desktop=true) | [📱 **Versão Mobile**](https://felipemacedo1.github.io/index.html?desktop=false) | [📚 **Documentação**](#-como-usar)
+Node 24 is the CI baseline (Node >=22.12 supported). Install from the lockfile:
 
-</div>
-
----
-
-## 🌟 Sobre o Projeto
-
-Um portfólio web inovador que oferece duas experiências completamente distintas e imersivas:
-
-- **🖥️ Desktop**: Terminal Linux/Unix autêntico com 25+ comandos interativos, histórico inteligente e 6 temas personalizáveis
-- **📱 Mobile**: Interface BIOS Android moderna com Material Design, boot sequence e navegação touch-friendly
-
-Desenvolvido inteiramente com **HTML, CSS e JavaScript vanilla** - sem frameworks ou dependências externas!
-
-### ✨ Por que este projeto é único?
-
-- **Dual Experience**: Cada plataforma tem sua interface nativa otimizada
-- **Zero Dependencies**: Funciona offline e carrega instantaneamente
-- **Arquitetura Limpa**: Código modular seguindo padrões de design
-- **Auto-Detection**: Redirecionamento inteligente baseado no dispositivo
-
----
-
-## 🎯 Acesso Rápido
-
-| Plataforma | Link | Descrição |
-|------------|------|-----------|
-| 🖥️ **Desktop** | [felipemacedo1.github.io/](https://felipemacedo1.github.io/index.html?desktop=true) | Terminal retrô completo |
-| 📱 **Mobile** | [felipemacedo1.github.io/index.html?desktop=false](https://felipemacedo1.github.io/index.html?desktop=false) | Interface BIOS Android |
-| 🔄 **Auto** | Detecção automática | Redireciona baseado no dispositivo |
-
----
-
-## 🎮 Como Usar
-
-### 🖥️ Desktop (Terminal Experience)
-
-1. **Acesse o terminal**: Abra `index.html` em qualquer navegador
-2. **Explore os comandos**: Digite `help` para ver todos os 25+ comandos disponíveis
-3. **Navegue inteligentemente**: 
-   - ↑↓ para histórico de comandos
-   - Tab para auto-complete
-   - `Ctrl+L` para limpar, `Ctrl+C` para cancelar
-4. **Personalize**: Use `theme [nome]` para alternar entre 6 temas
-
-```bash
-$ help                    # Lista todos os comandos
-$ about                   # Informações pessoais
-$ projects               # Portfólio de projetos
-$ skills                 # Habilidades técnicas
-$ theme matrix           # Troca para tema Matrix
-$ coffee                 # Easter egg divertido
+```sh
+npm ci
+npm run dev
 ```
 
-### 📱 Mobile (BIOS Experience)
+Open `http://localhost:4321`. Build and inspect the actual static output:
 
-1. **Acesso automático**: Dispositivos móveis são redirecionados automaticamente
-2. **Boot sequence**: Assista à animação de inicialização estilo Android
-3. **Navegação touch**: Interface otimizada com Material Design
-4. **Explore categorias**: Menus organizados em grid para fácil navegação
-5. **Modo desktop**: Use "Desktop Version" para forçar o terminal no mobile
-
----
-
-## ⚡ Funcionalidades
-
-### 🖥️ Terminal Desktop
-
-<details>
-<summary><strong>🖱️ Interface Autêntica</strong></summary>
-
-- **Cursor piscante** com efeitos de digitação realistas
-- **Histórico de comandos** navegável com setas ↑↓
-- **Auto-complete inteligente** ativado com Tab
-- **Atalhos de teclado** familiares (`Ctrl+L`, `Ctrl+C`)
-- **Feedback visual** em tempo real para todas as ações
-
-</details>
-
-<details>
-<summary><strong>🎨 Sistema de Temas (6 disponíveis)</strong></summary>
-
-| Tema | Comando | Descrição |
-|------|---------|-----------|
-| Dark | `theme dark` | Tema escuro clássico |
-| Light | `theme light` | Tema claro moderno |
-| Matrix | `theme matrix` | Estilo Matrix verde |
-| Hacker | `theme hacker` | Tema hacker verde/preto |
-| Retro | `theme retro` | Nostalgia dos anos 80 |
-| Contrast | `theme contrast` | Alto contraste (acessibilidade) |
-
-</details>
-
-<details>
-<summary><strong>🎮 Easter Eggs (8 implementados)</strong></summary>
-
-- `coffee` / `tdah` - Diagnóstico TDAH humorístico
-- `h4x0r-mode` - Modo hacker com efeitos especiais
-- `matrix` - Animação Matrix completa
-- `konami` - Código Konami clássico
-- `glitch` - Efeito glitch na tela
-- `ascii` - Logo ASCII animado
-- `growthfolio` - Organização GitHub
-- `eastereggs` - Lista todos os easter eggs
-
-</details>
-
-### 📱 Mobile BIOS
-
-<details>
-<summary><strong>🤖 Interface Android Autêntica</strong></summary>
-
-- **Boot sequence** animada simulando inicialização real
-- **Status bar** com hora e bateria (quando disponível)
-- **Material Design** com paleta teal e purple
-- **Navegação em grid** organizada por categorias
-- **Detail views** com informações expandidas
-
-</details>
-
-<details>
-<summary><strong>🎨 Design Mobile-First</strong></summary>
-
-- **Dark theme** otimizado para economia de bateria
-- **Touch-friendly** com botões de tamanho adequado
-- **Animações suaves** em todas as transições
-- **Responsive design** para tablets e smartphones
-- **Gesture support** para navegação natural
-
-</details>
-
----
-
-## 🛠️ Comandos Completos
-
-### 📋 Navegação Básica
-```bash
-help              # Lista todos os comandos disponíveis
-clear             # Limpa a tela do terminal
-menu              # Menu principal interativo
-about / 1         # Informações pessoais e apresentação
-projects / 2      # Portfólio completo de projetos
-contact / 3       # Informações de contato
+```sh
+npm run lint
+npm test
+npm run build
+npm run preview
 ```
 
-### 💼 Informações Profissionais
-```bash
-skills            # Skills técnicas com barras de progresso animadas
-experience        # Timeline de experiência profissional detalhada
-education         # Formação acadêmica completa
-certifications    # Certificados e cursos conquistados
-resume            # Download do currículo (PDF)
-status            # Status atual e disponibilidade
-whoami            # Apresentação pessoal técnica
+`dist/` contains complete HTML, CSS, JavaScript, fonts, badge images, social artwork, sitemap, robots and CNAME. No Node server, API route, database, serverless function, paid CDN or credentials are needed in production. No visitor tracking is installed. All rendered assets are served from this repository.
+
+## Architecture
+
+Astro renders pages at build time. TypeScript handles optional interactions. Three.js is a lazy chunk, not a prerequisite for rendering content. No React or client hydration framework is used. See [ADR 001](docs/ADR-001.md) and the [source audit](docs/SOURCES.md).
+
+| Location                              | Responsibility                                                    |
+| ------------------------------------- | ----------------------------------------------------------------- |
+| `src/content/profile.ts`              | Identity, canonical contacts, PT/EN editorial content             |
+| `src/content/projects.ts`             | Curated projects, evidence, limitations, repository links         |
+| `src/content/credentials.mjs`         | Eight official badge IDs                                          |
+| `src/data/credentials.generated.json` | Verified, committed fallback snapshot                             |
+| `src/components/`                     | Semantic sections, cases, SVG architecture diagrams               |
+| `src/graphics/scene.ts`               | One renderer, reusable particles and contextual viewports         |
+| `src/scripts/main.ts`                 | Motion preferences, lazy graphics, worker retirement              |
+| `src/styles/global.css`               | Design tokens and responsive layout                               |
+| `scripts/`                            | Build validation, Credly sync, original social artwork generation |
+| `tests/`                              | Data tests and real-browser smoke/accessibility tests             |
+
+PT-BR is `/`; English is `/en/`. Both are real static routes with canonical and hreflang links. To add Spanish, extend the locale type, add complete versioned copy and project translations, generate `/es/`, and update metadata/sitemap/tests. No runtime translation.
+
+## Visual system and graphics
+
+Graphite surfaces, restrained cyan signals, IBM Plex typography, fine rules and generous spacing. Diagrams explain the architecture rather than imply live telemetry. All topology, waveform, graph, mapping and trace artwork is original code; no template, proprietary footage or premium assets.
+
+One persistent WebGL2 canvas follows the active diagram. The same particles change configuration between topology, audio, impact paths, mapping and execution traces. Renderer work stops when the tab is hidden, no diagram is visible, or reduced motion has already drawn a static frame. Mobile uses 380 rather than 850 points, capped DPR 1.25 rather than 1.5, and 30 rather than 45 FPS.
+
+Three.js WebGPURenderer was evaluated; this lightweight point/line scene uses WebGL2 directly for smaller scope and predictable compatibility. **WebGPU is not implemented or required.** If WebGL2, initialization, JavaScript or dynamic imports fail, semantic HTML and original SVGs remain usable. `?no3d` offers a diagnostic fallback. Context loss removes the canvas.
+
+## Accessibility and performance
+
+Native anchors, skip navigation, visible focus, semantic headings, plain links, image dimensions, reduced-motion media query and an explicit motion toggle. There is no scroll hijacking, startup screen or cursor replacement. Core content and language navigation work without JavaScript. An optional `/legacy/` terminal is linked only in the footer; the previous implementation is recoverable at commit `3e0014b` / branch `archive/pre-engineering-redesign`.
+
+Build-enforced gzip budgets: HTML <30 KB per locale; all JavaScript <200 KB; CSS <20 KB. Local fonts and badge images are small, lazy images have dimensions, and no decorative video competes with the LCP. Detailed measurements and testing limits are in [QA.md](docs/QA.md).
+
+## Credly: build-time only
+
+```sh
+npm run sync:credly
+CREDLY_OFFLINE=1 npm run sync:credly  # Exercise committed fallback
 ```
 
-### 🔧 Comandos de Sistema
-```bash
-date              # Data e hora atual formatada
-pwd               # Diretório atual simulado
-ls                # Lista arquivos do portfólio
-ls -la            # Lista detalhada com permissões simuladas
-sudo              # Tentativa de privilégios (easter egg)
+The script calls the official public endpoint `/api/v1/public_badges/{id}` observed on Credly's own badge pages. It validates ID, public/accepted state, recipient and issuer, then whitelists name, issuer, description, image, issued/expires dates, skills, type and official URL. Recipient and tracking fields are never stored. Badge images are optimized locally to WebP.
+
+Failures preserve the last valid snapshot **per badge**. An incomplete first-ever snapshot fails explicitly rather than invent credentials. Unknown dates remain `null`; dates are never set to the current day. `checkedAt` is retrieval provenance, not issuance. Titles retain the issuer's wording: an AWS training badge is not AWS Certified. The verified Microsoft credential keeps its actual title.
+
+To add a badge, add its ID, run the sync, review the issuer/recipient/source, commit both JSON and optimized image, and update the snapshot test count. Builds work offline with the existing snapshot; CI attempts a refresh first.
+
+## Add or update a project
+
+Read the source project's README, current status, roadmap and architecture first. Edit `src/content/projects.ts` in both languages. Keep implemented evidence separate from planned scope. Update diagrams only when they improve understanding; never invent latency, confidence percentages or production qualification. Add provenance to `docs/SOURCES.md` and extend route/content checks where needed.
+
+## Validation
+
+```sh
+npx playwright install --with-deps chromium
+npm run test:e2e
+# Optional installed browser:
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome npm run test:e2e
+# Optional Lighthouse, while preview is running:
+npm run lighthouse
 ```
 
-### 🌐 Links Externos
-```bash
-github            # Perfil GitHub principal
-linkedin          # Perfil LinkedIn profissional
-```
+Smoke tests scroll all chapters at desktop/notebook/tablet/phone widths; check overflow, errors, keyboard, language, reduced motion, all-local asset requests, GPU failure, JavaScript disabled, axe WCAG A/AA and the optional terminal. Build validation checks every local route/asset/anchor and CNAME. `npm run format:check` checks source formatting.
 
----
+## GitHub Pages deployment
 
-## 🏗️ Arquitetura Técnica
+`.github/workflows/pages.yml` runs checkout → Node 24 → npm ci → Credly sync → lint → data tests → static build → Chromium smoke tests → upload **dist/**. Deployment runs only on `main`, after validation, using the GitHub Pages environment and official Actions. PRs validate without publishing. The `GITHUB_TOKEN` stays in Actions, never in browser code.
 
-### 📁 Estrutura Modular
+The repository must use **Settings → Pages → Source → GitHub Actions** (`build_type: workflow`). Before merging the migration, verify this setting; the audit initially found `legacy` publication. Preserve `felipemacedo.me` in both root CNAME and `public/CNAME`, and confirm it exists in `dist/CNAME`. Never upload the source root after introducing this build.
 
-```
-static-port/
-├── 📄 index.html              # Entrada desktop
-├── 📱 mobile.html             # Entrada mobile
-├── 🎨 css/                    # Estilos modulares
-│   ├── main.css               # Desktop principal
-│   ├── mobile-bios.css        # Mobile BIOS
-│   ├── terminal.css           # Componentes terminal
-│   ├── themes.css             # Sistema de temas
-│   └── animations.css         # Animações e efeitos
-├── 🔧 js/                     # JavaScript modular
-│   ├── main.js                # Entry point com detecção
-│   ├── mobile-bios.js         # Interface BIOS
-│   ├── core/                  # Funcionalidades centrais
-│   │   ├── Terminal.js        # Classe principal do terminal
-│   │   ├── CommandRegistry.js # Registro de comandos
-│   │   └── ThemeManager.js    # Gerenciamento de temas
-│   ├── commands/              # Comandos organizados
-│   │   ├── basic.js           # Comandos básicos
-│   │   ├── professional.js    # Info profissional
-│   │   ├── system.js          # Comandos de sistema
-│   │   └── eastereggs.js      # Easter eggs
-│   ├── features/              # Features específicas
-│   │   ├── autocomplete.js    # Auto-complete inteligente
-│   │   ├── history.js         # Histórico de comandos
-│   │   └── typewriter.js      # Efeito de digitação
-│   └── utils/                 # Utilitários
-│       ├── deviceDetection.js # Detecção de dispositivo
-│       └── helpers.js         # Funções auxiliares
-└── 📚 docs/                   # Documentação completa
-```
+The retirement worker at `/sw.js` removes only the old portfolio cache names, unregisters itself, and avoids leaving repeat visitors on stale terminal pages. A new PWA/manifest is intentionally unnecessary.
 
-### 🎯 Padrões de Design Implementados
+## Assets and licenses
 
-- **Command Pattern**: Comandos registrados dinamicamente
-- **Module Pattern**: ES6 modules com imports/exports
-- **Observer Pattern**: Event listeners organizados
-- **Factory Pattern**: Criação de componentes
-- **Singleton Pattern**: Instâncias únicas para managers
-- **Strategy Pattern**: Diferentes estratégias para temas
-
----
-
-## 🚀 Tecnologias
-
-### Frontend Core
-- **HTML5**: Estrutura semântica com ARIA labels para acessibilidade
-- **CSS3**: Variáveis customizadas, Grid/Flexbox, animações keyframes
-- **JavaScript ES6+**: Modules, Classes, Async/Await, Map/Set
-
-### Experience Mobile
-- **Material Design**: Paleta de cores teal/purple, componentes nativos
-- **Android BIOS Style**: Boot sequence, status bar, navigation grid
-- **Touch Optimization**: Gestos, feedback háptico, área de toque adequada
-
-### Experience Desktop
-- **Terminal Simulation**: Cursor piscante, typewriter effects, shell colors
-- **Command System**: 25+ comandos com parser inteligente
-- **Theme Engine**: Sistema de temas com CSS custom properties
-
-### Performance & Architecture
-- **Zero Dependencies**: Funciona completamente offline
-- **Lazy Loading**: Recursos carregados sob demanda
-- **Device Detection**: User agent + touch capability + screen size
-- **Local Storage**: Persistência de configurações e preferências
-
----
-
-## 🔄 Sistema Dual
-
-### Detecção Automática Inteligente
-
-```javascript
-// Critérios de detecção mobile
-- User Agent (dispositivos conhecidos)
-- Touch Capability (ontouchstart)
-- Screen Size (max-width: 768px)
-- Device Orientation (portrait/landscape)
-```
-
-### Navegação Fluida Entre Versões
-
-| Origem | Destino | Método |
-|--------|---------|--------|
-| Mobile → Desktop | Botão "Desktop Version" | Override manual |
-| Desktop → Mobile | Auto-redirect | Detecção automática |
-| URL Direta | Qualquer versão | Links específicos |
-| Configuração | Persistente | localStorage |
-
----
-
-## 📊 Performance & Otimizações
-
-### ⚡ Métricas de Performance
-
-- **First Paint**: < 200ms
-- **Interactive**: < 500ms
-- **Bundle Size**: < 50KB total
-- **Dependencies**: 0 (zero)
-- **Offline**: Funciona 100% offline
-
-### 🎯 Otimizações Implementadas
-
-- **CSS/JS Inline**: Recursos críticos embutidos
-- **Lazy Loading**: Comandos carregados sob demanda
-- **Memory Management**: Cleanup automático de event listeners
-- **Efficient Animations**: Transform/opacity apenas, 60fps garantido
-- **Local Storage**: Cache inteligente de configurações
-
----
-
-## 🌟 Diferenciais Competitivos
-
-### ✅ **Experiência Dual Nativa**
-- Terminal autêntico para entusiastas tech
-- Interface mobile moderna para usuários casuais
-- Transição fluida entre plataformas
-- Zero conflito entre versões
-
-### ✅ **Arquitetura Profissional**
-- Código limpo e bem documentado
-- Padrões de design industry-standard
-- Facilmente extensível e mantível
-- Testes unitários implementados
-
-### ✅ **UX/UI Excepcional**
-- Interfaces nativas para cada plataforma
-- Micro-interactions e feedback visual
-- Acessibilidade WCAG 2.1 AA
-- Performance otimizada para todos os dispositivos
-
----
-
-## 🚀 Instalação & Deploy
-
-### 📦 Instalação Local
-
-```bash
-# Clone o repositório
-git clone https://github.com/felipemacedo1/felipemacedo1.github.io.git
-cd static-port
-
-# Servidor local (escolha um):
-python -m http.server 8000        # Python
-npx serve .                       # Node.js
-php -S localhost:8000             # PHP
-
-# Acesso:
-# Desktop: http://localhost:8000/index.html?desktop=true
-# Mobile: http://localhost:8000/index.html?desktop=false
-```
-### 🐛 Reportar Bugs
-
-Use as [Issues do GitHub](https://github.com/felipemacedo1/felipemacedo1.github.io/issues) com:
-- Descrição clara do problema
-- Passos para reproduzir
-- Screenshots se aplicável
-- Ambiente (browser, SO, dispositivo)
-
----
-
-## 📄 Licença
-
-Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](./LICENSE) para detalhes completos.
-
----
-
-## 🏆 Créditos & Reconhecimentos
-
-### 👨‍💻 Desenvolvedor Principal
-**[Felipe Macedo](https://github.com/felipemacedo1)**
-- 🎯 Concept & Architecture
-- 💻 Full-Stack Development
-- 🎨 UI/UX Design
-- 📱 Mobile Experience
-
-### 🏢 Organização
-**[Growthfolio](https://github.com/orgs/growthfolio/)**
-- 🚀 Project Management
-- 📊 Quality Assurance
-- 🔧 DevOps & Infrastructure
-
-### 🙏 Agradecimentos Especiais
-- **Comunidade Open Source** pela inspiração
-- **Beta Testers** pelos feedbacks valiosos
-- **Contributors** pelas melhorias
-
----
-
-## 📈 Estatísticas do Projeto
-
-<div align="center">
-
-![GitHub stars](https://img.shields.io/github/stars/felipemacedo1/felipemacedo1.github.io?style=social)
-![GitHub forks](https://img.shields.io/github/forks/felipemacedo1/felipemacedo1.github.io?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/felipemacedo1/felipemacedo1.github.io?style=social)
-
-![GitHub last commit](https://img.shields.io/github/last-commit/felipemacedo1/felipemacedo1.github.io)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/felipemacedo1/felipemacedo1.github.io)
-![GitHub code size](https://img.shields.io/github/languages/code-size/felipemacedo1/felipemacedo1.github.io)
-
-</div>
-
----
-
-<div align="center">
-
-### 🌟 Gostou do projeto?
-
-**⭐ Dê uma estrela no GitHub!**  
-**🔄 Compartilhe com seus amigos!**  
-**🤝 Contribua com melhorias!**
-
----
-
-**© 2025 Felipe Macedo. Todos os direitos reservados.**
-
-*💡 Inspirado pela nostalgia dos terminais clássicos e a modernidade dos dispositivos móveis.*
-
-</div>
-
----
-
-### 🔗 Links Úteis
-
-- [📖 **Documentação Completa**](./docs/)
-- [🐛 **Reportar Bug**](https://github.com/felipemacedo1/felipemacedo1.github.io/issues)
-- [💡 **Sugerir Feature**](https://github.com/felipemacedo1/felipemacedo1.github.io/discussions)
-- [📧 **Contato Direto**](mailto:felipe@exemplo.com)
-
----
-
-### 🏷️ Tags
-
-`portfolio` `terminal` `javascript` `html5` `css3` `retro` `interactive` `mobile-first` `responsive` `material-design` `progressive-web-app` `offline-first` `es6-modules` `command-line` `bios-interface` `dual-experience` `performance` `accessibility` `open-source` `mit-license`
+Site code: [MIT](LICENSE). Three.js: MIT. Astro: MIT. IBM Plex Sans/Mono via Fontsource: SIL Open Font License; licenses are shipped in `public/licenses/`. Icons and diagrams are original SVG paths. Portrait is Felipe's existing growthfolio image, resized without facial alterations. Credly badges remain the intellectual property of their issuers and are displayed only to identify their linked public credentials. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
