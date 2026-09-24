@@ -7,4 +7,5 @@ export const badgeIds = [
   'c1cb7ff3-a435-4f34-a046-dd5a1a885d09',
   'f61b26e5-f236-4f74-a963-90a7daa9d8c1',
   '1e2ca8f1-6abd-4487-979b-0d2d22077df4',
+  'acdc8d79-0799-4ca5-a2c1-f34d61ce213b',
 ];

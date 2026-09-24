@@ -3,8 +3,9 @@
     "name": "Felipe Macedo",
     "site": "https://felipemacedo.me",
     "github": "https://github.com/felipemacedo1",
-    "linkedin": "https://www.linkedin.com/in/felipe-macedo-",
-    "email": "felipemacedo.dev@gmail.com"
+    "linkedin": "https://www.linkedin.com/in/felipemacedo1/",
+    "email": "felipealexandrej@gmail.com",
+    "resume": "/cv/Felipe-Macedo-CV-2026.pdf"
   },
   "copy": {
     "pt": {
@@ -109,7 +110,11 @@
       "more": "Mais experimentos no GitHub",
       "motion": "Reduzir animações",
       "motionOff": "Ativar animações",
-      "top": "Voltar ao início"
+      "top": "Voltar ao início",
+      "resume": "Ver currículo",
+      "resumePreview": "Pré-visualizar currículo",
+      "resumeDownload": "Baixar PDF",
+      "credentialsAll": "Ver todas as credenciais"
     },
     "en": {
       "lang": "en",
@@ -213,7 +218,11 @@
       "more": "More experiments on GitHub",
       "motion": "Reduce animations",
       "motionOff": "Enable animations",
-      "top": "Back to top"
+      "top": "Back to top",
+      "resume": "View résumé",
+      "resumePreview": "Preview résumé",
+      "resumeDownload": "Download PDF",
+      "credentialsAll": "View all credentials"
     }
   }
 }

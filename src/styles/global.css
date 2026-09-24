@@ -1345,3 +1345,197 @@ html[data-motion='reduced'] *::before {
     font-size: 8px;
   }
 }
+
+/* Document and credentials routes keep the portfolio system but give long-form material room to breathe. */
+.document-main,
+.credentials-main {
+  padding-block: 92px 120px;
+}
+.document-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 48px;
+  margin-bottom: 58px;
+}
+.document-heading h1 {
+  font-size: clamp(44px, 6vw, 82px);
+  letter-spacing: -0.055em;
+}
+.document-heading p {
+  max-width: 560px;
+  margin-top: 20px;
+  font-size: 17px;
+}
+.document-section-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-bottom: 18px;
+}
+.document-section-label h2 {
+  font-size: 24px;
+}
+.pdf-preview {
+  background: #121b23;
+  border: 1px solid var(--line);
+  padding: 28px;
+}
+.pdf-preview object {
+  display: block;
+  width: 100%;
+  height: min(76vh, 980px);
+  min-height: 560px;
+  border: 1px solid #34434f;
+  background: #f7f7f7;
+}
+.pdf-preview object p,
+.pdf-preview object a {
+  margin: 24px;
+}
+.document-fallback {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  font-size: 13px;
+}
+.credential-category {
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.credential-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+}
+.credential-links a {
+  font-size: 12px;
+}
+.credentials-more {
+  margin-top: 18px;
+}
+.credential-group {
+  margin-top: 72px;
+}
+.credential-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.credential-detail {
+  min-height: 310px;
+}
+.credential-detail h3 {
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+.credential-detail > p:not(.credential-category) {
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.credential-detail dl {
+  margin: 0 0 20px;
+  font-size: 11px;
+}
+.credential-detail dt {
+  color: #81929f;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  font-size: 9px;
+}
+.credential-detail dd {
+  margin: 4px 0 0;
+  color: #c9d2d9;
+}
+.certificate-group {
+  margin-top: 90px;
+}
+.certificate-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.certificate-card {
+  background: #10171e;
+}
+.certificate-card summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  cursor: pointer;
+  padding: 24px;
+  list-style: none;
+}
+.certificate-card summary::-webkit-details-marker {
+  display: none;
+}
+.certificate-card summary strong,
+.certificate-card summary small {
+  display: block;
+}
+.certificate-card summary strong {
+  font-size: 18px;
+  font-weight: 400;
+}
+.certificate-card summary small {
+  color: var(--muted);
+  margin-top: 5px;
+}
+.certificate-body {
+  padding: 0 24px 28px;
+  max-width: 900px;
+}
+.certificate-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.certificate-body p {
+  margin: 18px 0;
+  font-size: 14px;
+}
+.certificate-body a {
+  font-size: 13px;
+}
+@media (max-width: 760px) {
+  .document-main,
+  .credentials-main {
+    padding-block: 56px 80px;
+  }
+  .document-heading {
+    display: block;
+    margin-bottom: 38px;
+  }
+  .document-heading .button {
+    margin-top: 25px;
+  }
+  .pdf-preview {
+    padding: 16px;
+  }
+  .pdf-preview object {
+    height: 70vh;
+    min-height: 420px;
+  }
+  .credential-list {
+    grid-template-columns: 1fr;
+  }
+  .certificate-card summary {
+    padding: 20px 16px;
+  }
+  .certificate-body {
+    padding-inline: 16px;
+  }
+}

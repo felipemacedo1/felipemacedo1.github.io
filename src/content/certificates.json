@@ -1,0 +1,61 @@
+[
+  {
+    "id": "systems-computing-security",
+    "asset": "/certificates/certificado-sistemas-computacionais-seguranca.png",
+    "title": { "pt": "Sistemas Computacionais e Segurança", "en": "Computer Systems and Security" },
+    "issuer": "Universidade Anhembi Morumbi",
+    "category": { "pt": "unidade curricular", "en": "academic course" },
+    "hours": 160,
+    "date": "2024-04-30",
+    "description": {
+      "pt": "Unidade curricular de 160 horas sobre fundamentos de sistemas computacionais, arquitetura de computadores, segurança da informação, riscos, vulnerabilidades e proteção de ambientes computacionais.",
+      "en": "A 160-hour academic course covering computer systems, computer architecture, information security, risks, vulnerabilities and protection of computing environments."
+    }
+  },
+  {
+    "id": "cyber-threat-management",
+    "asset": "/certificates/certificado-cyber-threat-management.png",
+    "title": { "pt": "Cyber Threat Management", "en": "Cyber Threat Management" },
+    "issuer": "Cisco Networking Academy",
+    "category": { "pt": "curso / badge de aprendizagem", "en": "course / learning badge" },
+    "credlyId": "947a0b6f-ebd4-4089-9158-48dc187c5068"
+  },
+  {
+    "id": "computer-forensics-foundations",
+    "asset": "/certificates/certificado-fundamentos-forense-computacional.png",
+    "title": {
+      "pt": "Fundamentos de Forense Computacional",
+      "en": "Computer Forensics Foundations"
+    },
+    "issuer": "Centro Universitário FMU | FIAM-FAAM",
+    "category": { "pt": "curso livre", "en": "short course" },
+    "hours": 40,
+    "description": {
+      "pt": "Curso livre de 40 horas sobre coleta, preservação e análise de evidências digitais em mídias, redes, imagens e dispositivos móveis, incluindo conceitos de antiforense e legislação aplicável.",
+      "en": "A 40-hour course on collecting, preserving and analyzing digital evidence across media, networks, images and mobile devices, including anti-forensics concepts and applicable law."
+    }
+  },
+  {
+    "id": "introduction-to-cybersecurity",
+    "asset": "/certificates/certificado-introducao-ciberseguranca.png",
+    "title": { "pt": "Introduction to Cybersecurity", "en": "Introduction to Cybersecurity" },
+    "issuer": "Cisco Networking Academy",
+    "category": { "pt": "curso / badge de aprendizagem", "en": "course / learning badge" },
+    "credlyId": "0ce03a22-0f7a-42a4-b12d-408ccf4441d9"
+  },
+  {
+    "id": "protect-data-digital-age",
+    "asset": "/certificates/certificado-proteger-dados-era-digital.png",
+    "title": {
+      "pt": "Como Proteger Seus Dados na Era Digital",
+      "en": "Protecting Your Data in the Digital Age"
+    },
+    "issuer": "Centro Universitário FMU | FIAM-FAAM",
+    "category": { "pt": "curso livre", "en": "short course" },
+    "hours": 60,
+    "description": {
+      "pt": "Curso livre de 60 horas sobre proteção de dados e defesa contra phishing, malware e engenharia social, além de criptografia, autenticação, assinatura digital, políticas de segurança, firewalls, proxies e IDS.",
+      "en": "A 60-hour course on data protection and defense against phishing, malware and social engineering, covering encryption, authentication, digital signatures, security policies, firewalls, proxies and IDS."
+    }
+  }
+]

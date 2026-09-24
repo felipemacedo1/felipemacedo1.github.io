@@ -1,0 +1,113 @@
+---
+import { copy, profile, type Locale } from '../content/profile';
+import '../styles/global.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = copy[locale];
+const isPortuguese = locale === 'pt';
+const pagePath = isPortuguese ? '/curriculo/' : '/en/resume/';
+const pdf = profile.resume;
+---
+
+<!doctype html>
+<html lang={t.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{isPortuguese ? 'Currículo' : 'Résumé'} — Felipe Macedo</title>
+    <meta
+      name="description"
+      content={
+        isPortuguese
+          ? 'Currículo profissional de Felipe Macedo.'
+          : 'Felipe Macedo professional résumé.'
+      }
+    />
+    <link rel="canonical" href={`${profile.site}${pagePath}`} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="document-page">
+    <a class="skip" href="#main">
+      {t.skip}
+    </a>
+    <header class="header">
+      <a class="brand" href={isPortuguese ? '/' : '/en/'} aria-label={`Felipe Macedo — ${t.top}`}>
+        <span class="brand-mark" aria-hidden="true">
+          f<span>m</span>
+          <i></i>
+        </span>
+        <span>Felipe Macedo</span>
+      </a>
+      <nav aria-label={isPortuguese ? 'Navegação da página' : 'Page navigation'}>
+        <a href={isPortuguese ? '/' : '/en/'}>{isPortuguese ? 'Portfólio' : 'Portfolio'}</a>
+        <a href={isPortuguese ? '/credenciais/' : '/en/credentials/'}>{t.credentialsAll}</a>
+      </nav>
+      <div class="languages" aria-label="Language">
+        <a href="/curriculo/" lang="pt-BR" aria-current={isPortuguese ? 'page' : undefined}>
+          PT
+        </a>
+        <span>/</span>
+        <a href="/en/resume/" lang="en" aria-current={!isPortuguese ? 'page' : undefined}>
+          EN
+        </a>
+      </div>
+    </header>
+    <main id="main" class="document-main wrap">
+      <p class="eyebrow">{isPortuguese ? 'DOCUMENTO PROFISSIONAL' : 'PROFESSIONAL DOCUMENT'}</p>
+      <div class="document-heading">
+        <div>
+          <h1>{isPortuguese ? 'Currículo' : 'Résumé'}</h1>
+          <p>
+            {isPortuguese
+              ? 'Uma visão compacta da trajetória de Felipe em análise de sistemas, backend e engenharia de software.'
+              : 'A compact view of Felipe’s background in systems analysis, backend and software engineering.'}
+          </p>
+        </div>
+        <a class="button primary" href={pdf} download="Felipe-Macedo-CV-2026.pdf">
+          {t.resumeDownload} <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <section class="pdf-preview" aria-labelledby="preview-title">
+        <div class="document-section-label">
+          <span class="mono">PDF / 2026</span>
+          <h2 id="preview-title">{t.resumePreview}</h2>
+        </div>
+        <object
+          data={pdf}
+          type="application/pdf"
+          aria-label={isPortuguese ? 'Pré-visualização do currículo em PDF' : 'Résumé PDF preview'}
+        >
+          <p>
+            {isPortuguese
+              ? 'Seu navegador não renderiza PDFs incorporados.'
+              : 'Your browser does not render embedded PDFs.'}
+          </p>
+          <a href={pdf} target="_blank" rel="noreferrer">
+            {isPortuguese ? 'Abrir PDF em nova aba' : 'Open PDF in a new tab'}
+          </a>
+          <a href={pdf} download="Felipe-Macedo-CV-2026.pdf">
+            {t.resumeDownload}
+          </a>
+        </object>
+      </section>
+      <p class="document-fallback">
+        <a href={pdf} target="_blank" rel="noreferrer">
+          {isPortuguese ? 'Abrir currículo em nova aba' : 'Open résumé in a new tab'} ↗
+        </a>
+      </p>
+    </main>
+    <footer class="wrap footer">
+      <div>
+        <a href={isPortuguese ? '/' : '/en/'} class="brand">
+          Felipe Macedo<span aria-hidden="true">↗</span>
+        </a>
+        <p>{t.footer}</p>
+      </div>
+      <span class="mono">© {new Date().getFullYear()} / FM</span>
+    </footer>
+  </body>
+</html>

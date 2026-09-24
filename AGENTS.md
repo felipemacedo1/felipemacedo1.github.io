@@ -26,9 +26,15 @@ Gzip build budgets: all JS <200 KB; CSS <20 KB; each locale HTML <30 KB. Do not 
 
 Semantic HTML remains complete with JS disabled. Keep native anchors, browser scrolling, keyboard access, visible focus, skip link and one h1. Do not hide content for animation. Decorative canvas is aria-hidden and pointer-transparent. Honor OS reduced-motion changes and the explicit toggle. Avoid aria-label replacing visible link text with a different name. Diagrams need HTML labels or meaningful SVG names; static fallback is first-class.
 
+## Contacts, résumé and credentials
+
+- Canonical contacts and the résumé URL are in `src/content/profile.json`; do not duplicate them in components. The résumé routes are `/curriculo/` and `/en/resume/`, and the PDF must remain at `public/cv/Felipe-Macedo-CV-2026.pdf`.
+- Credential metadata is split between the official generated snapshot and localized editorial copy in `src/content/credential-editorial.json`. Never label AWS training as AWS Certified.
+- Visual certificate metadata is in `src/content/certificates.json`; preserve supplied files byte-for-byte in `public/certificates/`. Do not publish the résumé phone number elsewhere.
+
 ## Credly
 
-IDs: `src/content/credentials.mjs`. Run `npm run sync:credly`; review and commit `src/data/credentials.generated.json` plus `public/badges/`. Official source is `/api/v1/public_badges/{id}`; no `/api/credly` production route. Whitelist metadata, validate public/accepted state and Felipe's recipient identity, exclude personal recipient/tracking fields. Exact issuer names/titles; unknown dates null. Preserve prior valid snapshot on outage. Never replace issuance with today's date. `checkedAt` is retrieval time only. Run `CREDLY_OFFLINE=1 npm run sync:credly` to verify fallback stability.
+IDs: `src/content/credentials.mjs`. Run `npm run sync:credly`; review and commit `src/data/credentials.generated.json` plus `public/badges/`. Official source is `/api/v1/public_badges/{id}`; no `/api/credly` production route. Whitelist metadata, validate public/accepted state and Felipe's recipient identity, exclude personal recipient/tracking fields. Exact issuer names/titles; unknown dates null. Preserve prior valid snapshot on outage. Never replace issuance with today's date. `checkedAt` is retrieval time only. Run `CREDLY_OFFLINE=1 npm run sync:credly` to verify fallback stability. The snapshot currently contains nine IDs, including Generation's `acdc8d79-0799-4ca5-a2c1-f34d61ce213b`.
 
 ## Validation and deploy
 
