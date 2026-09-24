@@ -64,7 +64,7 @@
       "impactKicker": "EVIDÊNCIA NO DIA A DIA",
       "impactTitle": "De minutos a uma resposta\npraticamente instantânea.",
       "impact": "Uma consulta do sistema de engenharia da SANSUY levava minutos. Ao investigar o problema e desenvolver uma solução alinhada ao processo, reduzi a espera a uma resposta praticamente instantânea — uma mudança perceptível para o engenheiro responsável.",
-      "impactNote": "Relato de experiência profissional. Sem métricas de benchmark ou dados internos publicados.",
+      "impactNote": "Ao entender o processo por trás da consulta, a espera deixou de interromper o trabalho de engenharia.",
       "educationKicker": "04 / FORMAÇÃO & CREDENCIAIS",
       "educationTitle": "Fundamento técnico.\nAprendizado contínuo.",
       "degree": "GRADUAÇÃO",
@@ -72,7 +72,7 @@
       "ongoing": "Em andamento",
       "degrees": ["Gestão da Tecnologia da Informação", "Ciência da Computação"],
       "training": "FORMAÇÃO COMPLEMENTAR",
-      "trainingNote": "Cursos e treinamentos; não equivalem automaticamente a certificações profissionais.",
+      "trainingNote": "Formações que ampliam repertório para trabalhar com sistemas, cloud, dados e segurança.",
       "courses": [
         "Generation Brasil — Full Stack Java · Turma 69",
         "AWS re/Start",
@@ -81,7 +81,7 @@
         "Cyber Threat Management"
       ],
       "badges": "Credenciais verificáveis",
-      "badgesNote": "Nomes e emissores preservados conforme o Credly. Badges de treinamento não são apresentadas como certificações AWS.",
+      "badgesNote": "Credenciais verificáveis, com links para a fonte oficial e descrições editoriais curtas.",
       "verify": "Ver no Credly",
       "details": "Sobre a credencial",
       "unknownDate": "Data não informada na fonte",
@@ -172,7 +172,7 @@
       "impactKicker": "EVIDENCE IN EVERYDAY WORK",
       "impactTitle": "From minutes to\nnearly instant.",
       "impact": "A query in SANSUY’s engineering system took minutes. By investigating the problem and developing a solution aligned with the process, I brought the wait down to a nearly instant response — a noticeable change for the engineer responsible.",
-      "impactNote": "Professional experience account. No published benchmark or internal business data.",
+      "impactNote": "Understanding the process behind the query turned the wait into an immediate part of the engineering workflow.",
       "educationKicker": "04 / EDUCATION & CREDENTIALS",
       "educationTitle": "Technical foundations.\nContinuous learning.",
       "degree": "HIGHER EDUCATION",
@@ -180,7 +180,7 @@
       "ongoing": "In progress",
       "degrees": ["Information Technology Management", "Computer Science"],
       "training": "ADDITIONAL TRAINING",
-      "trainingNote": "Courses and training programs; these do not automatically imply professional certification.",
+      "trainingNote": "Learning paths that expand practical work across systems, cloud, data and security.",
       "courses": [
         "Generation Brasil — Full Stack Java · Cohort 69",
         "AWS re/Start",
@@ -189,7 +189,7 @@
         "Cyber Threat Management"
       ],
       "badges": "Verifiable credentials",
-      "badgesNote": "Names and issuers preserved as published by Credly. Training badges are not presented as AWS certifications.",
+      "badgesNote": "Verifiable credentials with links to the official source and concise editorial context.",
       "verify": "Verify on Credly",
       "details": "About this credential",
       "unknownDate": "Date not provided by source",
