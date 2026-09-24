@@ -2,6 +2,7 @@
 import { copy, profile, type Locale } from '../content/profile';
 import { projects } from '../content/projects';
 import credentials from '../data/credentials.generated.json';
+import editorial from '../content/credential-editorial.json';
 import Diagram from './Diagram.astro';
 import Project from './Project.astro';
 import '../styles/global.css';
@@ -21,6 +22,16 @@ const formatDate = (date: string) =>
     timeZone: 'UTC',
   }).format(new Date(date));
 const canonical = profile.site + (locale === 'pt' ? '/' : '/en/');
+const categoryLabel = (category: string) =>
+  category.replace(/^./, (letter) => letter.toUpperCase());
+const featuredCredentialIds = new Set([
+  'c1cb7ff3-a435-4f34-a046-dd5a1a885d09',
+  '7f62f225-3005-4043-b762-eb608f07636b',
+  'acdc8d79-0799-4ca5-a2c1-f34d61ce213b',
+  '1e2ca8f1-6abd-4487-979b-0d2d22077df4',
+  '947a0b6f-ebd4-4089-9158-48dc187c5068',
+  '0ce03a22-0f7a-42a4-b12d-408ccf4441d9',
+]);
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -127,6 +138,9 @@ const schema = {
             </a>
             <a class="text-link" href={profile.linkedin}>
               LinkedIn ↗
+            </a>
+            <a class="text-link" href={locale === 'pt' ? '/curriculo/' : '/en/resume/'}>
+              {t.resume} ↗
             </a>
             <a class="text-link" href={profile.github}>
               GitHub ↗
@@ -294,32 +308,62 @@ const schema = {
             <p>{t.badgesNote}</p>
           </div>
           <div class="credentials">
-            {credentials.map((b) => (
-              <article class="credential">
-                <div class="credential-head">
-                  {'localImage' in b && (
-                    <img src={String(b.localImage)} width="64" height="64" loading="lazy" alt="" />
-                  )}
-                  <p class="mono">{b.issuer}</p>
-                </div>
-                <h4>{b.name}</h4>
-                <details>
-                  <summary>{t.details}</summary>
-                  <p lang="en">{b.description}</p>
-                  <p>{b.issuedAt ? `${t.issued}: ${formatDate(b.issuedAt)}` : t.unknownDate}</p>
-                  {b.expiresAt && (
-                    <p>
-                      {t.expires}: {formatDate(b.expiresAt)}
+            {credentials
+              .filter((b) => featuredCredentialIds.has(b.id))
+              .map((b) => {
+                const meta = editorial[b.id as keyof typeof editorial];
+                const certificate = meta && 'certificate' in meta ? meta.certificate : undefined;
+                return (
+                  <article class="credential">
+                    <div class="credential-head">
+                      {'localImage' in b && (
+                        <img
+                          src={String(b.localImage)}
+                          width="64"
+                          height="64"
+                          loading="lazy"
+                          alt=""
+                        />
+                      )}
+                      <p class="mono">{b.issuer}</p>
+                    </div>
+                    <p class="credential-category mono">
+                      {meta?.category?.[locale] ?? categoryLabel(String(b.type ?? 'credential'))}
                     </p>
-                  )}
-                </details>
-                <a href={b.url}>
-                  {t.verify}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </article>
-            ))}
+                    <h4>{b.name}</h4>
+                    <details>
+                      <summary>{t.details}</summary>
+                      <p>{meta?.description?.[locale] ?? b.description}</p>
+                      <p>{b.issuedAt ? `${t.issued}: ${formatDate(b.issuedAt)}` : t.unknownDate}</p>
+                      {b.expiresAt && (
+                        <p>
+                          {t.expires}: {formatDate(b.expiresAt)}
+                        </p>
+                      )}
+                    </details>
+                    <div class="credential-links">
+                      <a href={b.url}>
+                        {t.verify}
+                        <span aria-hidden="true">↗</span>
+                      </a>
+                      {certificate && (
+                        <a href={certificate.asset} target="_blank" rel="noreferrer">
+                          {certificate.label[locale]}
+                          <span aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
           </div>
+          <a
+            class="more-link credentials-more"
+            href={locale === 'pt' ? '/credenciais/' : '/en/credentials/'}
+          >
+            {t.credentialsAll}
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </section>
       <section class="section wrap" id="direction">
