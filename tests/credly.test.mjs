@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { parsePublicBadge, validBadge } from '../scripts/credly.mjs';
 import { badgeIds } from '../src/content/credentials.mjs';
-test('snapshot contains eight official assertions with no fabricated dates', async () => {
+test('snapshot contains nine official assertions with no fabricated dates', async () => {
   const data = JSON.parse(await readFile('src/data/credentials.generated.json', 'utf8'));
   assert.deepEqual(
     data.map((x) => x.id),
@@ -14,7 +14,16 @@ test('snapshot contains eight official assertions with no fabricated dates', asy
     assert.ok(b.issuedAt === null || Number.isFinite(Date.parse(b.issuedAt)));
     assert.ok(!('recipient_email' in b));
   }
+  assert.equal(new Set(data.map((b) => b.id)).size, 9);
   assert.ok(data.some((b) => b.name === 'Microsoft Certified: Azure Fundamentals'));
+  assert.equal(
+    data.find((b) => b.id === 'acdc8d79-0799-4ca5-a2c1-f34d61ce213b')?.issuedAt,
+    '2026-04-19',
+  );
+  assert.equal(
+    data.find((b) => b.id === 'acdc8d79-0799-4ca5-a2c1-f34d61ce213b')?.issuer,
+    'Generation.org',
+  );
   assert.ok(
     data.filter((b) => b.issuer.includes('Amazon')).every((b) => !b.name.includes('AWS Certified')),
   );

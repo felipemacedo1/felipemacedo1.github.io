@@ -30,20 +30,26 @@ npm run preview
 
 Astro renders pages at build time. TypeScript handles optional interactions. Three.js is a lazy chunk, not a prerequisite for rendering content. No React or client hydration framework is used. See [ADR 001](docs/ADR-001.md) and the [source audit](docs/SOURCES.md).
 
-| Location                              | Responsibility                                                    |
-| ------------------------------------- | ----------------------------------------------------------------- |
-| `src/content/profile.ts`              | Identity, canonical contacts, PT/EN editorial content             |
-| `src/content/projects.ts`             | Curated projects, evidence, limitations, repository links         |
-| `src/content/credentials.mjs`         | Eight official badge IDs                                          |
-| `src/data/credentials.generated.json` | Verified, committed fallback snapshot                             |
-| `src/components/`                     | Semantic sections, cases, SVG architecture diagrams               |
-| `src/graphics/scene.ts`               | One renderer, reusable particles and contextual viewports         |
-| `src/scripts/main.ts`                 | Motion preferences, lazy graphics, worker retirement              |
-| `src/styles/global.css`               | Design tokens and responsive layout                               |
-| `scripts/`                            | Build validation, Credly sync, original social artwork generation |
-| `tests/`                              | Data tests and real-browser smoke/accessibility tests             |
+| Location                                | Responsibility                                                    |
+| --------------------------------------- | ----------------------------------------------------------------- |
+| `src/content/profile.ts`                | Identity, canonical contacts, PT/EN editorial content             |
+| `src/content/projects.ts`               | Curated projects, evidence, limitations, repository links         |
+| `src/content/credentials.mjs`           | Nine official Credly badge IDs                                    |
+| `src/data/credentials.generated.json`   | Verified, committed fallback snapshot                             |
+| `src/content/credential-editorial.json` | Localized descriptions and honest credential taxonomy             |
+| `src/content/certificates.json`         | Metadata for supplied visual certificates                         |
+| `src/components/`                       | Semantic sections, cases, SVG architecture diagrams               |
+| `src/graphics/scene.ts`                 | One renderer, reusable particles and contextual viewports         |
+| `src/scripts/main.ts`                   | Motion preferences, lazy graphics, worker retirement              |
+| `src/styles/global.css`                 | Design tokens and responsive layout                               |
+| `scripts/`                              | Build validation, Credly sync, original social artwork generation |
+| `tests/`                                | Data tests and real-browser smoke/accessibility tests             |
 
 PT-BR is `/`; English is `/en/`. Both are real static routes with canonical and hreflang links. To add Spanish, extend the locale type, add complete versioned copy and project translations, generate `/es/`, and update metadata/sitemap/tests. No runtime translation.
+
+The résumé is a static document at [`/curriculo/`](https://felipemacedo.me/curriculo/) and [`/en/resume/`](https://felipemacedo.me/en/resume/), with the source PDF at `public/cv/Felipe-Macedo-CV-2026.pdf`. Credential detail pages live at [`/credenciais/`](https://felipemacedo.me/credenciais/) and `/en/credentials/`; the home page intentionally shows only a small priority set. Visual certificate evidence stays in `public/certificates/` and is opened from accessible native `<details>` disclosures.
+
+Canonical contacts live only in `src/content/profile.json`. Replace the PDF at the same public path when updating the résumé, preserve its filename and do not copy its phone number into page content. Add a Credly ID to `src/content/credentials.mjs`, run `npm run sync:credly`, review the official snapshot, then add its localized editorial entry by ID. Official Credly metadata and editorial copy are separate by design. Add supplied certificate files without editing them and register their metadata in `src/content/certificates.json`.
 
 ## Visual system and graphics
 

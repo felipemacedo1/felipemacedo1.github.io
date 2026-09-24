@@ -1,10 +1,31 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import assert from 'node:assert/strict';
-const htmls = ['index.html', 'en/index.html', 'legacy/index.html', 'mobile.html', '404.html'];
+const htmls = [
+  'index.html',
+  'en/index.html',
+  'legacy/index.html',
+  'mobile.html',
+  '404.html',
+  'curriculo/index.html',
+  'en/resume/index.html',
+  'credenciais/index.html',
+  'en/credentials/index.html',
+];
 assert.equal((await readFile('dist/CNAME', 'utf8')).trim(), 'felipemacedo.me');
+for (const asset of [
+  'cv/Felipe-Macedo-CV-2026.pdf',
+  'certificates/certificado-sistemas-computacionais-seguranca.png',
+  'certificates/certificado-cyber-threat-management.png',
+  'certificates/certificado-fundamentos-forense-computacional.png',
+  'certificates/certificado-introducao-ciberseguranca.png',
+  'certificates/certificado-proteger-dados-era-digital.png',
+])
+  assert.ok((await stat(`dist/${asset}`)).isFile(), `Missing document asset ${asset}`);
 for (const path of htmls) {
   const html = await readFile(`dist/${path}`, 'utf8');
+  assert.ok(!html.includes(['felipemacedo.dev', '@gmail.com'].join('')));
+  assert.ok(!html.includes(['linkedin.com/in/felipe', '-macedo-', '"'].join('')));
   for (const [, url] of html.matchAll(/\b(?:src|href)="(\/[^"#?]*)"/g)) {
     const file = `dist${url}${url.endsWith('/') ? 'index.html' : ''}`;
     assert.ok((await stat(file)).isFile(), `Broken asset/route ${url} in ${path}`);
