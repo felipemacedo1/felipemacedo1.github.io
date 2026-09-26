@@ -10,24 +10,32 @@
   "copy": {
     "pt": {
       "lang": "pt-BR",
-      "title": "Felipe Macedo — Análise de Sistemas & Engenharia de Software",
-      "description": "Analista de Sistemas na SANSUY. Investigação, integração e modernização de sistemas corporativos. Projetos, trajetória e credenciais de Felipe Macedo.",
-      "nav": ["Projetos", "Trajetória", "Formação", "Contato"],
+      "title": "Felipe Macedo — Analista de Sistemas",
+      "description": "Analista de Sistemas na SANSUY, com atuação em sustentação, evolução de ERP, integrações e desenvolvimento de sistemas corporativos.",
+      "nav": [
+        "Projetos",
+        "Trajetória",
+        "Formação",
+        "Contato"
+      ],
       "skip": "Ir para o conteúdo",
-      "eyebrow": "ANÁLISE DE SISTEMAS / ENGENHARIA DE SOFTWARE",
-      "headline": ["Entender a complexidade.", "Construir com clareza."],
-      "intro": "Investigo sistemas, conecto necessidades de negócio a decisões de engenharia e desenvolvo soluções para operações que precisam continuar funcionando.",
+      "eyebrow": "ANÁLISE DE SISTEMAS / SISTEMAS CORPORATIVOS",
+      "headline": [
+        "Entender o problema.",
+        "Melhorar o sistema."
+      ],
+      "intro": "Atuo com sustentação, integração e evolução de sistemas corporativos. Também desenvolvo projetos pessoais para aprender, testar ideias e aprofundar conhecimentos.",
       "current": "Analista de Sistemas na SANSUY",
       "explore": "Explorar projetos",
       "contact": "Vamos conversar",
       "summary": [
-        "Integração & modernização",
-        "Sistemas corporativos críticos",
-        "Engenharia orientada a evidências"
+        "Sistemas corporativos",
+        "Integrações e manutenção",
+        "Desenvolvimento e aprendizado"
       ],
-      "valueKicker": "01 / COMO GERO VALOR",
-      "valueTitle": "Antes do código,\no contexto.",
-      "valueIntro": "Sistemas reais têm história, dependências e pessoas. O trabalho começa entendendo o que não pode se perder na próxima mudança.",
+      "valueKicker": "01 / COMO TRABALHO",
+      "valueTitle": "Entender antes de alterar.",
+      "valueIntro": "Sistemas existentes têm regras, dependências e pessoas. Antes de mudar alguma coisa, procuro entender o problema, o impacto e o que precisa continuar funcionando.",
       "values": [
         [
           "Investigar",
@@ -42,37 +50,40 @@
           "Melhorar sistemas existentes com análise de impacto, documentação e cuidado com a continuidade da operação."
         ]
       ],
-      "workKicker": "02 / ENGENHARIA EM ABERTO",
-      "workTitle": "Sistemas que tornam\noutros sistemas mais claros.",
-      "workIntro": "Quatro investigações transformadas em software. Problemas concretos, decisões explícitas e limites documentados.",
+      "workKicker": "02 / PROJETOS PESSOAIS",
+      "workTitle": "Projetos para aprender e testar ideias.",
+      "workIntro": "Experimentos e ferramentas desenvolvidos fora do trabalho para estudar problemas que me interessam. Cada projeto mostra o que já existe e o que ainda falta.",
       "problem": "O problema",
-      "idea": "A decisão de engenharia",
-      "evidence": "O que existe hoje",
-      "limits": "Próximo limite",
+      "idea": "A abordagem",
+      "evidence": "O que já funciona",
+      "limits": "Limites atuais",
       "source": "Explorar código",
       "docs": "Ler documentação",
       "diagram": "DIAGRAMA CONCEITUAL · NÃO É TELEMETRIA AO VIVO",
       "journeyKicker": "03 / TRAJETÓRIA",
-      "journeyTitle": "Engenharia no contexto\nde quem usa o sistema.",
+      "journeyTitle": "Tecnologia no contexto de quem usa o sistema.",
       "now": "ATUAL",
       "before": "ANTERIOR",
       "role": "Analista de Sistemas",
       "job": "Em um ambiente industrial, atuo entre TI e áreas de negócio: sustentação, investigação de problemas, evolução de ERP, integrações e desenvolvimento desktop e web.",
       "previousRole": "Desenvolvimento backend",
       "previousCompany": "Sistemas financeiros / autorizações",
-      "previous": "Atuação em um autorizador financeiro relacionado à Mastercard. O contato com processamento transacional aprofundou meu interesse por backend, sistemas distribuídos e confiabilidade.",
-      "impactKicker": "EVIDÊNCIA NO DIA A DIA",
+      "previous": "Atuação em backend em um autorizador financeiro relacionado à Mastercard. A experiência me aproximou de processamento transacional e aumentou meu interesse por backend e confiabilidade.",
+      "impactKicker": "EXEMPLO DO DIA A DIA",
       "impactTitle": "De minutos a uma resposta\npraticamente instantânea.",
       "impact": "Uma consulta do sistema de engenharia da SANSUY levava minutos. Ao investigar o problema e desenvolver uma solução alinhada ao processo, reduzi a espera a uma resposta praticamente instantânea — uma mudança perceptível para o engenheiro responsável.",
       "impactNote": "Ao entender o processo por trás da consulta, a espera deixou de interromper o trabalho de engenharia.",
       "educationKicker": "04 / FORMAÇÃO & CREDENCIAIS",
-      "educationTitle": "Fundamento técnico.\nAprendizado contínuo.",
+      "educationTitle": "Formação e aprendizado contínuo.",
       "degree": "GRADUAÇÃO",
       "complete": "Concluído",
       "ongoing": "Em andamento",
-      "degrees": ["Gestão da Tecnologia da Informação", "Ciência da Computação"],
+      "degrees": [
+        "Gestão da Tecnologia da Informação",
+        "Ciência da Computação"
+      ],
       "training": "FORMAÇÃO COMPLEMENTAR",
-      "trainingNote": "Formações que ampliam repertório para trabalhar com sistemas, cloud, dados e segurança.",
+      "trainingNote": "Formações complementares que ampliam meu repertório em desenvolvimento, cloud, dados e segurança.",
       "courses": [
         "Generation Brasil — Full Stack Java · Turma 69",
         "AWS re/Start",
@@ -87,26 +98,26 @@
       "unknownDate": "Data não informada na fonte",
       "issued": "Emissão",
       "expires": "Expiração",
-      "interestsKicker": "05 / DIREÇÃO",
-      "interestsTitle": "Onde aprofundo\nminha engenharia.",
+      "interestsKicker": "05 / ESTUDOS E INTERESSES",
+      "interestsTitle": "O que estou aprofundando.",
       "interests": [
         [
-          "Sistemas & plataformas",
-          "Sistemas distribuídos, backend e arquitetura. Ferramentas que ajudam outras pessoas a desenvolver e operar software."
+          "Backend & sistemas",
+          "Backend, APIs, integração e fundamentos de sistemas distribuídos. São temas em que continuo estudando e praticando."
         ],
         [
-          "Confiabilidade & evolução",
-          "Observabilidade, integrações e modernização gradual. Infraestrutura cloud com atenção ao comportamento real dos sistemas."
+          "Evolução de sistemas",
+          "Manutenção de legados, observabilidade e cloud aplicados a problemas reais de operação."
         ],
         [
-          "Investigação & novas ferramentas",
-          "Engenharia assistida por IA, com revisão, testes e rastreabilidade. A ferramenta precisa ampliar o entendimento do problema."
+          "IA & ferramentas",
+          "Uso de IA como apoio a desenvolvimento, análise e documentação, sempre com revisão humana e testes."
         ]
       ],
       "contactKicker": "06 / CONTATO",
-      "contactTitle": "Vamos construir\nalgo útil.",
-      "contactText": "Um sistema para entender, uma integração para resolver ou uma equipe para somar. Vamos conversar.",
-      "footer": "Análise de sistemas. Engenharia com contexto.",
+      "contactTitle": "Se fizer sentido,\\nvamos conversar.",
+      "contactText": "Sistemas corporativos, integrações, desenvolvimento ou algum dos projetos pessoais acima. Fique à vontade para entrar em contato.",
+      "footer": "Análise de sistemas. Projetos e aprendizado contínuo.",
       "more": "Mais experimentos no GitHub",
       "motion": "Reduzir animações",
       "motionOff": "Ativar animações",
@@ -118,24 +129,32 @@
     },
     "en": {
       "lang": "en",
-      "title": "Felipe Macedo — Systems Analysis & Software Engineering",
-      "description": "Systems Analyst at SANSUY. Investigation, integration and modernization of business-critical software. Projects, background and credentials.",
-      "nav": ["Projects", "Journey", "Education", "Contact"],
+      "title": "Felipe Macedo — Systems Analyst",
+      "description": "Systems Analyst at SANSUY, working with application support, ERP evolution, integrations and business software development.",
+      "nav": [
+        "Projects",
+        "Journey",
+        "Education",
+        "Contact"
+      ],
       "skip": "Skip to content",
-      "eyebrow": "SYSTEMS ANALYSIS / SOFTWARE ENGINEERING",
-      "headline": ["Understand complexity.", "Build with clarity."],
-      "intro": "I investigate systems, connect business needs to engineering decisions, and build solutions for operations that need to keep running.",
+      "eyebrow": "SYSTEMS ANALYSIS / BUSINESS SOFTWARE",
+      "headline": [
+        "Understand the problem.",
+        "Improve the system."
+      ],
+      "intro": "I work with support, integration and evolution of business software. I also build personal projects to learn, test ideas and deepen my knowledge.",
       "current": "Systems Analyst at SANSUY",
       "explore": "Explore projects",
       "contact": "Get in touch",
       "summary": [
-        "Integration & modernization",
-        "Business-critical systems",
-        "Evidence-led engineering"
+        "Business software",
+        "Integrations & maintenance",
+        "Development & learning"
       ],
-      "valueKicker": "01 / HOW I CONTRIBUTE",
-      "valueTitle": "Before the code,\nthe context.",
-      "valueIntro": "Real systems have history, dependencies and people. The work starts with understanding what the next change must preserve.",
+      "valueKicker": "01 / HOW I WORK",
+      "valueTitle": "Understand before changing.",
+      "valueIntro": "Existing systems have rules, dependencies and people. Before changing something, I try to understand the problem, the impact and what must keep working.",
       "values": [
         [
           "Investigate",
@@ -150,37 +169,40 @@
           "Improve existing systems through impact analysis, documentation and care for operational continuity."
         ]
       ],
-      "workKicker": "02 / ENGINEERING IN THE OPEN",
-      "workTitle": "Systems that make\nother systems clearer.",
-      "workIntro": "Four investigations turned into software. Concrete problems, explicit decisions and documented limitations.",
+      "workKicker": "02 / PERSONAL PROJECTS",
+      "workTitle": "Projects for learning and testing ideas.",
+      "workIntro": "Experiments and tools built outside work to study problems that interest me. Each project shows what exists today and what is still missing.",
       "problem": "The problem",
-      "idea": "Engineering decision",
-      "evidence": "What exists today",
-      "limits": "The next boundary",
+      "idea": "Approach",
+      "evidence": "What works today",
+      "limits": "Current limits",
       "source": "Explore source",
       "docs": "Read documentation",
       "diagram": "CONCEPTUAL DIAGRAM · NOT LIVE TELEMETRY",
       "journeyKicker": "03 / PROFESSIONAL JOURNEY",
-      "journeyTitle": "Engineering in the context\nof the people using it.",
+      "journeyTitle": "Technology in the context of the people using it.",
       "now": "CURRENT",
       "before": "PREVIOUS",
       "role": "Systems Analyst",
       "job": "In an industrial environment, I work across IT and business teams: application support, incident investigation, ERP evolution, integrations, and desktop and web development.",
       "previousRole": "Backend development",
       "previousCompany": "Financial systems / authorizations",
-      "previous": "Backend work on a financial authorization system related to Mastercard. Transaction processing deepened my interest in backend, distributed systems and reliability.",
-      "impactKicker": "EVIDENCE IN EVERYDAY WORK",
+      "previous": "Backend work on a financial authorization system related to Mastercard. The experience brought me closer to transaction processing and increased my interest in backend and reliability.",
+      "impactKicker": "EVERYDAY EXAMPLE",
       "impactTitle": "From minutes to\nnearly instant.",
       "impact": "A query in SANSUY’s engineering system took minutes. By investigating the problem and developing a solution aligned with the process, I brought the wait down to a nearly instant response — a noticeable change for the engineer responsible.",
       "impactNote": "Understanding the process behind the query turned the wait into an immediate part of the engineering workflow.",
       "educationKicker": "04 / EDUCATION & CREDENTIALS",
-      "educationTitle": "Technical foundations.\nContinuous learning.",
+      "educationTitle": "Education and continuous learning.",
       "degree": "HIGHER EDUCATION",
       "complete": "Completed",
       "ongoing": "In progress",
-      "degrees": ["Information Technology Management", "Computer Science"],
+      "degrees": [
+        "Information Technology Management",
+        "Computer Science"
+      ],
       "training": "ADDITIONAL TRAINING",
-      "trainingNote": "Learning paths that expand practical work across systems, cloud, data and security.",
+      "trainingNote": "Additional training that broadens my practical knowledge across development, cloud, data and security.",
       "courses": [
         "Generation Brasil — Full Stack Java · Cohort 69",
         "AWS re/Start",
@@ -195,26 +217,26 @@
       "unknownDate": "Date not provided by source",
       "issued": "Issued",
       "expires": "Expires",
-      "interestsKicker": "05 / DIRECTION",
-      "interestsTitle": "Where I deepen\nmy engineering.",
+      "interestsKicker": "05 / STUDY & INTERESTS",
+      "interestsTitle": "What I am learning more about.",
       "interests": [
         [
-          "Systems & platforms",
-          "Distributed systems, backend and architecture. Tools that help people develop and operate software."
+          "Backend & systems",
+          "Backend, APIs, integration and distributed-systems fundamentals. These are areas I continue studying and practicing."
         ],
         [
-          "Reliability & evolution",
-          "Observability, integrations and gradual modernization. Cloud infrastructure grounded in actual system behavior."
+          "System evolution",
+          "Legacy maintenance, observability and cloud applied to practical operational problems."
         ],
         [
-          "Investigation & new tools",
-          "AI-assisted engineering with review, tests and traceability. A tool should improve understanding of the problem."
+          "AI & tools",
+          "Using AI to support development, analysis and documentation, with human review and tests."
         ]
       ],
       "contactKicker": "06 / CONTACT",
-      "contactTitle": "Let’s build\nsomething useful.",
-      "contactText": "A system to understand, an integration to solve, or a team to contribute to. Let’s talk.",
-      "footer": "Systems analysis. Engineering with context.",
+      "contactTitle": "If it makes sense,\\nlet’s talk.",
+      "contactText": "Business software, integrations, development, or any of the personal projects above. Feel free to get in touch.",
+      "footer": "Systems analysis. Projects and continuous learning.",
       "more": "More experiments on GitHub",
       "motion": "Reduce animations",
       "motionOff": "Enable animations",
