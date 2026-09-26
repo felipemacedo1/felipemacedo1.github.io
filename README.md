@@ -1,6 +1,6 @@
-# Felipe Macedo — Engineering with context
+# Felipe Macedo — Personal portfolio
 
-Professional portfolio for systems analysis, software engineering, integration and modernization. The experience explains how Felipe investigates complex systems through four evidence-based case studies, professional background and verified credentials.
+Personal portfolio for systems analysis, business software, integrations and development. It presents Felipe's professional background, selected personal projects, current studies and verified credentials without treating personal experiments as professional production experience.
 
 **Production domain:** [felipemacedo.me](https://felipemacedo.me) · **Hosting:** GitHub Pages only · **Recurring infrastructure cost:** R$ 0.
 
@@ -33,12 +33,12 @@ Astro renders pages at build time. TypeScript handles optional interactions. Thr
 | Location                                | Responsibility                                                    |
 | --------------------------------------- | ----------------------------------------------------------------- |
 | `src/content/profile.ts`                | Identity, canonical contacts, PT/EN editorial content             |
-| `src/content/projects.ts`               | Curated projects, evidence, limitations, repository links         |
+| `src/content/projects.ts`               | Selected personal projects, current status, limits and links      |
 | `src/content/credentials.mjs`           | Nine official Credly badge IDs                                    |
 | `src/data/credentials.generated.json`   | Verified, committed fallback snapshot                             |
 | `src/content/credential-editorial.json` | Localized descriptions and honest credential taxonomy             |
 | `src/content/certificates.json`         | Metadata for supplied visual certificates                         |
-| `src/components/`                       | Semantic sections, cases, SVG architecture diagrams               |
+| `src/components/`                       | Semantic sections, project views and explanatory SVG diagrams     |
 | `src/graphics/scene.ts`                 | One renderer, reusable particles and contextual viewports         |
 | `src/scripts/main.ts`                   | Motion preferences, lazy graphics, worker retirement              |
 | `src/styles/global.css`                 | Design tokens and responsive layout                               |
@@ -80,7 +80,7 @@ To add a badge, add its ID, run the sync, review the issuer/recipient/source, co
 
 ## Add or update a project
 
-Read the source project's README, current status, roadmap and architecture first. Edit `src/content/projects.ts` in both languages. Keep implemented evidence separate from planned scope. Update diagrams only when they improve understanding; never invent latency, confidence percentages or production qualification. Add provenance to `docs/SOURCES.md` and extend route/content checks where needed.
+Read the source project's README, current status, roadmap and documentation first. Edit `src/content/projects.ts` in both languages. Keep implemented evidence separate from planned scope. Update diagrams only when they improve understanding; never invent latency, confidence percentages or production qualification. Add provenance to `docs/SOURCES.md` and extend route/content checks where needed.
 
 ## Validation
 
