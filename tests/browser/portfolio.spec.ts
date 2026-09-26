@@ -48,7 +48,7 @@ test('keyboard, reduced motion and language continuity', async ({ page }) => {
   await page.locator('.languages a[lang="en"]').click();
   await expect(page).toHaveURL(/\/en\/#education$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('h1')).toContainText('Understand complexity');
+  await expect(page.locator('h1')).toContainText('Understand the problem');
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze();
