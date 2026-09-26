@@ -1,28 +1,38 @@
 {
-  "repositories": ["open-speech-bridge", "database-radar", "rizoma", "legacy-flight-recorder"],
-  "projectNames": ["OpenSpeechBridge", "Database Radar", "Rizoma", "Legacy Flight Recorder"],
+  "repositories": [
+    "open-speech-bridge",
+    "database-radar",
+    "rizoma",
+    "legacy-flight-recorder"
+  ],
+  "projectNames": [
+    "OpenSpeechBridge",
+    "Database Radar",
+    "Rizoma",
+    "Legacy Flight Recorder"
+  ],
   "shared": [
     {
       "mode": "audio",
-      "category": "LOCAL-FIRST AUDIO RUNTIME",
+      "category": "LOCAL-FIRST AUDIO PROJECT",
       "tech": "Rust / PipeWire / Ring buffers / Engine protocols",
       "docs": "docs/ARCHITECTURE.md"
     },
     {
       "mode": "radar",
-      "category": "STATIC SYSTEMS INTELLIGENCE",
+      "category": "STATIC ANALYSIS EXPERIMENT",
       "tech": "Java / Static analysis / SQL parsing / Evidence graphs",
       "docs": "docs/analysis-model.md"
     },
     {
       "mode": "mapping",
-      "category": "SAFE DATA INTEGRATION",
+      "category": "DATA IMPORT TOOLING",
       "tech": "Java / Streaming ingestion / Profiling / Deterministic mapping",
       "docs": "docs/CONSUMING_RIZOMA.md"
     },
     {
       "mode": "trace",
-      "category": "RUNTIME EVIDENCE",
+      "category": "JAVA RUNTIME EXPERIMENT",
       "tech": "Java 8 / Bytecode instrumentation / JDBC / JSONL",
       "docs": "docs/architecture.md"
     }
