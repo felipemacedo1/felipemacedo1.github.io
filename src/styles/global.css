@@ -1510,6 +1510,38 @@ html[data-motion='reduced'] *::before {
 .certificate-body a {
   font-size: 13px;
 }
+.policy-main {
+  max-width: 840px;
+  padding-block: 112px;
+}
+.policy-main h1 {
+  font-size: clamp(42px, 5vw, 64px);
+  letter-spacing: -0.05em;
+}
+.policy-intro {
+  font-size: 19px;
+  line-height: 1.75;
+  margin-top: 28px;
+  max-width: 720px;
+}
+.policy-sections {
+  margin-top: 72px;
+  border-top: 1px solid var(--line);
+}
+.policy-sections section,
+.policy-contact {
+  padding-block: 30px;
+  border-bottom: 1px solid var(--line);
+}
+.policy-sections h2,
+.policy-contact h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.policy-contact {
+  margin-top: 56px;
+  border-top: 1px solid var(--line);
+}
 @media (max-width: 760px) {
   .document-main,
   .credentials-main {
