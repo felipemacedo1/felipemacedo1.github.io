@@ -1,0 +1,58 @@
+---
+import { profile, type Locale } from '../content/profile';
+import '../styles/global.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const isPortuguese = locale === 'pt';
+const path = isPortuguese ? '/privacidade/' : '/en/privacy/';
+const copy = isPortuguese ? {
+  title: 'Política de Privacidade', description: 'Política de privacidade das integrações de Felipe Macedo com tecnologias Meta.', home: 'Portfólio', eyebrow: 'PRIVACIDADE / INTEGRAÇÕES META',
+  intro: 'Esta política explica como os dados podem ser tratados por integrações criadas e operadas por Felipe Macedo com as APIs da Meta.',
+  sections: [
+    ['Escopo', 'Esta política se aplica às integrações com WhatsApp Business, Instagram e Páginas do Facebook vinculadas a este aplicativo. O portfólio público não coleta dados de mensagens nem executa essas integrações no navegador.'],
+    ['Dados tratados', 'Quando uma integração estiver ativa e autorizada, ela poderá tratar identificadores de conta e página, identificadores técnicos, conteúdo de mensagens e mídias enviados à conta comercial, além de metadados necessários para entregar, proteger e depurar o serviço.'],
+    ['Finalidades', 'Os dados são usados somente para operar as funcionalidades solicitadas, responder a interações autorizadas, manter segurança e prevenir abuso, e cumprir obrigações legais aplicáveis.'],
+    ['Compartilhamento', 'A Meta processa dados conforme seus próprios termos e políticas. Dados não são vendidos. O acesso por terceiros ocorre apenas quando necessário para operar uma integração autorizada ou quando exigido por lei.'],
+    ['Retenção e segurança', 'Os dados são mantidos apenas pelo período necessário para a finalidade informada, segurança e obrigações legais. Credenciais de API são mantidas fora do código público e o acesso é limitado ao necessário.'],
+    ['Seus direitos e exclusão', 'Você pode solicitar acesso, correção, exclusão ou esclarecimentos sobre dados pessoais tratados por uma integração. Para solicitar a exclusão de dados associados à sua conta, envie uma solicitação pelo e-mail abaixo com os detalhes necessários para localizar a interação.'],
+    ['Alterações', 'Esta política pode ser atualizada quando as integrações ou requisitos legais mudarem. A versão publicada nesta página é a versão vigente.']
+  ], contact: 'Contato para privacidade'
+} : {
+  title: 'Privacy Policy', description: 'Privacy policy for Felipe Macedo’s integrations with Meta technologies.', home: 'Portfolio', eyebrow: 'PRIVACY / META INTEGRATIONS',
+  intro: 'This policy explains how data may be handled by integrations created and operated by Felipe Macedo with Meta APIs.',
+  sections: [
+    ['Scope', 'This policy applies to WhatsApp Business, Instagram, and Facebook Page integrations connected to this application. The public portfolio does not collect message data or run these integrations in the browser.'],
+    ['Data processed', 'When an integration is active and authorized, it may process account and Page identifiers, technical identifiers, message and media content sent to the business account, and metadata needed to deliver, secure, and debug the service.'],
+    ['Purposes', 'Data is used only to operate requested functionality, respond to authorized interactions, maintain security and prevent abuse, and meet applicable legal obligations.'],
+    ['Sharing', 'Meta processes data under its own terms and policies. Data is not sold. Third parties receive access only when needed to operate an authorized integration or when required by law.'],
+    ['Retention and security', 'Data is retained only as long as needed for the stated purpose, security, and legal obligations. API credentials are kept outside public code and access is limited to what is necessary.'],
+    ['Your rights and deletion', 'You may request access, correction, deletion, or clarification about personal data processed by an integration. To request deletion of data associated with your account, email the address below with enough detail to locate the interaction.'],
+    ['Changes', 'This policy may be updated when integrations or legal requirements change. The version published on this page is the current version.']
+  ], contact: 'Privacy contact'
+};
+---
+<!doctype html>
+<html lang={isPortuguese ? 'pt-BR' : 'en'}>
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{copy.title} — Felipe Macedo</title><meta name="description" content={copy.description} />
+    <link rel="canonical" href={`${profile.site}${path}`} /><link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="document-page">
+    <a class="skip" href="#main">{isPortuguese ? 'Ir para o conteúdo' : 'Skip to content'}</a>
+    <header class="header">
+      <a class="brand" href={isPortuguese ? '/' : '/en/'} aria-label="Felipe Macedo"><span class="brand-mark" aria-hidden="true">f<span>m</span><i></i></span><span>Felipe Macedo</span></a>
+      <nav aria-label={isPortuguese ? 'Navegação da página' : 'Page navigation'}><a href={isPortuguese ? '/' : '/en/'}>{copy.home}</a></nav>
+      <div class="languages" aria-label="Language"><a href="/privacidade/" lang="pt-BR" aria-current={isPortuguese ? 'page' : undefined}>PT</a><span>/</span><a href="/en/privacy/" lang="en" aria-current={!isPortuguese ? 'page' : undefined}>EN</a></div>
+    </header>
+    <main id="main" class="document-main wrap policy-main">
+      <p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p class="policy-intro">{copy.intro}</p>
+      <div class="policy-sections">{copy.sections.map(([heading, text]) => <section><h2>{heading}</h2><p>{text}</p></section>)}</div>
+      <section class="policy-contact"><h2>{copy.contact}</h2><a class="text-link" href={`mailto:${profile.email}`}>{profile.email}</a></section>
+    </main>
+    <footer class="wrap footer"><div><a href={isPortuguese ? '/' : '/en/'} class="brand">Felipe Macedo<span aria-hidden="true">↗</span></a></div><span class="mono">© {new Date().getFullYear()} / FM</span></footer>
+  </body>
+</html>
