@@ -3,7 +3,7 @@
 ## Hard invariants
 
 - Production is exclusively static GitHub Pages in `felipemacedo1/felipemacedo1.github.io`.
-- Domain `felipemacedo.me`: preserve root CNAME, public/CNAME, dist/CNAME and Pages settings.
+- Canonical production URL is `https://felipemacedo1.github.io`. Use the default GitHub Pages hostname and never create root/public/dist CNAME files. Keep the custom domain field empty in Settings → Pages.
 - Recurring infrastructure cost R$ 0. No backend, serverless, databases, paid service, runtime API or Node deployment. No secrets in client bundles.
 - Work in a branch and PR. Do not merge or replace the published site unless requested. Original state is commit `3e0014b` / `archive/pre-engineering-redesign`.
 - Never invent experience, metrics, dates, credentials or production-readiness. Read current upstream docs before changing project claims.
@@ -40,4 +40,4 @@ IDs: `src/content/credentials.mjs`. Run `npm run sync:credly`; review and commit
 
 Node 24; `npm ci`. Required: `npm run lint`, `npm test`, `npm run build`, `npm run test:e2e`. Install browser with `npx playwright install --with-deps chromium`; optional `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for system Chrome. Preview the built output and visually inspect desktop, laptop, tablet, phone and full-page scrolling. Use `npm run lighthouse` with the preview server running. Keep reproducible evidence/limits in `docs/QA.md`. Format with `npm run format`.
 
-Workflow builds/uploads dist and deploys only main; PR does not publish. Pages must use workflow source, not legacy branch source. Confirm deployed CNAME, HTTPS, locale routes, metadata and stale-worker migration after a real deployment. Local tests are not evidence of a successful hosted Actions run. Report GitHub account/billing restrictions separately if encountered. Never bypass security or billing controls.
+Workflow builds/uploads dist and deploys only main; PR does not publish. Pages must use workflow source, not legacy branch source. Confirm absence of deployed CNAME, HTTPS, locale routes, metadata and stale-worker migration after a real deployment. Local tests are not evidence of a successful hosted Actions run. Report GitHub account/billing restrictions separately if encountered. Never bypass security or billing controls.

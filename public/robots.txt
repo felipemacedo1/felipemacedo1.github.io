@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /legacy/
-Sitemap: https://felipemacedo.me/sitemap.xml
+Sitemap: https://felipemacedo1.github.io/sitemap.xml
