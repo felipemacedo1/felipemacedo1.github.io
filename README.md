@@ -2,7 +2,7 @@
 
 Personal portfolio for systems analysis, business software, integrations and development. It presents Felipe's professional background, selected personal projects, current studies and verified credentials without treating personal experiments as professional production experience.
 
-**Production domain:** [felipemacedo.me](https://felipemacedo.me) · **Hosting:** GitHub Pages only · **Recurring infrastructure cost:** R$ 0.
+**Production URL:** [felipemacedo1.github.io](https://felipemacedo1.github.io) · **Hosting:** GitHub Pages only · **Recurring infrastructure cost:** R$ 0.
 
 ![Desktop portfolio preview](docs/preview.webp)
 
@@ -24,7 +24,7 @@ npm run build
 npm run preview
 ```
 
-`dist/` contains complete HTML, CSS, JavaScript, fonts, badge images, social artwork, sitemap, robots and CNAME. No Node server, API route, database, serverless function, paid CDN or credentials are needed in production. No visitor tracking is installed. All rendered assets are served from this repository.
+`dist/` contains complete HTML, CSS, JavaScript, fonts, badge images, social artwork, sitemap and robots. No custom-domain CNAME is generated. No Node server, API route, database, serverless function, paid CDN or credentials are needed in production. No visitor tracking is installed. All rendered assets are served from this repository.
 
 ## Architecture
 
@@ -47,7 +47,7 @@ Astro renders pages at build time. TypeScript handles optional interactions. Thr
 
 PT-BR is `/`; English is `/en/`. Both are real static routes with canonical and hreflang links. To add Spanish, extend the locale type, add complete versioned copy and project translations, generate `/es/`, and update metadata/sitemap/tests. No runtime translation.
 
-The résumé is a static document at [`/curriculo/`](https://felipemacedo.me/curriculo/) and [`/en/resume/`](https://felipemacedo.me/en/resume/), with the source PDF at `public/cv/Felipe-Macedo-CV-2026.pdf`. Credential detail pages live at [`/credenciais/`](https://felipemacedo.me/credenciais/) and `/en/credentials/`; the home page intentionally shows only a small priority set. Visual certificate evidence stays in `public/certificates/` and is opened from accessible native `<details>` disclosures.
+The résumé is a static document at [`/curriculo/`](https://felipemacedo1.github.io/curriculo/) and [`/en/resume/`](https://felipemacedo1.github.io/en/resume/), with the source PDF at `public/cv/Felipe-Macedo-CV-2026.pdf`. Credential detail pages live at [`/credenciais/`](https://felipemacedo1.github.io/credenciais/) and `/en/credentials/`; the home page intentionally shows only a small priority set. Visual certificate evidence stays in `public/certificates/` and is opened from accessible native `<details>` disclosures.
 
 Canonical contacts live only in `src/content/profile.json`. Replace the PDF at the same public path when updating the résumé, preserve its filename and do not copy its phone number into page content. Add a Credly ID to `src/content/credentials.mjs`, run `npm run sync:credly`, review the official snapshot, then add its localized editorial entry by ID. Official Credly metadata and editorial copy are separate by design. Add supplied certificate files without editing them and register their metadata in `src/content/certificates.json`.
 
@@ -93,13 +93,13 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome npm run test:e2e
 npm run lighthouse
 ```
 
-Smoke tests scroll all chapters at desktop/notebook/tablet/phone widths; check overflow, errors, keyboard, language, reduced motion, all-local asset requests, GPU failure, JavaScript disabled, axe WCAG A/AA and the optional terminal. Build validation checks every local route/asset/anchor and CNAME. `npm run format:check` checks source formatting.
+Smoke tests scroll all chapters at desktop/notebook/tablet/phone widths; check overflow, errors, keyboard, language, reduced motion, all-local asset requests, GPU failure, JavaScript disabled, axe WCAG A/AA and the optional terminal. Build validation checks every local route/asset/anchor and ensures no custom-domain CNAME is produced. `npm run format:check` checks source formatting.
 
 ## GitHub Pages deployment
 
 `.github/workflows/pages.yml` runs checkout → Node 24 → npm ci → Credly sync → lint → data tests → static build → Chromium smoke tests → upload **dist/**. Deployment runs only on `main`, after validation, using the GitHub Pages environment and official Actions. PRs validate without publishing. The `GITHUB_TOKEN` stays in Actions, never in browser code.
 
-The repository must use **Settings → Pages → Source → GitHub Actions** (`build_type: workflow`). Before merging the migration, verify this setting; the audit initially found `legacy` publication. Preserve `felipemacedo.me` in both root CNAME and `public/CNAME`, and confirm it exists in `dist/CNAME`. Never upload the source root after introducing this build.
+The repository must use **Settings → Pages → Source → GitHub Actions** (`build_type: workflow`). Before merging the migration, verify this setting; the audit initially found `legacy` publication. Use the default `https://felipemacedo1.github.io` hostname, leave the custom-domain field empty in Settings → Pages, and ensure no CNAME appears in the source or generated `dist/`. Never upload the source root after introducing this build.
 
 The retirement worker at `/sw.js` removes only the old portfolio cache names, unregisters itself, and avoids leaving repeat visitors on stale terminal pages. A new PWA/manifest is intentionally unnecessary.
 

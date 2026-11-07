@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 export default defineConfig({
-  site: 'https://felipemacedo.me',
+  site: 'https://felipemacedo1.github.io',
   output: 'static',
   trailingSlash: 'always',
   build: { format: 'directory' },

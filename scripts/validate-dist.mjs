@@ -12,7 +12,7 @@ const htmls = [
   'credenciais/index.html',
   'en/credentials/index.html',
 ];
-assert.equal((await readFile('dist/CNAME', 'utf8')).trim(), 'felipemacedo.me');
+assert.ok(!(await readdir('dist')).includes('CNAME'), 'Unexpected custom-domain CNAME');
 for (const asset of [
   'cv/Felipe-Macedo-CV-2026.pdf',
   'certificates/certificado-sistemas-computacionais-seguranca.png',
@@ -45,7 +45,7 @@ for (const path of htmls) {
     const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map((x) => x[1]));
     for (const [, id] of html.matchAll(/href="#([^"]+)"/g))
       assert.ok(ids.has(id), `Broken anchor ${id}`);
-    assert.ok(html.includes('https://felipemacedo.me/og-image.png'));
+    assert.ok(html.includes('https://felipemacedo1.github.io/og-image.png'));
     assert.equal([...html.matchAll(/<h1[ >]/g)].length, 1);
     assert.ok(gzipSync(html).length < 30000, 'HTML gzip budget: 30kB');
   }
@@ -61,5 +61,5 @@ for (const f of await readdir('dist/_astro')) {
 assert.ok(scriptTotal < 200000, `JS gzip exceeds 200kB: ${scriptTotal}`);
 assert.ok(cssTotal < 20000, `CSS gzip exceeds 20kB: ${cssTotal}`);
 console.log(
-  `Static routes, anchors, assets, CNAME verified. JS gzip ${scriptTotal}B; CSS gzip ${cssTotal}B.`,
+  `Static routes, anchors, assets, no custom CNAME verified. JS gzip ${scriptTotal}B; CSS gzip ${cssTotal}B.`,
 );
